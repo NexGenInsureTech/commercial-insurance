@@ -458,10 +458,17 @@
                 <div class="bg-white p-4 rounded-lg shadow clickable-card" onclick="toggleDetails(this)">
                     <h4 class="text-lg font-semibold text-sky-700">1. Micro-Business Income Protection (Parametric) ➕</h4>
                     <div class="details text-slate-600 mt-2">
-                        <p><strong>Concept:</strong> A simple, affordable policy that pays out a fixed sum if a pre-defined event (e.g., prolonged power outage in a specific area, sustained internet disruption, or a local government-mandated shutdown exceeding X days) occurs, directly impacting business operations.</p>
-                        <p><strong>Novelty:</strong> Hyper-localized, event-triggered income protection, moving beyond traditional business interruption to specific, quantifiable disruptions.</p>
+                        <p><strong>Concept:</strong> A simple, affordable policy that pays out a fixed sum if a pre-defined event directly impacting business operations occurs.</p>
+                        <p><strong>Product Features/Coverages:</strong> Fixed daily/weekly sum for business income loss; Coverage for specific, quantifiable disruptions.</p>
+                        <p><strong>Claim/Benefit Trigger:</strong> Automated payout upon verified occurrence of:
+                            <ul class="list-disc list-inside ml-4">
+                                <li>Prolonged power outage (>6 hours) in the business's registered PIN code, verified via public utility outage maps.</li>
+                                <li>Sustained internet disruption (>12 hours) in the business's service area, verified via major ISP outage reports.</li>
+                                <li>Local government-mandated shutdown (e.g., due to local unrest, health emergency) exceeding 3 days within a specific radius of the business, verified via official government notifications.</li>
+                            </ul>
+                        </p>
                         <p><strong>Industry/Sector Benefit:</strong> Small retail shops, street vendors, home-based businesses, small service providers (salons, small clinics), small manufacturing units.</p>
-                        <p><strong>Digital Sellability/Low Intervention:</strong> Fully automated payout based on verified public data (e.g., utility outage maps, government notifications). Online purchase with minimal underwriting.</p>
+                        <p><strong>Digital Sellability/Low Intervention:</strong> Fully automated payout based on verified public data. Online purchase with minimal underwriting.</p>
                         <p><strong>Product Structure (Underwriting Tech Note & Process):</strong>
                             <ul class="list-disc list-inside ml-4">
                                 <li><strong>Data Sources:</strong> Public utility data (power grid, ISP outage reports), municipal/government official shutdown notices, local news APIs.</li>
@@ -475,8 +482,15 @@
                 <div class="bg-white p-4 rounded-lg shadow clickable-card" onclick="toggleDetails(this)">
                     <h4 class="text-lg font-semibold text-sky-700">2. Localized Natural Calamity Micro-Parametric ➕</h4>
                     <div class="details text-slate-600 mt-2">
-                        <p><strong>Concept:</strong> Offers a fixed payout for specific, localized natural calamities (e.g., rainfall exceeding X mm in Y hours, wind speed exceeding Z km/h) based on official weather station data or satellite imagery.</p>
-                        <p><strong>Novelty:</strong> Ultra-specific geographic targeting and immediate, no-questions-asked payouts for common climate risks affecting small businesses.</p>
+                        <p><strong>Concept:</strong> Offers a fixed payout for specific, localized natural calamities based on official weather station data or satellite imagery.</p>
+                        <p><strong>Product Features/Coverages:</strong> Fixed sum payout for property damage or business disruption; Coverage for specific weather events (e.g., excessive rainfall, high winds, localized flooding).</p>
+                        <p><strong>Claim/Benefit Trigger:</strong> Automated payout when official data confirms:
+                            <ul class="list-disc list-inside ml-4">
+                                <li>Rainfall exceeding 150mm in 24 hours at the nearest official weather station to the business's registered location.</li>
+                                <li>Wind speed exceeding 80 km/h for a sustained period (e.g., 2 hours) at the nearest official weather station.</li>
+                                <li>Flood inundation reaching a pre-defined depth (e.g., 0.5 meters) in the business's area, verified by satellite imagery or official disaster management reports.</li>
+                            </ul>
+                        </p>
                         <p><strong>Industry/Sector Benefit:</strong> Agriculture-dependent small businesses, small shops in flood-prone areas, coastal businesses, construction micro-contractors.</p>
                         <p><strong>Digital Sellability/Low Intervention:</strong> Purchase via app/web, location-based underwriting, automated payouts upon trigger verification.</p>
                         <p><strong>Product Structure (Underwriting Tech Note & Process):</strong>
@@ -492,8 +506,16 @@
                 <div class="bg-white p-4 rounded-lg shadow clickable-card" onclick="toggleDetails(this)">
                     <h4 class="text-lg font-semibold text-sky-700">3. Supply Chain Disruption Micro-Cover (Parametric) ➕</h4>
                     <div class="details text-slate-600 mt-2">
-                        <p><strong>Concept:</strong> A low-cost policy for small businesses that pays out a fixed amount if a critical supply chain node (e.g., a specific port, major highway, or key supplier's facility) experiences a pre-defined disruption (e.g., closure for >48 hours due to an incident).</p>
-                        <p><strong>Novelty:</strong> Parametric trigger for supply chain, simplifying a complex risk for small players.</p>
+                        <p><strong>Concept:</strong> A low-cost policy for small businesses that pays out a fixed amount if a critical supply chain node experiences a pre-defined disruption.</p>
+                        <p><strong>Product Features/Coverages:</strong> Fixed sum payout for lost revenue or increased operational costs due to supply chain interruption; Coverage for specific, declared critical supply chain nodes.</p>
+                        <p><strong>Claim/Benefit Trigger:</strong> Automated payout upon verified closure or severe disruption of a declared critical supply chain node:
+                            <ul class="list-disc list-inside ml-4">
+                                <li>A specific port (e.g., Mumbai Port) is officially declared closed for >48 hours due to an incident (e.g., strike, accident).</li>
+                                <li>A major highway segment (e.g., NH48 stretch) is officially closed for >72 hours due to a natural disaster or major accident.</li>
+                                <li>A declared key supplier's primary manufacturing facility is officially shut down for >5 days due to fire or natural calamity.</li>
+                            </ul>
+                            Verification via port authority notices, national highway status updates, or official news reports for supplier incidents.
+                        </p>
                         <p><strong>Industry/Sector Benefit:</strong> Small manufacturers, e-commerce sellers, local distributors, food delivery services, small import/export businesses.</p>
                         <p><strong>Digital Sellability/Low Intervention:</strong> Integrates with logistics/e-commerce platforms; automated payout based on public transport/supplier status data.</p>
                         <p><strong>Product Structure (Underwriting Tech Note & Process):</strong>
@@ -513,8 +535,23 @@
                 <div class="bg-white p-4 rounded-lg shadow clickable-card" onclick="toggleDetails(this)">
                     <h4 class="text-lg font-semibold text-sky-700">4. Digital Asset & Data Breach Micro-Cover ➕</h4>
                     <div class="details text-slate-600 mt-2">
-                        <p><strong>Concept:</strong> A simplified cyber insurance policy for MSMEs, covering costs related to basic data recovery, notification expenses for a small number of affected customers, and a helpline for cyber incident response.</p>
-                        <p><strong>Novelty:</strong> Tailored for minimal digital footprint, focusing on core cyber risks relevant to small businesses (e.g., website hacks, email scams).</p>
+                        <p><strong>Concept:</strong> A simplified cyber insurance policy for MSMEs, covering essential costs related to basic digital security incidents.</p>
+                        <p><strong>Product Features/Coverages:</strong>
+                            <ul class="list-disc list-inside ml-4">
+                                <li>Costs for basic data recovery services (up to a fixed limit, e.g., ₹50,000).</li>
+                                <li>Expenses for notifying a small number of affected customers (e.g., up to 500 customers).</li>
+                                <li>Access to a 24/7 cyber incident response helpline for initial guidance.</li>
+                                <li>Coverage for legal expenses (up to a fixed limit, e.g., ₹1,00,000) if a third-party claim arises from the breach.</li>
+                            </ul>
+                        </p>
+                        <p><strong>Claim/Benefit Trigger:</strong> Payout upon verified occurrence of:
+                            <ul class="list-disc list-inside ml-4">
+                                <li>Confirmation of a data breach affecting a minimum number of customer records (e.g., 50 records) stored by the business.</li>
+                                <li>Verification of a ransomware attack encrypting business data, requiring recovery efforts.</li>
+                                <li>Official notification of a successful phishing attack leading to financial loss or data compromise.</li>
+                            </ul>
+                            Verification through digital forensics report or police complaint.
+                        </p>
                         <p><strong>Industry/Sector Benefit:</strong> Any MSME with an online presence: small e-commerce stores, local service providers with websites, online consultants, digital marketing agencies, small clinics/law firms storing client data.</p>
                         <p><strong>Digital Sellability/Low Intervention:</strong> Online questionnaire-based underwriting, instant policy issuance. Claims primarily handled via digital submission and fixed payouts for defined events.</p>
                         <p><strong>Product Structure (Underwriting Tech Note & Process):</strong>
@@ -530,8 +567,21 @@
                 <div class="bg-white p-4 rounded-lg shadow clickable-card" onclick="toggleDetails(this)">
                     <h4 class="text-lg font-semibold text-sky-700">5. Online Seller's Protection Package ➕</h4>
                     <div class="details text-slate-600 mt-2">
-                        <p><strong>Concept:</strong> A bundled policy for small e-commerce businesses covering common risks like transit damage/loss of goods, basic product liability, and protection against fraudulent returns/chargebacks.</p>
-                        <p><strong>Novelty:</strong> Integrated solution for the specific risks of online selling, beyond just transit.</p>
+                        <p><strong>Concept:</strong> A bundled policy for small e-commerce businesses covering common risks encountered in online selling.</p>
+                        <p><strong>Product Features/Coverages:</strong>
+                            <ul class="list-disc list-inside ml-4">
+                                <li><strong>Transit Damage/Loss:</strong> Covers physical damage or loss of goods during shipping from seller to customer (up to declared value per consignment, e.g., ₹5,000 per consignment).</li>
+                                <li><strong>Basic Product Liability:</strong> Protection against claims arising from bodily injury or property damage caused by products sold (up to a fixed aggregate limit, e.g., ₹2,00,000).</li>
+                                <li><strong>Fraudulent Returns/Chargebacks:</strong> Fixed sum payout for verified losses due to fraudulent customer returns or chargebacks (up to a monthly limit, e.g., ₹10,000).</li>
+                            </ul>
+                        </p>
+                        <p><strong>Claim/Benefit Trigger:</strong>
+                            <ul class="list-disc list-inside ml-4">
+                                <li><strong>Transit:</strong> Verified damage/loss report from shipping carrier integrated via API.</li>
+                                <li><strong>Product Liability:</strong> Receipt of legal notice or court order for bodily injury/property damage caused by product.</li>
+                                <li><strong>Fraudulent Returns:</strong> Bank/payment gateway confirmation of chargeback due to fraud, with digital evidence of product return discrepancy.</li>
+                            </ul>
+                        </p>
                         <p><strong>Industry/Sector Benefit:</strong> E-commerce sellers (on platforms like Amazon, Flipkart, Meesho), D2C brands, small online retailers, artisan shops selling online.</p>
                         <p><strong>Digital Sellability/Low Intervention:</strong> Embedded within e-commerce platforms (e.g., Shopify, Amazon Seller Central integrations) or direct via API. Automated claims for verified transit losses.</p>
                         <p><strong>Product Structure (Underwriting Tech Note & Process):</strong>
@@ -547,10 +597,24 @@
                 <div class="bg-white p-4 rounded-lg shadow clickable-card" onclick="toggleDetails(this)">
                     <h4 class="text-lg font-semibold text-sky-700">6. Shop-from-Home / Home-Based Business Package ➕</h4>
                     <div class="details text-slate-600 mt-2">
-                        <p><strong>Concept:</strong> A modular policy specifically for individuals running businesses from their homes, covering specific perils to business equipment/stock, basic public liability for visitors, and limited professional indemnity.</p>
-                        <p><strong>Novelty:</strong> Recognizes the rise of home-based entrepreneurship, distinct from personal home insurance.</p>
+                        <p><strong>Concept:</strong> A modular policy specifically for individuals running businesses from their homes, covering business-specific perils.</p>
+                        <p><strong>Product Features/Coverages:</strong>
+                            <ul class="list-disc list-inside ml-4">
+                                <li><strong>Business Equipment & Stock:</strong> Covers damage or loss to business-specific equipment (e.g., oven for home baker, sewing machine for tailor) and inventory/stock due to fire, theft, flood (up to a fixed sum, e.g., ₹1,00,000).</li>
+                                <li><strong>Basic Public Liability:</strong> Covers legal liability for accidental bodily injury or property damage to visitors at the home premises related to business activity (up to a fixed limit, e.g., ₹50,000 per incident).</li>
+                                <li><strong>Limited Professional Indemnity:</strong> For service-based home businesses (e.g., freelance designer), covers legal costs for claims of professional negligence (up to a fixed, low limit, e.g., ₹25,000).</li>
+                            </ul>
+                        </p>
+                        <p><strong>Claim/Benefit Trigger:</strong>
+                            <ul class="list-disc list-inside ml-4">
+                                <li><strong>Equipment/Stock:</strong> Police report for theft, fire brigade report for fire, or official disaster report for flood.</li>
+                                <li><strong>Public Liability:</strong> Verified incident report of injury to a visitor on business premises, leading to a third-party claim.</li>
+                                <li><strong>Professional Indemnity:</strong> Receipt of a formal claim or legal notice alleging professional negligence.</li>
+                            </ul>
+                        </p>
                         <p><strong>Industry/Sector Benefit:</strong> Home bakers, online tutors, freelance designers/developers, small craft businesses, consultants working from home, small catering businesses.</p>
-                        <p><strong>Digital Sellability/Low Intervention:</strong> Simple online questionnaire, pre-defined coverage tiers.</p>
+                        <p><strong>Digital Sellability/Low Intervention:</strong> Simple online questionnaire, pre-defined coverage tiers.
+                        </p>
                         <p><strong>Product Structure (Underwriting Tech Note & Process):</strong>
                             <ul class="list-disc list-inside ml-4">
                                 <li><strong>Data Sources:</strong> Self-declaration of business type, home area used for business, estimated value of business equipment/stock.</li>
@@ -568,8 +632,15 @@
                 <div class="bg-white p-4 rounded-lg shadow clickable-card" onclick="toggleDetails(this)">
                     <h4 class="text-lg font-semibold text-sky-700">7. "Pay-as-You-Go" Equipment Breakdown ➕</h4>
                     <div class="details text-slate-600 mt-2">
-                        <p><strong>Concept:</strong> Insurance for small machinery (e.g., restaurant equipment, small manufacturing tools) where the premium is calculated based on actual usage (e.g., hours of operation, number of cycles) tracked via simple IoT sensors or manual input.</p>
-                        <p><strong>Novelty:</strong> Usage-based model for equipment, making it affordable for intermittent use.</p>
+                        <p><strong>Concept:</strong> Insurance for small machinery where the premium is calculated based on actual usage, making it affordable for intermittent use.</p>
+                        <p><strong>Product Features/Coverages:</strong> Repair or replacement costs (up to declared value) for mechanical or electrical breakdown of specific, registered equipment; Coverage for sudden and unforeseen damage.</p>
+                        <p><strong>Claim/Benefit Trigger:</strong>
+                            <ul class="list-disc list-inside ml-4">
+                                <li>Verified mechanical or electrical breakdown of the insured equipment during its operational period.</li>
+                                <li>Usage data (from IoT sensor or manual input) confirms the equipment was "on" and being used at the time of breakdown.</li>
+                            </ul>
+                            Verification via technician's report detailing breakdown cause.
+                        </p>
                         <p><strong>Industry/Sector Benefit:</strong> Small restaurants (kitchen equipment), local workshops (machinery), small printing presses, laundromats, construction micro-contractors (small tools).</p>
                         <p><strong>Digital Sellability/Low Intervention:</strong> App-based tracking and premium calculation. Claims for verified breakdowns.</p>
                         <p><strong>Product Structure (Underwriting Tech Note & Process):</strong>
@@ -585,8 +656,19 @@
                 <div class="bg-white p-4 rounded-lg shadow clickable-card" onclick="toggleDetails(this)">
                     <h4 class="text-lg font-semibold text-sky-700">8. Gig Worker / Freelancer Liability Cover ➕</h4>
                     <div class="details text-slate-600 mt-2">
-                        <p><strong>Concept:</strong> Affordable, short-term professional liability and personal accident cover for individual gig workers and freelancers (e.g., delivery riders, independent consultants, designers). Can be purchased for specific projects or durations.</p>
-                        <p><strong>Novelty:</strong> Tailored for the gig economy, offering flexible and on-demand protection.</p>
+                        <p><strong>Concept:</strong> Affordable, short-term professional liability and personal accident cover for individual gig workers and freelancers, purchasable for specific projects or durations.</p>
+                        <p><strong>Product Features/Coverages:</strong>
+                            <ul class="list-disc list-inside ml-4">
+                                <li><strong>Professional Liability:</strong> Covers legal costs and damages (up to a fixed limit, e.g., ₹1,00,000) arising from claims of professional negligence, errors, or omissions during a specific project.</li>
+                                <li><strong>Personal Accident:</strong> Fixed sum payout for accidental death or permanent total/partial disability sustained while performing gig-related duties (e.g., ₹2,00,000).</li>
+                            </ul>
+                        </p>
+                        <p><strong>Claim/Benefit Trigger:</strong>
+                            <ul class="list-disc list-inside ml-4">
+                                <li><strong>Professional Liability:</strong> Receipt of a formal claim or legal notice from a client alleging negligence related to the insured project.</li>
+                                <li><strong>Personal Accident:</strong> Medical report confirming accidental death or disability directly resulting from an incident during the insured gig period.</li>
+                            </ul>
+                        </p>
                         <p><strong>Industry/Sector Benefit:</strong> Delivery riders, independent consultants, graphic designers, content writers, web developers, photographers, event organizers (small scale).</p>
                         <p><strong>Digital Sellability/Low Intervention:</strong> Available via gig platforms or a dedicated app, with instant policy issuance.</p>
                         <p><strong>Product Structure (Underwriting Tech Note & Process):</strong>
@@ -606,8 +688,19 @@
                 <div class="bg-white p-4 rounded-lg shadow clickable-card" onclick="toggleDetails(this)">
                     <h4 class="text-lg font-semibold text-sky-700">9. SME Employee Accident & Wellness Micro-Cover ➕</h4>
                     <div class="details text-slate-600 mt-2">
-                        <p><strong>Concept:</strong> A highly simplified group personal accident policy combined with basic digital wellness benefits (e.g., tele-consultations, health content) for employees of micro-enterprises.</p>
-                        <p><strong>Novelty:</strong> Focus on immediate accident protection and basic digital wellness, making it accessible and attractive for very small teams.</p>
+                        <p><strong>Concept:</strong> A highly simplified group personal accident policy combined with basic digital wellness benefits for employees of micro-enterprises.</p>
+                        <p><strong>Product Features/Coverages:</strong>
+                            <ul class="list-disc list-inside ml-4">
+                                <li><strong>Group Personal Accident:</strong> Fixed sum payout for accidental death or permanent total/partial disability of a covered employee (up to a low, fixed sum per employee, e.g., ₹1,00,000).</li>
+                                <li><strong>Basic Digital Wellness:</strong> Access to a fixed number of tele-consultations with general physicians per year (e.g., 3 per year), and a library of health and wellness content via a mobile app.</li>
+                            </ul>
+                        </p>
+                        <p><strong>Claim/Benefit Trigger:</strong>
+                            <ul class="list-disc list-inside ml-4">
+                                <li><strong>Personal Accident:</strong> Medical report confirming accidental death or disability of an enrolled employee.</li>
+                                <li><strong>Wellness:</strong> Access to digital platform for tele-consultations and content upon policy activation.</li>
+                            </ul>
+                        </p>
                         <p><strong>Industry/Sector Benefit:</strong> Any MSME with employees (small shops, restaurants, small factories, startups, local service businesses).</p>
                         <p><strong>Digital Sellability/Low Intervention:</strong> Employer manages via a simple app, employees access benefits via their own app. Automated claims for defined accidents.</p>
                         <p><strong>Product Structure (Underwriting Tech Note & Process):</strong>
@@ -623,8 +716,21 @@
                 <div class="bg-white p-4 rounded-lg shadow clickable-card" onclick="toggleDetails(this)">
                     <h4 class="text-lg font-semibold text-sky-700">10. "Business Continuity Lite" Package ➕</h4>
                     <div class="details text-slate-600 mt-2">
-                        <p><strong>Concept:</strong> A very basic, affordable package covering essential elements for business continuity: a small fixed sum for property damage, a small fixed sum for income loss due to specific perils, and access to a digital legal/advisory helpline.</p>
-                        <p><strong>Novelty:</strong> Focuses on the core concept of "keeping the business running" rather than comprehensive risk transfer, making it less intimidating.</p>
+                        <p><strong>Concept:</strong> A very basic, affordable package covering essential elements for business continuity during common disruptions.</p>
+                        <p><strong>Product Features/Coverages:</strong>
+                            <ul class="list-disc list-inside ml-4">
+                                <li><strong>Fixed Property Damage Sum:</strong> A small, fixed sum payout for minor property damage due to fire, flood, or natural disaster (e.g., ₹25,000).</li>
+                                <li><strong>Fixed Income Loss Sum:</strong> A small, fixed sum payout for income loss due to specific perils (e.g., fire, flood, major theft) that force temporary closure (e.g., ₹5,000 per week for up to 2 weeks).</li>
+                                <li><strong>Digital Legal/Advisory Helpline:</strong> Access to a digital helpline for basic legal or business advisory services related to covered perils.</li>
+                            </ul>
+                        </p>
+                        <p><strong>Claim/Benefit Trigger:</strong>
+                            <ul class="list-disc list-inside ml-4">
+                                <li><strong>Property Damage:</strong> Police report for theft, fire brigade report for fire, or official disaster report for flood/natural disaster, confirming damage to business premises/assets.</li>
+                                <li><strong>Income Loss:</strong> Official confirmation of business closure due to a covered peril (e.g., municipal order, police report).</li>
+                                <li><strong>Helpline:</strong> Immediate access upon policy purchase.</li>
+                            </ul>
+                        </p>
                         <p><strong>Industry/Sector Benefit:</strong> All MSMEs, especially those new to insurance or with limited budgets.</p>
                         <p><strong>Digital Sellability/Low Intervention:</strong> Simplified online underwriting, pre-defined fixed benefits.</p>
                         <p><strong>Product Structure (Underwriting Tech Note & Process):</strong>

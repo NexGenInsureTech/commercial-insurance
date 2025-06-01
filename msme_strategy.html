@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MSME Insurance Strategy India - Interactive Explorer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Application Structure Plan: 
+        Theme: "Navigating the MSME Insurance Landscape in India."
+        Structure: A multi-section SPA with a sticky top navigation bar.
+        1.  Home/Dashboard: Executive Summary highlights, key MSME statistics (contribution to GDP, employment, total number), and the core problem (low insurance penetration). Interaction: Dynamic display of key stats.
+        2.  MSME Profile: Detailed information on MSME classification (interactive table for old vs. new criteria), overview of their economic contribution, and a section on MSME clusters (interactive table of prominent clusters). Interaction: Toggle for classification table, potential filters for cluster table.
+        3.  The Insurance Gap: Focus on the current state of insurance penetration (prominent display of low rates), key reasons for underinsurance (interactive cards/list), and common business risks faced by MSMEs (categorized list). Interaction: Clickable elements for details on reasons.
+        4.  Tailored Insurance Solutions: Interactive section where users can select an MSME sector (Manufacturing, Services, Retail, Food Processing, Textile) to see specific risks and recommended insurance types. Also, factors influencing pricing. Interaction: Sector selection dynamically updates content.
+        5.  Strategic Outreach: Covering value proposition points, strategies to overcome reluctance, effective communication channels, and leveraging government initiatives (interactive table of schemes). Interaction: Accordions or clickable cards for strategies.
+        6.  Key Recommendations: Summarizing key recommendations from the report.
+        User Flow: Users navigate via the top menu or scroll. Interactive elements encourage exploration.
+        Why this structure?: This thematic structure breaks the report into digestible sections, flowing from general overview to specific solutions and strategies, making complex information accessible and supporting user understanding of the MSME insurance domain.
+    -->
+    <!-- Visualization & Content Choices:
+        - MSME Classification (Table 1): Interactive HTML Table (JS toggle for old/new comparison). Goal: Inform & Compare. Justification: Clear tabular data presentation.
+        - MSME Contributions (GDP, Exports, Employment): Dynamic Stat Cards (HTML/CSS). Goal: Inform (key metrics). Justification: Quick, impactful display.
+        - Prominent MSME Clusters (Table 2): Interactive HTML Table (JS filter by State/Sector if complex, otherwise static). Goal: Organize & Inform. Justification: Targeted data exploration.
+        - Low Insurance Penetration: Prominent Stat Display (HTML/CSS). Goal: Emphasize. Justification: Highlights core problem.
+        - Reasons for Underinsurance: Interactive Cards/Accordion (HTML/CSS/JS). Goal: Inform & Explain. Justification: Organizes multiple reasons, allows exploration.
+        - Common Business Risks: Categorized list with icons (HTML/CSS/Unicode). Goal: Inform. Justification: Clear presentation.
+        - Insurance Needs by Sector (Table 3): Interactive Sector Selector updating content cards (HTML/CSS/JS). Goal: Compare & Inform (sector-specific). Justification: Targeted information delivery.
+        - Factors Influencing Pricing: Informative Cards/List (HTML/CSS). Goal: Inform. Justification: Explains determinants.
+        - Government Schemes (Table 4): Interactive HTML Table. Goal: Organize & Inform. Justification: Clear presentation.
+        - Charts: MSME Contribution (e.g., 30% GDP) visualized as simple bar chart (Chart.js). Goal: Visualize. Justification: Visual comparison.
+        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        scroll-behavior: smooth;
+      }
+      .nav-link {
+        transition: color 0.3s ease, border-bottom-color 0.3s ease;
+      }
+      .nav-link.active {
+        color: #0d9488;
+        border-bottom-color: #0d9488;
+      }
+      .nav-link:hover {
+        color: #0d9488;
+      }
+      .stat-card {
+        background-color: #fffbeb;
+        border: 1px solid #fde68a;
+      }
+      .table th,
+      .table td {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid #f3f4f6;
+      }
+      .table th {
+        background-color: #fef3c7;
+      }
+      .tab-button.active {
+        background-color: #0d9488;
+        color: white;
+      }
+      .tab-button {
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+      .chart-container {
+        position: relative;
+        width: 100%;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        height: 300px;
+        max-height: 400px;
+      }
+      @media (min-width: 768px) {
+        .chart-container {
+          height: 350px;
+        }
+      }
+      .section-title {
+        font-size: 1.875rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid #0d9488;
+        padding-bottom: 0.5rem;
+      }
+      .card {
+        background-color: white;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        padding: 1.5rem;
+      }
+      .accordion-header {
+        cursor: pointer;
+      }
+      .accordion-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+      }
+      .accordion-item.open .accordion-content {
+        max-height: 1000px; /* Arbitrary large number */
+      }
+    </style>
+  </head>
+  <body class="bg-amber-50 text-neutral-800">
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+      <div
+        class="container mx-auto px-6 py-3 flex justify-between items-center"
+      >
+        <a href="#" class="text-xl font-semibold text-teal-700"
+          >MSME Insurance India</a
+        >
+        <div class="hidden md:flex space-x-4">
+          <a
+            href="#home"
+            class="nav-link px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent"
+            >Home</a
+          >
+          <a
+            href="#msme-profile"
+            class="nav-link px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent"
+            >MSME Profile</a
+          >
+          <a
+            href="#insurance-gap"
+            class="nav-link px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent"
+            >Insurance Gap</a
+          >
+          <a
+            href="#solutions"
+            class="nav-link px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent"
+            >Tailored Solutions</a
+          >
+          <a
+            href="#outreach"
+            class="nav-link px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent"
+            >Strategic Outreach</a
+          >
+          <a
+            href="#recommendations"
+            class="nav-link px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent"
+            >Recommendations</a
+          >
+        </div>
+        <div class="md:hidden">
+          <button
+            id="mobile-menu-button"
+            class="text-neutral-600 hover:text-teal-600 focus:outline-none focus:text-teal-600"
+          >
+            <svg
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16m-7 6h7"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div id="mobile-menu" class="md:hidden hidden bg-white shadow-lg">
+        <a
+          href="#home"
+          class="block nav-link px-4 py-2 text-sm hover:bg-amber-50"
+          >Home</a
+        >
+        <a
+          href="#msme-profile"
+          class="block nav-link px-4 py-2 text-sm hover:bg-amber-50"
+          >MSME Profile</a
+        >
+        <a
+          href="#insurance-gap"
+          class="block nav-link px-4 py-2 text-sm hover:bg-amber-50"
+          >Insurance Gap</a
+        >
+        <a
+          href="#solutions"
+          class="block nav-link px-4 py-2 text-sm hover:bg-amber-50"
+          >Tailored Solutions</a
+        >
+        <a
+          href="#outreach"
+          class="block nav-link px-4 py-2 text-sm hover:bg-amber-50"
+          >Strategic Outreach</a
+        >
+        <a
+          href="#recommendations"
+          class="block nav-link px-4 py-2 text-sm hover:bg-amber-50"
+          >Recommendations</a
+        >
+      </div>
+    </nav>
+
+    <div class="container mx-auto px-6 py-8">
+      <section id="home" class="mb-16">
+        <h1 class="text-3xl font-bold text-teal-700 mb-4">
+          Strategic Blueprint for MSME Commercial Insurance
+        </h1>
+        <p class="mb-6 text-lg text-neutral-700">
+          An interactive exploration of India's MSME sector and strategies for
+          enhancing commercial insurance penetration. This application aims to
+          distill key insights from the comprehensive report, offering a
+          user-friendly way to understand the challenges, opportunities, and
+          actionable steps for insurers.
+        </p>
+
+        <div class="grid md:grid-cols-3 gap-6 mb-8">
+          <div class="stat-card p-6 rounded-lg shadow-lg text-center">
+            <h3 class="text-4xl font-bold text-teal-600">~30%</h3>
+            <p class="text-neutral-600 mt-2">Contribution to India's GDP</p>
+          </div>
+          <div class="stat-card p-6 rounded-lg shadow-lg text-center">
+            <h3 class="text-4xl font-bold text-teal-600">~40%</h3>
+            <p class="text-neutral-600 mt-2">Contribution to India's Exports</p>
+          </div>
+          <div class="stat-card p-6 rounded-lg shadow-lg text-center">
+            <h3 class="text-4xl font-bold text-teal-600">110M+</h3>
+            <p class="text-neutral-600 mt-2">Jobs Provided</p>
+          </div>
+        </div>
+        <div class="grid md:grid-cols-2 gap-6 mb-8">
+          <div class="stat-card p-6 rounded-lg shadow-lg text-center">
+            <h3 class="text-4xl font-bold text-red-600">7.34 Cr</h3>
+            <p class="text-neutral-600 mt-2">
+              Total MSMEs in India (2023 Survey)
+            </p>
+          </div>
+          <div class="stat-card p-6 rounded-lg shadow-lg text-center">
+            <h3 class="text-4xl font-bold text-red-600">&lt;15%</h3>
+            <p class="text-neutral-600 mt-2">
+              MSMEs with Adequate Insurance (Critically Underinsured)
+            </p>
+          </div>
+        </div>
+        <div class="card">
+          <h2 class="text-xl font-semibold text-neutral-700 mb-2">
+            The Core Challenge: Bridging the Protection Gap
+          </h2>
+          <p class="text-neutral-600">
+            Despite their vital economic role, India's MSMEs are critically
+            underinsured. This report outlines a data-driven, cluster-based, and
+            consultative approach to develop tailored insurance products and
+            engagement strategies, fostering resilience and growth in this
+            sector.
+          </p>
+        </div>
+      </section>
+
+      <section id="msme-profile" class="mb-16">
+        <h2 class="section-title">Understanding India's MSME Landscape</h2>
+        <p class="mb-6 text-neutral-700">
+          A foundational understanding of the MSME sector, including its
+          classification, economic contributions, and geographical clusters, is
+          crucial for developing effective insurance strategies. This section
+          explores these key aspects.
+        </p>
+
+        <div class="card mb-8">
+          <h3 class="text-xl font-semibold text-neutral-700 mb-3">
+            MSME Classification Criteria (Effective April 1, 2025)
+          </h3>
+          <p class="text-sm text-neutral-600 mb-4">
+            MSMEs are categorized based on investment in plant &
+            machinery/equipment and annual turnover. The limits were revised
+            effective April 1, 2025.
+          </p>
+          <div class="overflow-x-auto">
+            <table class="min-w-full table">
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Old Investment Limit (₹)</th>
+                  <th>New Investment Limit (₹)</th>
+                  <th>Old Turnover Limit (₹)</th>
+                  <th>New Turnover Limit (₹)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="font-medium">Micro Enterprise</td>
+                  <td>&lt; 1 Crore</td>
+                  <td class="font-semibold text-teal-700">&lt; 2.5 Crore</td>
+                  <td>&lt; 5 Crore</td>
+                  <td class="font-semibold text-teal-700">&lt; 10 Crore</td>
+                </tr>
+                <tr>
+                  <td class="font-medium">Small Enterprise</td>
+                  <td>&lt; 10 Crore</td>
+                  <td class="font-semibold text-teal-700">&lt; 25 Crore</td>
+                  <td>&lt; 50 Crore</td>
+                  <td class="font-semibold text-teal-700">&lt; 100 Crore</td>
+                </tr>
+                <tr>
+                  <td class="font-medium">Medium Enterprise</td>
+                  <td>&lt; 50 Crore</td>
+                  <td class="font-semibold text-teal-700">&lt; 125 Crore</td>
+                  <td>&lt; 250 Crore</td>
+                  <td class="font-semibold text-teal-700">&lt; 500 Crore</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="mt-3 text-xs text-neutral-500">
+            *Source: Ministry of Micro, Small, and Medium Enterprises,
+            Government of India.
+          </p>
+        </div>
+
+        <div class="card mb-8">
+          <h3 class="text-xl font-semibold text-neutral-700 mb-3">
+            Data Sources & MSME Clusters
+          </h3>
+          <p class="text-neutral-600 mb-4">
+            The Udyam Registration portal is the primary source for MSME data,
+            enabling cluster identification. Key sectors with significant
+            clusters include automotive, textile, chemical, pharmaceutical, and
+            food processing.
+          </p>
+          <div class="overflow-x-auto">
+            <table class="min-w-full table">
+              <thead>
+                <tr>
+                  <th>State/Region</th>
+                  <th>Identified Clusters (Examples)</th>
+                  <th>Dominant MSME Sectors (Examples)</th>
+                </tr>
+              </thead>
+              <tbody id="msme-cluster-table-body">
+                <tr>
+                  <td>Haryana</td>
+                  <td>Gurgaon, Rewari</td>
+                  <td>Automotive, Chemical</td>
+                </tr>
+                <tr>
+                  <td>Maharashtra</td>
+                  <td>Pune</td>
+                  <td>Automotive, Manufacturing</td>
+                </tr>
+                <tr>
+                  <td>Gujarat</td>
+                  <td>Ankleshwar, Vapi</td>
+                  <td>Chemical, Pharmaceutical</td>
+                </tr>
+                <tr>
+                  <td>Tamil Nadu</td>
+                  <td>Tirupur, Coimbatore</td>
+                  <td>Textile, Engineering</td>
+                </tr>
+                <tr>
+                  <td>Uttar Pradesh</td>
+                  <td>Moradabad, Firozabad</td>
+                  <td>Handicrafts, Glassware</td>
+                </tr>
+                <tr>
+                  <td>Punjab</td>
+                  <td>Ludhiana</td>
+                  <td>Hosiery, Light Engineering</td>
+                </tr>
+                <tr>
+                  <td>Karnataka</td>
+                  <td>Bengaluru</td>
+                  <td>IT/ITeS, Biotechnology</td>
+                </tr>
+                <tr>
+                  <td>Andhra Pradesh</td>
+                  <td>Visakhapatnam</td>
+                  <td>Pharmaceuticals, Food Processing</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="mt-3 text-xs text-neutral-500">
+            *Illustrative examples. Source: NITI Aayog, CMIE Prowess, PLFS data.
+          </p>
+        </div>
+      </section>
+
+      <section id="insurance-gap" class="mb-16">
+        <h2 class="section-title">The Commercial Insurance Gap</h2>
+        <p class="mb-6 text-neutral-700">
+          Despite their economic importance, MSMEs in India are significantly
+          underinsured. This section delves into the low penetration rates, the
+          reasons behind this gap, and the common risks MSMEs face.
+        </p>
+
+        <div class="grid md:grid-cols-2 gap-8 mb-8">
+          <div class="card">
+            <h3 class="text-xl font-semibold text-neutral-700 mb-2">
+              Alarmingly Low Penetration
+            </h3>
+            <p class="text-5xl font-bold text-red-500 mb-3">&lt;15%</p>
+            <p class="text-neutral-600">
+              Of MSMEs have adequate insurance. Some estimates are as low as 3%.
+            </p>
+            <p class="text-neutral-600 mt-2">
+              This leaves millions vulnerable to financial shocks and highlights
+              a vast untapped market.
+            </p>
+          </div>
+          <div class="card">
+            <h3 class="text-xl font-semibold text-neutral-700 mb-3">
+              Common Business Risks
+            </h3>
+            <ul class="list-disc list-inside text-neutral-600 space-y-1">
+              <li>
+                <span class="font-medium">Property Damage:</span> From natural
+                disasters, fire, theft (45% reported).
+              </li>
+              <li>
+                <span class="font-medium">Business Interruption:</span> Halting
+                operations, revenue loss.
+              </li>
+              <li>
+                <span class="font-medium">Cybersecurity Risks:</span> Data
+                breaches, ransomware.
+              </li>
+              <li>
+                <span class="font-medium">Supply Chain Disruptions:</span>
+                Impacting production, delivery.
+              </li>
+              <li>
+                <span class="font-medium">Liability Claims:</span> Third-party
+                injury or property damage.
+              </li>
+              <li>
+                <span class="font-medium">Access to Finance:</span> Often linked
+                to insurance coverage.
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="text-xl font-semibold text-neutral-700 mb-4">
+            Key Reasons for Underinsurance
+          </h3>
+          <div id="reasons-accordion" class="space-y-3">
+            <div class="accordion-item border border-amber-200 rounded-md">
+              <div
+                class="accordion-header bg-amber-100 p-4 flex justify-between items-center"
+              >
+                <h4 class="font-medium text-neutral-700">
+                  Lack of Awareness & Understanding
+                </h4>
+                <span
+                  class="text-teal-600 transform transition-transform duration-300"
+                  >&#9660;</span
+                >
+              </div>
+              <div class="accordion-content p-4 bg-white">
+                <p class="text-neutral-600">
+                  Many MSME owners don't fully grasp insurance benefits or
+                  urgency. Policies seem complex with technical jargon.
+                </p>
+              </div>
+            </div>
+            <div class="accordion-item border border-amber-200 rounded-md">
+              <div
+                class="accordion-header bg-amber-100 p-4 flex justify-between items-center"
+              >
+                <h4 class="font-medium text-neutral-700">
+                  Perceived High Cost
+                </h4>
+                <span
+                  class="text-teal-600 transform transition-transform duration-300"
+                  >&#9660;</span
+                >
+              </div>
+              <div class="accordion-content p-4 bg-white">
+                <p class="text-neutral-600">
+                  MSMEs on thin margins (75%) prioritize short-term expenses,
+                  viewing insurance as an "avoidable cost."
+                </p>
+              </div>
+            </div>
+            <div class="accordion-item border border-amber-200 rounded-md">
+              <div
+                class="accordion-header bg-amber-100 p-4 flex justify-between items-center"
+              >
+                <h4 class="font-medium text-neutral-700">
+                  Product Complexity & Cumbersome Processes
+                </h4>
+                <span
+                  class="text-teal-600 transform transition-transform duration-300"
+                  >&#9660;</span
+                >
+              </div>
+              <div class="accordion-content p-4 bg-white">
+                <p class="text-neutral-600">
+                  Traditional products are often ill-suited for MSMEs. Concerns
+                  about documentation and lengthy claims processes deter
+                  adoption.
+                </p>
+              </div>
+            </div>
+            <div class="accordion-item border border-amber-200 rounded-md">
+              <div
+                class="accordion-header bg-amber-100 p-4 flex justify-between items-center"
+              >
+                <h4 class="font-medium text-neutral-700">
+                  Trust & Reliability Concerns
+                </h4>
+                <span
+                  class="text-teal-600 transform transition-transform duration-300"
+                  >&#9660;</span
+                >
+              </div>
+              <div class="accordion-content p-4 bg-white">
+                <p class="text-neutral-600">
+                  Skepticism about insurers settling claims fairly, sometimes
+                  fueled by past negative experiences.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="solutions" class="mb-16">
+        <h2 class="section-title">Tailoring Insurance Solutions for MSMEs</h2>
+        <p class="mb-6 text-neutral-700">
+          Effectively serving the MSME market requires understanding diverse
+          sectoral needs and offering customized, simplified products. This
+          section explores insurance requirements by sector and factors
+          influencing pricing.
+        </p>
+
+        <div class="card mb-8">
+          <h3 class="text-xl font-semibold text-neutral-700 mb-4">
+            Insurance Needs by MSME Sector
+          </h3>
+          <p class="text-neutral-600 mb-4">
+            Select a sector to view its specific risks and recommended insurance
+            coverage:
+          </p>
+          <div class="mb-6 flex flex-wrap gap-2" id="sector-filter-buttons">
+            <button
+              data-sector="manufacturing"
+              class="sector-button tab-button bg-amber-200 hover:bg-teal-500 hover:text-white text-neutral-700 font-medium py-2 px-4 rounded-md"
+            >
+              Manufacturing
+            </button>
+            <button
+              data-sector="services"
+              class="sector-button tab-button bg-amber-200 hover:bg-teal-500 hover:text-white text-neutral-700 font-medium py-2 px-4 rounded-md"
+            >
+              Services
+            </button>
+            <button
+              data-sector="retail"
+              class="sector-button tab-button bg-amber-200 hover:bg-teal-500 hover:text-white text-neutral-700 font-medium py-2 px-4 rounded-md"
+            >
+              Retail/Trading
+            </button>
+            <button
+              data-sector="food"
+              class="sector-button tab-button bg-amber-200 hover:bg-teal-500 hover:text-white text-neutral-700 font-medium py-2 px-4 rounded-md"
+            >
+              Food Processing
+            </button>
+            <button
+              data-sector="textile"
+              class="sector-button tab-button bg-amber-200 hover:bg-teal-500 hover:text-white text-neutral-700 font-medium py-2 px-4 rounded-md"
+            >
+              Textile
+            </button>
+          </div>
+          <div
+            id="sector-details-content"
+            class="p-4 border border-amber-300 rounded-md bg-amber-50 min-h-[200px]"
+          >
+            <p class="text-neutral-500">
+              Select a sector above to see details.
+            </p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="text-xl font-semibold text-neutral-700 mb-3">
+            Factors Influencing Commercial Insurance Pricing
+          </h3>
+          <ul class="list-disc list-inside text-neutral-600 space-y-2">
+            <li>
+              <strong>Type of Business/Industry Risk:</strong> Different
+              industries have varying inherent risk levels.
+            </li>
+            <li>
+              <strong>Size and Revenue of the Business:</strong> Larger
+              businesses with higher turnover generally face higher premiums.
+            </li>
+            <li>
+              <strong>Location:</strong> Geographical risks (natural disasters,
+              crime rates) impact premiums.
+            </li>
+            <li>
+              <strong>Claims History:</strong> A history of frequent or large
+              claims can increase premiums.
+            </li>
+            <li>
+              <strong>Coverage Limits and Deductibles:</strong> Higher limits
+              mean higher premiums; higher deductibles can lower them.
+            </li>
+          </ul>
+          <p class="mt-4 text-neutral-600">
+            Transparency in how these factors affect pricing is key to building
+            trust with MSMEs.
+          </p>
+        </div>
+      </section>
+
+      <section id="outreach" class="mb-16">
+        <h2 class="section-title">Strategic Outreach & Engagement</h2>
+        <p class="mb-6 text-neutral-700">
+          Reaching MSMEs effectively involves a consultative approach,
+          leveraging appropriate communication channels, and aligning with
+          government initiatives. This section outlines key strategies.
+        </p>
+
+        <div class="grid md:grid-cols-2 gap-8 mb-8">
+          <div class="card">
+            <h3 class="text-xl font-semibold text-neutral-700 mb-3">
+              Developing a Strong Value Proposition
+            </h3>
+            <ul class="list-disc list-inside text-neutral-600 space-y-1">
+              <li>Financial Security & Risk Mitigation</li>
+              <li>Business Continuity Assurance</li>
+              <li>Enhanced Credibility & Trust (Loan Eligibility)</li>
+              <li>Employee Protection & Morale</li>
+              <li>Peace of Mind for Owners</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3 class="text-xl font-semibold text-neutral-700 mb-3">
+              Overcoming Reluctance
+            </h3>
+            <ul class="list-disc list-inside text-neutral-600 space-y-1">
+              <li>Transparency & Education (Simplify Concepts)</li>
+              <li>Simplified Products & Processes</li>
+              <li>Affordability & Flexibility (Essential Coverage First)</li>
+              <li>Promote Group Schemes & Govt. Incentives</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card mb-8">
+          <h3 class="text-xl font-semibold text-neutral-700 mb-3">
+            Effective Communication Channels
+          </h3>
+          <div class="flex flex-wrap gap-4">
+            <span
+              class="bg-teal-100 text-teal-700 px-3 py-1 rounded-full text-sm"
+              >📱 Digital Platforms (WhatsApp, Social Media)</span
+            >
+            <span
+              class="bg-teal-100 text-teal-700 px-3 py-1 rounded-full text-sm"
+              >📧 Email Marketing</span
+            >
+            <span
+              class="bg-teal-100 text-teal-700 px-3 py-1 rounded-full text-sm"
+              >🔍 Local SEO</span
+            >
+            <span
+              class="bg-teal-100 text-teal-700 px-3 py-1 rounded-full text-sm"
+              >🤝 Industry Associations</span
+            >
+            <span
+              class="bg-teal-100 text-teal-700 px-3 py-1 rounded-full text-sm"
+              >🗣️ On-site Consultations & Workshops</span
+            >
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="text-xl font-semibold text-neutral-700 mb-3">
+            Leveraging Government Initiatives
+          </h3>
+          <p class="text-neutral-600 mb-4">
+            Aligning with Ministry of MSME schemes can amplify outreach. Key
+            initiatives include Udyam Registration, Credit Guarantee Scheme, and
+            state-level premium reimbursements.
+          </p>
+          <div class="overflow-x-auto">
+            <table class="min-w-full table">
+              <thead>
+                <tr>
+                  <th>Scheme Name</th>
+                  <th>Objective</th>
+                  <th>Insurance Implication</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Udyam Registration</td>
+                  <td>Formalization & MSME database</td>
+                  <td>Verified client list</td>
+                </tr>
+                <tr>
+                  <td>Credit Guarantee Scheme</td>
+                  <td>Collateral-free loans</td>
+                  <td>Insurance often needed for loans</td>
+                </tr>
+                <tr>
+                  <td>CBFTE</td>
+                  <td>Support new exporters</td>
+                  <td>Reimbursement for export insurance</td>
+                </tr>
+                <tr>
+                  <td>Kerala MSME Insurance Scheme</td>
+                  <td>Premium reimbursement</td>
+                  <td>Direct financial incentive</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="mt-3 text-xs text-neutral-500">
+            *Illustrative. Refer to official sources for full details.
+          </p>
+        </div>
+      </section>
+
+      <section id="recommendations" class="mb-16">
+        <h2 class="section-title">Key Recommendations</h2>
+        <p class="mb-6 text-neutral-700">
+          This section summarizes actionable recommendations for creating MSME
+          lists, product development, sales and marketing, partnerships, and
+          continuous monitoring to effectively penetrate the MSME insurance
+          market.
+        </p>
+        <div class="space-y-6">
+          <div class="card">
+            <h3 class="text-lg font-semibold text-teal-700">
+              1. Data & Segmentation:
+            </h3>
+            <ul class="list-disc list-inside text-neutral-600 mt-2 space-y-1">
+              <li>Leverage Udyam Registration Portal API for MSME lists.</li>
+              <li>Enhance data with NIC codes for finer segmentation.</li>
+              <li>
+                Map MSME clusters geographically, prioritizing key sectors.
+              </li>
+              <li>
+                Segment by new MSME classification criteria (eff. April 1,
+                2025).
+              </li>
+              <li>Develop a dynamic, updatable MSME database.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3 class="text-lg font-semibold text-teal-700">
+              2. Product Development & Customization:
+            </h3>
+            <ul class="list-disc list-inside text-neutral-600 mt-2 space-y-1">
+              <li>
+                Design modular, scalable products (essential coverage first).
+              </li>
+              <li>
+                Tailor sector-specific solutions (e.g., product liability for
+                food, cyber for services).
+              </li>
+              <li>Drastically simplify policy language and processes.</li>
+              <li>Emphasize risk-based pricing transparency.</li>
+              <li>Integrate coverage for emerging risks like cybersecurity.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3 class="text-lg font-semibold text-teal-700">
+              3. Sales, Marketing & Consultative Service:
+            </h3>
+            <ul class="list-disc list-inside text-neutral-600 mt-2 space-y-1">
+              <li>
+                Adopt a consultative sales model (risk advisors, not just
+                sellers).
+              </li>
+              <li>
+                Launch targeted education and awareness campaigns in clusters.
+              </li>
+              <li>
+                Utilize digital channels (WhatsApp, social media, local SEO).
+              </li>
+              <li>
+                Focus on trust-building via fair and speedy claim settlements.
+              </li>
+              <li>Explore group schemes and promote government incentives.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3 class="text-lg font-semibold text-teal-700">
+              4. Partnerships & Government Support:
+            </h3>
+            <ul class="list-disc list-inside text-neutral-600 mt-2 space-y-1">
+              <li>Collaborate with MSME associations and trade bodies.</li>
+              <li>Engage with financial institutions (banks, NBFCs).</li>
+              <li>
+                Align with government formalization efforts (Udyam
+                Registration).
+              </li>
+              <li>
+                Participate in or develop products aligning with government
+                schemes.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <footer class="bg-neutral-800 text-amber-50 py-8 text-center">
+      <p>
+        &copy; <span id="currentYear"></span> MSME Insurance Strategy Explorer.
+        For informational purposes only.
+      </p>
+      <p class="text-xs mt-1">
+        Based on "Strategic Blueprint for Commercial Insurance Penetration in
+        India's MSME Sector".
+      </p>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById("mobile-menu-button");
+        const mobileMenu = document.getElementById("mobile-menu");
+        if (mobileMenuButton && mobileMenu) {
+          mobileMenuButton.addEventListener("click", () => {
+            mobileMenu.classList.toggle("hidden");
+          });
+        }
+
+        // Smooth scrolling for nav links & active state
+        const navLinks = document.querySelectorAll(".nav-link");
+        navLinks.forEach((link) => {
+          link.addEventListener("click", function (e) {
+            if (this.hash !== "") {
+              // e.preventDefault(); // Only prevent if not mobile menu link which needs to close
+              const hash = this.hash;
+              const targetElement = document.querySelector(hash);
+              if (targetElement) {
+                // For mobile menu, close it after click
+                if (mobileMenu && !mobileMenu.classList.contains("hidden")) {
+                  mobileMenu.classList.add("hidden");
+                }
+                // Smooth scroll if supported, otherwise jump
+                if ("scrollBehavior" in document.documentElement.style) {
+                  // No need for explicit scroll if default browser behavior is used for fragment links
+                } else {
+                  // Fallback for browsers that don't support smooth scroll on fragment links
+                  // window.scrollTo(0, targetElement.offsetTop - 60); // Adjust offset for sticky nav
+                }
+              }
+            }
+            // Active link styling handled by scroll listener
+          });
+        });
+
+        // Active nav link on scroll
+        const sections = document.querySelectorAll("section");
+        window.addEventListener("scroll", () => {
+          let current = "";
+          sections.forEach((section) => {
+            const sectionTop = section.offsetTop;
+            if (pageYOffset >= sectionTop - 70) {
+              // 70 for nav height + شويه buffer
+              current = section.getAttribute("id");
+            }
+          });
+
+          navLinks.forEach((link) => {
+            link.classList.remove("active");
+            if (link.getAttribute("href") === `#${current}`) {
+              link.classList.add("active");
+            }
+          });
+          // Ensure first link is active if at top or no section matched
+          if (!current && pageYOffset < sections[0].offsetTop - 70) {
+            const firstLink = document.querySelector('.nav-link[href="#home"]');
+            if (firstLink) firstLink.classList.add("active");
+          }
+        });
+
+        // Accordion functionality
+        const accordionItems = document.querySelectorAll(".accordion-item");
+        accordionItems.forEach((item) => {
+          const header = item.querySelector(".accordion-header");
+          const icon = header.querySelector("span");
+          header.addEventListener("click", () => {
+            const isOpen = item.classList.contains("open");
+            accordionItems.forEach((i) => {
+              i.classList.remove("open");
+              i.querySelector(".accordion-header span").style.transform =
+                "rotate(0deg)";
+            });
+            if (!isOpen) {
+              item.classList.add("open");
+              icon.style.transform = "rotate(180deg)";
+            } else {
+              icon.style.transform = "rotate(0deg)";
+            }
+          });
+        });
+
+        // Sector-specific insurance details
+        const sectorButtons = document.querySelectorAll(".sector-button");
+        const sectorDetailsContent = document.getElementById(
+          "sector-details-content"
+        );
+
+        const sectorData = {
+          manufacturing: {
+            title: "Manufacturing MSMEs",
+            risks:
+              "Property damage (buildings, machinery, inventory), business interruption, equipment failure, product defects.",
+            needs:
+              "Property Insurance, Business Interruption, Machinery Breakdown (MBD)/Electronic Equipment Insurance (EEI), Commercial General Liability (CGL), Product Liability.",
+            rationale:
+              "Protects significant capital investment in physical assets and addresses liabilities from production processes and products.",
+          },
+          services: {
+            title: "Services MSMEs",
+            risks:
+              "Public liability (third-party injury/damage), professional liability (errors/omissions), cyber risks, employee injuries.",
+            needs:
+              "Public Liability Insurance, Professional Indemnity (Errors & Omissions), Cyber Insurance, Employee Compensation Insurance.",
+            rationale:
+              "Addresses intangible risks, legal claims related to service delivery, data handling, and digital vulnerabilities.",
+          },
+          retail: {
+            title: "Retail & Trading MSMEs",
+            risks:
+              "Theft, fire, natural calamities affecting inventory/premises, business interruption, public liability.",
+            needs:
+              "Shop Owners Insurance (package policy), Fire & Burglary Insurance, Money Insurance, Business Interruption.",
+            rationale:
+              "Safeguards inventory, cash transactions, physical premises, and covers liability from customer foot traffic.",
+          },
+          food: {
+            title: "Food Processing MSMEs",
+            risks:
+              "Product contamination, spoilage, product recalls, stringent regulatory compliance (FSSAI), third-party liability from consumption.",
+            needs:
+              "Product Liability Insurance (critical), General Liability Insurance, Business Interruption Insurance.",
+            rationale:
+              "Mitigates highly specialized and potentially catastrophic risks related to food safety, product integrity, and consumer health.",
+          },
+          textile: {
+            title: "Textile MSMEs",
+            risks:
+              "Fire hazards, machinery breakdown, loss of profit from operational disruptions, credit risk (exports), marine risk (goods in transit).",
+            needs:
+              "Fire Insurance, Loss of Profit Insurance, Boiler and Pressure Plant Insurance, EEI/MBD, Credit Insurance, Marine Insurance, Fidelity Guarantee, Public Liability.",
+            rationale:
+              "Covers capital-intensive operations, complex manufacturing processes, supply chain vulnerabilities, and export-related financial risks.",
+          },
+        };
+
+        sectorButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            const sector = button.dataset.sector;
+            const data = sectorData[sector];
+
+            sectorButtons.forEach((btn) =>
+              btn.classList.remove("active", "bg-teal-600", "text-white")
+            );
+            button.classList.add("active", "bg-teal-600", "text-white");
+            button.classList.remove("bg-amber-200", "text-neutral-700");
+
+            if (data && sectorDetailsContent) {
+              sectorDetailsContent.innerHTML = `
+                        <h4 class="text-lg font-semibold text-teal-700 mb-2">${data.title}</h4>
+                        <p class="mb-2"><strong class="text-neutral-700">Common Risks:</strong> ${data.risks}</p>
+                        <p class="mb-2"><strong class="text-neutral-700">Key Insurance Needs:</strong> ${data.needs}</p>
+                        <p><strong class="text-neutral-700">Rationale:</strong> ${data.rationale}</p>
+                    `;
+            }
+          });
+        });
+        // Trigger click on the first sector button by default
+        if (sectorButtons.length > 0) {
+          sectorButtons[0].click();
+        }
+
+        // Set current year in footer
+        const currentYearSpan = document.getElementById("currentYear");
+        if (currentYearSpan) {
+          currentYearSpan.textContent = new Date().getFullYear();
+        }
+      });
+    </script>
+  </body>
+</html>

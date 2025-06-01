@@ -1,0 +1,1854 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Project Ascend: SME Channel Growth Plan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Application Structure Plan: The SPA is designed as a "Strategic Growth Command Center" for the Channel Head. It moves from a high-level situational overview to a granular action plan, promoting understanding before action. The structure is thematic, not linear like the report, to improve usability.
+    1.  **Hero/Dashboard:** Immediately presents the core challenge (Current vs. Target GWP) for context.
+    2.  **Situation Analysis:** Explores the "Why now?" by visualizing the market opportunity and challenges.
+    3.  **The Diagnosis:** Interactively dissects the internal roadblocks (RFQ Funnel, Agent Recruitment), allowing the user to explore the "Why we are stuck."
+    4.  **Strategic Pillars:** Organizes the complex solutions into three clear, interactive tabs (Brokers, Agents, Team/Tech), making the "How we will win" digestible. This section now contains elaborated content.
+    5.  **The Roadmap:** Provides a visual, time-based plan for execution, answering "When will we do this?".
+    6.  **KPI Tracker:** Concludes with a mock dashboard of key metrics, now with input capability.
+    7.  **Team Empowerment Daily Log:** A new section for tracking daily activities related to team and technology goals.
+    This user flow—from understanding the big picture to exploring specific actions, metrics, and daily logs—is designed to be more intuitive and empowering for a leader planning a major business transformation. -->
+    <!-- Visualization & Content Choices:
+    - **Goal: Inform (Current Status):** Hero section uses large text and simple cards for Current/Target GWP. Goal -> Inform. Viz -> Key Metric Cards (HTML/CSS). Interaction -> None. Justification -> High impact, immediate context.
+    - **Goal: Compare (Market Growth):** Situation Analysis uses a Line Chart for market projections. Goal -> Show Change. Viz -> Chart.js Line Chart. Interaction -> Hover tooltips. Justification -> Clearly shows trends over time.
+    - **Goal: Organize (Market Segments):** Situation Analysis uses a Donut Chart for SME size and a Bar Chart for industries. Goal -> Show Proportions. Viz -> Chart.js Donut/Bar Charts. Interaction -> Hover tooltips. Justification -> Best for comparing parts of a whole.
+    - **Goal: Diagnose (RFQ Funnel):** The Diagnosis uses a custom HTML/CSS funnel. Goal -> Show Process/Bottleneck. Viz -> Custom Diagram (HTML/CSS). Interaction -> Click to reveal details. Justification -> Visually more impactful for a process flow than a standard chart.
+    - **Goal: Organize (Strategies):** Strategic Pillars section uses a tabbed interface with detailed, elaborated content for each pillar. Goal -> Organize large amounts of related content. Viz -> Tabs (HTML/CSS/JS) with structured text. Interaction -> Click to switch content. Justification -> Prevents overwhelming the user with information, allows focused exploration of detailed strategies.
+    - **Goal: Change over Time (Roadmap):** The Roadmap section uses a custom horizontal timeline. Goal -> Show Phased Plan. Viz -> Custom Diagram (HTML/CSS/JS). Interaction -> Click to expand phases. Justification -> Intuitively represents a chronological plan.
+    - **Goal: Inform/Track (KPIs):** The KPI Tracker uses a grid of cards with a gauge-like element and input fields for dynamic updates. Goal -> Inform/Monitor/Input. Viz -> Cards, Custom Gauge (HTML/CSS/JS), Input Fields. Interaction -> User input, button click to update. Justification -> Allows for dynamic tracking and scenario visualization.
+    - **Goal: Log Activities (Team Empowerment):** New section uses textareas and a log display area. Goal -> Record daily progress. Viz -> Text Inputs, Dynamic Log Display (HTML/CSS/JS). Interaction -> User input, button click to log. Justification -> Provides a simple mechanism for daily activity tracking. -->
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .chart-container {
+        position: relative;
+        width: 100%;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        height: 300px;
+        max-height: 400px;
+      }
+      @media (min-width: 768px) {
+        .chart-container {
+          height: 350px;
+        }
+      }
+      .tab-active {
+        border-color: #2563eb;
+        color: #2563eb;
+        background-color: #eff6ff;
+      }
+      .tab-inactive {
+        border-color: transparent;
+        color: #4b5563;
+      }
+      .kpi-gauge-wrap {
+        position: relative;
+        width: 150px;
+        height: 75px;
+        overflow: hidden;
+      }
+      .kpi-gauge-fill {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: conic-gradient(#2563eb 0%, #dbeafe 0%);
+        border-radius: 150px 150px 0 0;
+        transition: background 1.5s ease-in-out;
+      }
+      .kpi-gauge-cover {
+        position: absolute;
+        top: 12.5%;
+        left: 12.5%;
+        width: 75%;
+        height: 150%;
+        background: #f9fafb;
+        border-radius: 150px 150px 0 0;
+      }
+      .kpi-gauge-text {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+      }
+      .phase-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
+      }
+      .phase.active .phase-content {
+        max-height: 500px;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+      }
+      .input-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+        border-radius: 0.25rem;
+        border: 1px solid #cbd5e1;
+      }
+      .activity-log-entry {
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
+        padding: 0.75rem;
+        margin-top: 0.75rem;
+        border-radius: 0.375rem;
+      }
+      .strategy-point {
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        background-color: #ffffff;
+        border-radius: 0.5rem;
+        border: 1px solid #e5e7eb;
+      }
+      .strategy-point h4 {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 0.5rem;
+      }
+      .strategy-point p {
+        font-size: 0.875rem;
+        line-height: 1.5;
+        color: #4b5563;
+        margin-bottom: 0.25rem;
+      }
+      .strategy-point p strong {
+        color: #111827;
+      }
+      .strategy-point ul {
+        list-style-type: disc;
+        margin-left: 1.25rem;
+        font-size: 0.875rem;
+        color: #4b5563;
+      }
+    </style>
+  </head>
+  <body class="bg-slate-50 text-slate-700">
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+      <nav class="container mx-auto px-4 lg:px-6">
+        <div class="flex items-center justify-between h-16">
+          <div class="flex-shrink-0">
+            <h1 class="text-xl font-bold text-slate-800">Project Ascend 🚀</h1>
+          </div>
+          <div class="hidden md:flex md:items-center md:space-x-4 lg:space-x-6">
+            <a
+              href="#situation"
+              class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors"
+              >Situation Analysis</a
+            >
+            <a
+              href="#diagnosis"
+              class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors"
+              >The Diagnosis</a
+            >
+            <a
+              href="#strategy"
+              class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors"
+              >Strategic Pillars</a
+            >
+            <a
+              href="#roadmap"
+              class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors"
+              >The Roadmap</a
+            >
+            <a
+              href="#kpi"
+              class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors"
+              >KPI Tracker</a
+            >
+            <a
+              href="#activity-log"
+              class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors"
+              >Daily Log</a
+            >
+          </div>
+          <div class="md:hidden">
+            <button
+              id="mobile-menu-button"
+              class="p-2 rounded-md text-slate-500 hover:text-slate-800 hover:bg-slate-100"
+            >
+              <svg
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden py-2">
+          <a
+            href="#situation"
+            class="block py-2 px-4 text-sm text-slate-600 hover:bg-slate-100"
+            >Situation Analysis</a
+          >
+          <a
+            href="#diagnosis"
+            class="block py-2 px-4 text-sm text-slate-600 hover:bg-slate-100"
+            >The Diagnosis</a
+          >
+          <a
+            href="#strategy"
+            class="block py-2 px-4 text-sm text-slate-600 hover:bg-slate-100"
+            >Strategic Pillars</a
+          >
+          <a
+            href="#roadmap"
+            class="block py-2 px-4 text-sm text-slate-600 hover:bg-slate-100"
+            >The Roadmap</a
+          >
+          <a
+            href="#kpi"
+            class="block py-2 px-4 text-sm text-slate-600 hover:bg-slate-100"
+            >KPI Tracker</a
+          >
+          <a
+            href="#activity-log"
+            class="block py-2 px-4 text-sm text-slate-600 hover:bg-slate-100"
+            >Daily Log</a
+          >
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="bg-white pt-12 pb-16">
+        <div class="container mx-auto px-4 lg:px-6 text-center">
+          <h2 class="text-3xl md:text-4xl font-bold text-slate-800">
+            Your Roadmap to ₹5 Crore Monthly
+          </h2>
+          <p class="mt-4 max-w-2xl mx-auto text-lg text-slate-600">
+            An interactive strategic plan to navigate challenges, leverage
+            opportunities, and drive exponential growth for the SME Commercial
+            Lines channel.
+          </p>
+          <div
+            class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto"
+          >
+            <div class="bg-slate-50 rounded-xl p-6 border border-slate-200">
+              <p class="text-sm font-medium text-slate-500">Current Business</p>
+              <p class="text-3xl font-bold text-slate-800 mt-2">&lt; ₹1.5 Cr</p>
+              <p class="text-xs text-slate-400 mt-1">Stagnant Growth</p>
+            </div>
+            <div
+              class="bg-blue-50 rounded-xl p-6 border border-blue-200 ring-2 ring-blue-500/50"
+            >
+              <p class="text-sm font-medium text-blue-600">Monthly Target</p>
+              <p class="text-3xl font-bold text-blue-700 mt-2">₹5 Cr</p>
+              <p class="text-xs text-blue-500 mt-1">Ambitious but Achievable</p>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-6 border border-amber-200">
+              <p class="text-sm font-medium text-amber-600">Growth Gap</p>
+              <p class="text-3xl font-bold text-amber-700 mt-2">&gt; 3x</p>
+              <p class="text-xs text-amber-500 mt-1">Requires Transformation</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="situation" class="py-16 lg:py-24 bg-slate-50">
+        <div class="container mx-auto px-4 lg:px-6">
+          <div class="text-center max-w-3xl mx-auto">
+            <h2 class="text-3xl font-bold text-slate-800">
+              Situation Analysis: The Market Landscape
+            </h2>
+            <p class="mt-4 text-lg text-slate-600">
+              This section provides the critical market context. Despite our
+              internal challenges, the Indian insurance market is poised for
+              significant expansion. Understanding these external drivers and
+              vast untapped segments is key to building the confidence and
+              strategy required to pursue our ₹5 Crore target.
+            </p>
+          </div>
+
+          <div
+            class="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center"
+          >
+            <div
+              class="bg-white p-6 rounded-xl shadow-md border border-slate-200"
+            >
+              <h3 class="text-lg font-semibold text-slate-800 text-center">
+                Indian Non-Life Insurance Growth (Real Terms)
+              </h3>
+              <div class="chart-container mt-4">
+                <canvas id="marketGrowthChart"></canvas>
+              </div>
+            </div>
+            <div
+              class="bg-white p-6 rounded-xl shadow-md border border-slate-200"
+            >
+              <h3 class="text-lg font-semibold text-slate-800 text-center">
+                SME Market: Untapped Potential by Size
+              </h3>
+              <div class="chart-container mt-4">
+                <canvas id="smeSizeChart"></canvas>
+              </div>
+            </div>
+            <div
+              class="bg-white p-6 rounded-xl shadow-md border border-slate-200 lg:col-span-2"
+            >
+              <h3 class="text-lg font-semibold text-slate-800 text-center">
+                Top SME Industry Verticals by Market Share
+              </h3>
+              <div class="chart-container mt-4 !h-64 md:!h-80">
+                <canvas id="industryChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="diagnosis" class="py-16 lg:py-24 bg-white">
+        <div class="container mx-auto px-4 lg:px-6">
+          <div class="text-center max-w-3xl mx-auto">
+            <h2 class="text-3xl font-bold text-slate-800">
+              The Diagnosis: Why Are We Stuck?
+            </h2>
+            <p class="mt-4 text-lg text-slate-600">
+              Before we can accelerate, we must understand the brakes. This
+              section interactively dissects our two primary internal
+              challenges: converting high RFQ volume into actual business, and a
+              stalled agent recruitment engine. Identifying the specific points
+              of failure is the first step toward building a targeted solution.
+            </p>
+          </div>
+          <div class="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+            <div class="bg-slate-50 rounded-xl p-6 border border-slate-200">
+              <h3 class="text-xl font-semibold text-center text-slate-800 mb-6">
+                The RFQ Conversion Funnel Problem
+              </h3>
+              <div id="funnel" class="space-y-2">
+                <div
+                  class="bg-green-100 text-green-800 p-4 rounded-lg text-center font-medium"
+                >
+                  High Volume of RFQs Received
+                </div>
+                <div class="flex justify-center">
+                  <div class="h-6 w-1 bg-slate-300"></div>
+                </div>
+                <div
+                  class="bg-red-100 text-red-800 p-4 rounded-lg ring-2 ring-red-500 cursor-pointer"
+                  onclick="toggleDetails('funnel-details')"
+                >
+                  <div class="flex items-center justify-center font-medium">
+                    <svg
+                      class="w-5 h-5 mr-2"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      ></path>
+                    </svg>
+                    Major Bottleneck: Low Conversion
+                    <span class="text-xs ml-2">(Click to see why)</span>
+                  </div>
+                </div>
+                <div
+                  id="funnel-details"
+                  class="hidden bg-white p-4 rounded-lg border border-red-200 mt-2"
+                >
+                  <ul class="space-y-3 text-sm text-slate-600">
+                    <li class="flex items-start">
+                      <span class="font-bold text-red-600 mr-2">1.</span>
+                      <span
+                        ><strong class="text-slate-700"
+                          >Weak Value Proposition:</strong
+                        >
+                        Focus on price, not on solving SME-specific
+                        problems.</span
+                      >
+                    </li>
+                    <li class="flex items-start">
+                      <span class="font-bold text-red-600 mr-2">2.</span>
+                      <span
+                        ><strong class="text-slate-700"
+                          >Slow Turnaround Time (TAT):</strong
+                        >
+                        Cumbersome internal processes lead to delays, losing SME
+                        interest.</span
+                      >
+                    </li>
+                    <li class="flex items-start">
+                      <span class="font-bold text-red-600 mr-2">3.</span>
+                      <span
+                        ><strong class="text-slate-700"
+                          >Product Complexity:</strong
+                        >
+                        One-size-fits-all products don't meet diverse SME
+                        needs.</span
+                      >
+                    </li>
+                    <li class="flex items-start">
+                      <span class="font-bold text-red-600 mr-2">4.</span>
+                      <span
+                        ><strong class="text-slate-700"
+                          >Poor Negotiation Skills:</strong
+                        >
+                        Brokers struggle to handle price objections and close
+                        deals effectively.</span
+                      >
+                    </li>
+                    <li class="flex items-start bg-amber-50 p-2 rounded-md">
+                      <span class="font-bold text-amber-600 mr-2">!</span>
+                      <span
+                        ><strong class="text-slate-700"
+                          >The EB Conundrum:</strong
+                        >
+                        Particularly low conversion on Employer Benefits quotes
+                        due to perceived high cost and lack of
+                        customization.</span
+                      >
+                    </li>
+                  </ul>
+                </div>
+                <div class="flex justify-center">
+                  <div class="h-6 w-1 bg-slate-300"></div>
+                </div>
+                <div
+                  class="bg-slate-200 text-slate-600 p-4 rounded-lg text-center font-medium"
+                >
+                  Low Volume of Policies Bound
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-slate-50 rounded-xl p-6 border border-slate-200">
+              <h3 class="text-xl font-semibold text-center text-slate-800 mb-6">
+                The Agent Recruitment Engine Failure
+              </h3>
+              <div class="space-y-6">
+                <div class="flex items-center">
+                  <div
+                    class="flex-shrink-0 bg-blue-100 text-blue-600 rounded-full h-12 w-12 flex items-center justify-center font-bold text-xl"
+                  >
+                    1
+                  </div>
+                  <div class="ml-4">
+                    <h4 class="font-semibold text-slate-800">
+                      Recruitment Strategy Mismatch
+                    </h4>
+                    <p class="text-sm text-slate-600">
+                      Generic recruitment drives fail to attract individuals
+                      with the necessary commercial or B2B acumen.
+                    </p>
+                  </div>
+                </div>
+                <div class="flex items-center">
+                  <div
+                    class="flex-shrink-0 bg-blue-100 text-blue-600 rounded-full h-12 w-12 flex items-center justify-center font-bold text-xl"
+                  >
+                    2
+                  </div>
+                  <div class="ml-4">
+                    <h4 class="font-semibold text-slate-800">
+                      Perceived Product Complexity
+                    </h4>
+                    <p class="text-sm text-slate-600">
+                      Potential agents are intimidated by commercial products,
+                      opting for simpler retail lines.
+                    </p>
+                  </div>
+                </div>
+                <div class="flex items-center">
+                  <div
+                    class="flex-shrink-0 bg-blue-100 text-blue-600 rounded-full h-12 w-12 flex items-center justify-center font-bold text-xl"
+                  >
+                    3
+                  </div>
+                  <div class="ml-4">
+                    <h4 class="font-semibold text-slate-800">
+                      Weak Value Proposition for Agents
+                    </h4>
+                    <p class="text-sm text-slate-600">
+                      Insufficient training, support, and incentives to justify
+                      the higher effort required for commercial sales.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="strategy" class="py-16 lg:py-24 bg-slate-50">
+        <div class="container mx-auto px-4 lg:px-6">
+          <div class="text-center max-w-3xl mx-auto">
+            <h2 class="text-3xl font-bold text-slate-800">
+              Strategic Pillars: How We Will Win
+            </h2>
+            <p class="mt-4 text-lg text-slate-600">
+              Our transformation is built on three core pillars. This section
+              provides an interactive breakdown of the specific action plans for
+              mastering our broker channel, rebuilding our agent channel from
+              the ground up, and empowering our internal team with the right
+              tools and culture to drive success.
+            </p>
+          </div>
+          <div class="mt-12 max-w-5xl mx-auto">
+            <div class="border-b border-slate-200">
+              <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                <button
+                  class="tab-btn tab-active whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"
+                  data-tab="broker"
+                >
+                  Broker Channel Mastery
+                </button>
+                <button
+                  class="tab-btn tab-inactive whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"
+                  data-tab="agent"
+                >
+                  Agent Channel Rebirth
+                </button>
+                <button
+                  class="tab-btn tab-inactive whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"
+                  data-tab="team"
+                >
+                  Team & Tech Empowerment
+                </button>
+              </nav>
+            </div>
+            <div class="mt-8">
+              <div id="tab-content-broker" class="tab-content">
+                <h3 class="text-2xl font-semibold text-slate-800 mb-2">
+                  Pillar 1: Broker Channel Mastery – Forging High-Performance
+                  Partnerships
+                </h3>
+                <p class="text-slate-600 mb-6">
+                  The objective here is to transform the broker channel from a
+                  source of high RFQ volume with low conversion into a
+                  consistent, high-performing engine for profitable growth. This
+                  requires a multi-faceted approach.
+                </p>
+
+                <h4 class="text-xl font-semibold text-slate-700 mt-6 mb-3">
+                  A. Turbocharging RFQ Conversion Rates
+                </h4>
+                <div class="strategy-point">
+                  <h5 class="text-lg font-semibold text-slate-700 mb-2">
+                    1. Crafting Compelling, SME-Centric Value Propositions
+                  </h5>
+                  <p>
+                    <strong class="text-slate-800">Specificity:</strong> Move
+                    beyond generic product pitches. Develop and equip brokers
+                    with industry-specific value proposition templates (e.g.,
+                    for manufacturing, retail, hospitality SMEs) that highlight
+                    solutions to their unique risks and operational challenges.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Clarity:</strong> Train
+                    brokers to use ROI calculators and case studies (e.g.,
+                    demonstrating business continuity benefits of BI cover after
+                    a claim, or cost savings from risk mitigation advice) to
+                    tangibly demonstrate the financial and operational benefits
+                    of the proposed insurance solutions, justifying the premium.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Drive:</strong> Mandate a
+                    shift in broker engagement from "price-first" to
+                    "value-first" conversations, supported by insurer-provided
+                    market intelligence on SME pain points.
+                  </p>
+                </div>
+                <div class="strategy-point">
+                  <h5 class="text-lg font-semibold text-slate-700 mb-2">
+                    2. Streamlining the RFQ-to-Policy Journey
+                  </h5>
+                  <p>
+                    <strong class="text-slate-800">Specificity:</strong>
+                    Implement a tiered Turnaround Time (TAT) system for quotes:
+                    instant/automated for simple, standard SME risks via a
+                    digital broker portal; defined (e.g., 24-48 hours) for
+                    moderately complex risks; and transparently managed
+                    timelines for highly complex risks.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Clarity:</strong> Provide
+                    brokers with a digital dashboard for real-time RFQ status
+                    tracking, clear communication protocols for underwriting
+                    queries, and simplified policy documentation for key SME
+                    products.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Drive:</strong> Continuously
+                    audit and optimize internal underwriting and policy issuance
+                    workflows to eliminate bottlenecks, empowering brokers to
+                    deliver speed and efficiency to SMEs.
+                  </p>
+                </div>
+                <div class="strategy-point">
+                  <h5 class="text-lg font-semibold text-slate-700 mb-2">
+                    3. Enhancing Negotiation and Closing Capabilities
+                  </h5>
+                  <p>
+                    <strong class="text-slate-800">Specificity:</strong> Conduct
+                    advanced sales negotiation workshops for brokers, focusing
+                    on SME-specific scenarios. These workshops should cover
+                    techniques like consultative selling, handling common price
+                    objections with value-based arguments, and closing
+                    strategies for different SME decision-maker profiles.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Clarity:</strong> Develop and
+                    disseminate negotiation guides and objection-handling
+                    matrices tailored for commercial lines, providing brokers
+                    with proven responses and strategies.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Drive:</strong> Incentivize
+                    brokers not just on volume, but also on the quality of
+                    business closed (e.g., higher-margin products, comprehensive
+                    covers rather than basic ones), encouraging value-based
+                    selling.
+                  </p>
+                </div>
+                <div class="strategy-point">
+                  <h5 class="text-lg font-semibold text-slate-700 mb-2">
+                    4. Leveraging Technology for Broker Efficiency
+                  </h5>
+                  <p>
+                    <strong class="text-slate-800">Specificity:</strong>
+                    Implement a robust CRM system that integrates with the
+                    broker portal, enabling seamless lead pass-off, automated
+                    follow-ups, and a 360-degree view of broker interactions and
+                    performance.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Clarity:</strong> Provide
+                    brokers with analytics dashboards derived from the CRM and
+                    sales data, highlighting their conversion funnels,
+                    high-potential SME leads (lead scoring), and
+                    cross-sell/upsell opportunities.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Drive:</strong> Invest in
+                    AI-powered tools for initial risk assessment on standard SME
+                    proposals submitted via the portal, speeding up the
+                    underwriting process for brokers.
+                  </p>
+                </div>
+
+                <h4 class="text-xl font-semibold text-slate-700 mt-6 mb-3">
+                  B. Mastering Employer Benefits (EB) for SMEs
+                </h4>
+                <div class="strategy-point">
+                  <h5 class="text-lg font-semibold text-slate-700 mb-2">
+                    1. Deeply Understanding SME Needs and Price Sensitivity in
+                    EB
+                  </h5>
+                  <p>
+                    <strong class="text-slate-800">Specificity:</strong> Develop
+                    modular EB product structures (e.g., core health cover +
+                    optional riders like GPA, GTL, critical illness, outpatient,
+                    wellness programs) allowing SMEs to tailor packages to their
+                    budget and employee demographics.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Clarity:</strong> Train
+                    brokers to conduct thorough EB needs analysis for SMEs,
+                    considering employee profiles, industry risks, and
+                    affordability, moving beyond a one-size-fits-all approach.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Drive:</strong> Actively
+                    solicit broker feedback on SME requirements for EB to inform
+                    new product development and refinement of existing EB
+                    offerings.
+                  </p>
+                </div>
+                <div class="strategy-point">
+                  <h5 class="text-lg font-semibold text-slate-700 mb-2">
+                    2. Tailoring EB Solutions and Communicating Value
+                    Effectively
+                  </h5>
+                  <p>
+                    <strong class="text-slate-800">Specificity:</strong> Equip
+                    brokers with EB ROI calculators that demonstrate benefits
+                    like reduced employee attrition costs, improved
+                    productivity, and tax advantages for the SME.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Clarity:</strong> Provide
+                    brokers with simplified EB policy explainers and employee
+                    communication templates to help SMEs educate their workforce
+                    about the benefits, thereby increasing perceived value.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Drive:</strong> Launch
+                    targeted marketing campaigns (co-branded with brokers) aimed
+                    at SMEs, highlighting the strategic importance of EB in
+                    talent management and business resilience.
+                  </p>
+                </div>
+                <div class="strategy-point">
+                  <h5 class="text-lg font-semibold text-slate-700 mb-2">
+                    3. Specialized Broker Training and Support for EB
+                  </h5>
+                  <p>
+                    <strong class="text-slate-800">Specificity:</strong> Create
+                    a certification program for "SME EB Specialists" within the
+                    broker network, offering advanced training on EB product
+                    nuances, underwriting, claims management, and
+                    legal/compliance aspects.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Clarity:</strong> Establish a
+                    dedicated EB support desk for brokers, providing quick
+                    access to expert advice for complex EB cases and quoting
+                    assistance.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Drive:</strong> Offer
+                    enhanced incentives or recognition for brokers who achieve
+                    EB specialization and meet specific EB sales targets for the
+                    SME segment.
+                  </p>
+                </div>
+
+                <h4 class="text-xl font-semibold text-slate-700 mt-6 mb-3">
+                  C. Building and Empowering a Winning Broker Network
+                </h4>
+                <div class="strategy-point">
+                  <h5 class="text-lg font-semibold text-slate-700 mb-2">
+                    1. Strategic Relationship Management
+                  </h5>
+                  <p>
+                    <strong class="text-slate-800">Specificity:</strong>
+                    Implement a tiered broker segmentation program (e.g.,
+                    Platinum, Gold, Silver) with differentiated support,
+                    incentives, and access to resources based on performance and
+                    commitment to the SME segment.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Clarity:</strong> Assign
+                    dedicated Relationship Managers (RMs) from the internal team
+                    to key broker partners, ensuring a single point of contact
+                    for strategic discussions, issue resolution, and support.
+                    Conduct regular (e.g., quarterly) business review meetings.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Drive:</strong> Foster a
+                    partnership ethos through joint business planning,
+                    transparent communication of insurer strategy, and actively
+                    seeking broker input on product and process improvements.
+                  </p>
+                </div>
+                <div class="strategy-point">
+                  <h5 class="text-lg font-semibold text-slate-700 mb-2">
+                    2. Providing Superior Support (Training, Marketing, Tech)
+                  </h5>
+                  <p>
+                    <strong class="text-slate-800">Specificity:</strong> Develop
+                    a continuous learning calendar for brokers, offering
+                    webinars, workshops, and e-learning modules on new products,
+                    emerging SME risks (e.g., cyber), regulatory updates, and
+                    advanced selling skills.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Clarity:</strong> Provide
+                    access to a digital library of co-brandable marketing
+                    collateral (brochures, presentations, social media content)
+                    tailored for different SME industries and insurance needs.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Drive:</strong> Ensure the
+                    broker portal is continuously updated with the latest
+                    product information, underwriting guidelines, and sales
+                    tools, making it an indispensable resource.
+                  </p>
+                </div>
+                <div class="strategy-point">
+                  <h5 class="text-lg font-semibold text-slate-700 mb-2">
+                    3. Enabling Value-Added Services (VAS) by Brokers
+                  </h5>
+                  <p>
+                    <strong class="text-slate-800">Specificity:</strong> Provide
+                    brokers with templates and tools to conduct basic risk
+                    assessment surveys for SMEs, enabling them to offer
+                    preliminary risk management advice.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Clarity:</strong> Offer
+                    training to brokers on claims advocacy best practices,
+                    equipping them to guide SMEs effectively through the claims
+                    process and liaise with the insurer on their behalf.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Drive:</strong> Where
+                    feasible, provide brokers with access to anonymized claims
+                    data insights for specific industries, helping them advise
+                    SMEs on common loss prevention measures.
+                  </p>
+                </div>
+              </div>
+
+              <div id="tab-content-agent" class="tab-content hidden">
+                <h3 class="text-2xl font-semibold text-slate-800 mb-2">
+                  Pillar 2: Agent Channel Rebirth – Cultivating Commercial Lines
+                  Specialists
+                </h3>
+                <p class="text-slate-600 mb-6">
+                  The goal is to build a new, highly skilled, and productive
+                  agent channel focused exclusively on SME commercial lines,
+                  moving away from past ineffective recruitment efforts.
+                </p>
+
+                <h4 class="text-xl font-semibold text-slate-700 mt-6 mb-3">
+                  A. Targeted Recruitment & Compelling Agent Value Proposition
+                </h4>
+                <div class="strategy-point">
+                  <h5 class="text-lg font-semibold text-slate-700 mb-2">
+                    1. Identifying the Right Profile
+                  </h5>
+                  <p>
+                    <strong class="text-slate-800">Specificity:</strong> Focus
+                    recruitment efforts on individuals with prior B2B sales
+                    experience, financial advisory backgrounds, or former SME
+                    owners/managers. Look for attributes like business acumen,
+                    networking skills, and a consultative mindset.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Clarity:</strong> Develop a
+                    distinct "Commercial Lines Advisor" brand for this new cadre
+                    of agents, differentiating them from generalist retail
+                    agents.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Drive:</strong> Utilize
+                    professional networking platforms, industry associations,
+                    and referral programs from existing business contacts to
+                    source potential candidates.
+                  </p>
+                </div>
+                <div class="strategy-point">
+                  <h5 class="text-lg font-semibold text-slate-700 mb-2">
+                    2. Crafting an Attractive Proposition for Agents
+                  </h5>
+                  <p>
+                    <strong class="text-slate-800">Specificity:</strong>
+                    Highlight the higher average premiums and commission
+                    potential in commercial lines compared to retail. Emphasize
+                    the opportunity for professional specialization and
+                    development as a respected business risk advisor.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Clarity:</strong> Clearly
+                    outline the comprehensive training, technological support,
+                    mentorship, and career progression pathways available to
+                    successful Commercial Lines Advisors.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Drive:</strong> Offer a
+                    competitive initial support package (e.g., fixed stipend
+                    during the initial training and ramp-up period) to attract
+                    high-caliber individuals.
+                  </p>
+                </div>
+
+                <h4 class="text-xl font-semibold text-slate-700 mt-6 mb-3">
+                  B. Intensive, Commercial-Focused Onboarding & Continuous
+                  Training
+                </h4>
+                <div class="strategy-point">
+                  <h5 class="text-lg font-semibold text-slate-700 mb-2">
+                    1. Structured Onboarding Program
+                  </h5>
+                  <p>
+                    <strong class="text-slate-800">Specificity:</strong>
+                    Implement a multi-stage onboarding process including
+                    intensive classroom/virtual training, followed by joint
+                    fieldwork with experienced team members or senior agents,
+                    and finally, supervised independent work.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Clarity:</strong> Provide
+                    each new agent with a clear 90-day and 180-day plan
+                    outlining learning objectives, activity targets, and
+                    performance expectations.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Drive:</strong> Assign a
+                    dedicated mentor from the internal team or a seasoned
+                    commercial lines professional to each new agent for ongoing
+                    guidance and support.
+                  </p>
+                </div>
+                <div class="strategy-point">
+                  <h5 class="text-lg font-semibold text-slate-700 mb-2">
+                    2. Advanced Commercial Lines Training Curriculum
+                  </h5>
+                  <p>
+                    <strong class="text-slate-800">Specificity:</strong> Develop
+                    in-depth training modules covering:
+                  </p>
+                  <ul>
+                    <li>
+                      <strong>Complex Products:</strong> Deep dives into
+                      Property (including ISR, Fire), Engineering (CAR/EAR,
+                      CPM), Marine Cargo, all lines of Liability (Public,
+                      Product, Professional Indemnity, D&O, Cyber), Workmen's
+                      Compensation, and tailored EB solutions for SMEs.
+                    </li>
+                    <li>
+                      <strong>SME Risk Assessment:</strong> Practical
+                      methodologies for identifying, analyzing, and evaluating
+                      diverse SME risks across key sectors (manufacturing,
+                      services, retail, tech startups). Include basic financial
+                      statement analysis to understand insurable values and
+                      business health.
+                    </li>
+                    <li>
+                      <strong>Industry Verticals:</strong> Specific modules on
+                      the risk profiles and insurance needs of target SME
+                      industries.
+                    </li>
+                  </ul>
+                  <p>
+                    <strong class="text-slate-800">Clarity:</strong> Utilize
+                    case studies, role-playing, and assessments to ensure
+                    practical understanding and application of knowledge.
+                    Leverage resources from NIA/III and consider bespoke
+                    programs.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Drive:</strong> Make ongoing
+                    training and certification a mandatory requirement for
+                    maintaining "Commercial Lines Advisor" status and for
+                    eligibility for higher incentives.
+                  </p>
+                </div>
+
+                <h4 class="text-xl font-semibold text-slate-700 mt-6 mb-3">
+                  C. Robust Performance Management & Aligned Incentivization
+                </h4>
+                <div class="strategy-point">
+                  <h5 class="text-lg font-semibold text-slate-700 mb-2">
+                    1. Tailored Performance Metrics
+                  </h5>
+                  <p>
+                    <strong class="text-slate-800">Specificity:</strong> Focus
+                    KPIs on GWP from commercial lines, number of new SME clients
+                    acquired, average policy size, cross-sell ratio (number of
+                    policies per SME), and persistency rates.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Clarity:</strong> Provide
+                    agents with a dashboard to track their performance against
+                    these KPIs in real-time.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Drive:</strong> Conduct
+                    regular (e.g., monthly) performance review and coaching
+                    sessions with each agent to discuss progress, challenges,
+                    and action plans.
+                  </p>
+                </div>
+                <div class="strategy-point">
+                  <h5 class="text-lg font-semibold text-slate-700 mb-2">
+                    2. Motivational Incentive Structure
+                  </h5>
+                  <p>
+                    <strong class="text-slate-800">Specificity:</strong> Design
+                    a tiered commission structure that offers higher rates for
+                    more complex commercial products and for achieving specific
+                    SME segment penetration goals. Implement bonus programs for
+                    exceeding targets, high persistency, and successful
+                    cross-selling.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Clarity:</strong> Ensure the
+                    incentive plan is transparent, easily understandable, and
+                    payments are processed promptly.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Drive:</strong> Introduce
+                    non-monetary recognition programs, such as "Commercial
+                    Advisor of the Year" awards, conventions for top performers,
+                    and opportunities for career advancement into team
+                    leadership or specialist roles.
+                  </p>
+                </div>
+              </div>
+
+              <div id="tab-content-team" class="tab-content hidden">
+                <h3 class="text-2xl font-semibold text-slate-800 mb-2">
+                  Pillar 3: Team & Tech Empowerment – Building the Engine for
+                  Execution
+                </h3>
+                <p class="text-slate-600 mb-6">
+                  The internal team of nine and the strategic use of technology
+                  are the enablers for the success of the broker and agent
+                  channels.
+                </p>
+
+                <h4 class="text-xl font-semibold text-slate-700 mt-6 mb-3">
+                  A. Empowering the Internal Team for Peak Performance
+                </h4>
+                <div class="strategy-point">
+                  <h5 class="text-lg font-semibold text-slate-700 mb-2">
+                    1. Aligning with the Vision & Cascading Clear Goals
+                  </h5>
+                  <p>
+                    <strong class="text-slate-800">Specificity:</strong>
+                    Translate the overall INR 5 Crore monthly GWP target into
+                    specific, measurable, achievable, relevant, and time-bound
+                    (SMART) KPIs for each of the 9 team members. For example,
+                    RMs will have targets for broker activation and GWP from
+                    their assigned brokers; agent development managers will have
+                    targets for agent recruitment and productivity.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Clarity:</strong> Conduct
+                    regular team meetings to reinforce the strategic vision,
+                    discuss progress against collective and individual goals,
+                    and ensure everyone understands their contribution to the
+                    channel's success.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Drive:</strong> Foster a
+                    sense of shared ownership by linking a portion of team
+                    incentives to the overall achievement of the channel's
+                    targets.
+                  </p>
+                </div>
+                <div class="strategy-point">
+                  <h5 class="text-lg font-semibold text-slate-700 mb-2">
+                    2. Focused Skill Development and Role Enhancement
+                  </h5>
+                  <p>
+                    <strong class="text-slate-800">Specificity:</strong> Conduct
+                    a skills gap analysis for the internal team and implement
+                    targeted training programs. For RMs: advanced negotiation,
+                    strategic account management, data interpretation for broker
+                    performance. For operational staff: process optimization,
+                    new technology proficiency. For the Channel Head: strategic
+                    leadership, change management, advanced coaching skills.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Clarity:</strong> Define
+                    clear roles and responsibilities for each team member,
+                    ensuring they are empowered to make decisions within their
+                    domain and are equipped with the necessary authority and
+                    resources.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Drive:</strong> Encourage
+                    cross-functional learning and job rotation (where
+                    appropriate) to build a more versatile and knowledgeable
+                    team.
+                  </p>
+                </div>
+                <div class="strategy-point">
+                  <h5 class="text-lg font-semibold text-slate-700 mb-2">
+                    3. Cultivating a High-Performance, Collaborative Culture
+                  </h5>
+                  <p>
+                    <strong class="text-slate-800">Specificity:</strong>
+                    Implement a structured performance dialogue process (e.g.,
+                    quarterly check-ins) focusing on achievements, challenges,
+                    development needs, and career aspirations.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Clarity:</strong> Establish
+                    platforms for peer-to-peer learning and best-practice
+                    sharing (e.g., internal forums, "lunch and learn" sessions
+                    on successful case closures or market insights).
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Drive:</strong> Actively
+                    recognize and reward individual and team achievements,
+                    fostering a positive and motivational work environment.
+                    Address underperformance proactively and supportively.
+                  </p>
+                </div>
+
+                <h4 class="text-xl font-semibold text-slate-700 mt-6 mb-3">
+                  B. Strategic Implementation and Leverage of Technology
+                </h4>
+                <div class="strategy-point">
+                  <h5 class="text-lg font-semibold text-slate-700 mb-2">
+                    1. Maximizing CRM for Sales and Relationship Management
+                  </h5>
+                  <p>
+                    <strong class="text-slate-800">Specificity:</strong> Fully
+                    utilize the CRM to manage the entire lifecycle of broker and
+                    agent relationships, from onboarding and training tracking
+                    to performance monitoring and communication logging.
+                    Implement automated workflows for routine tasks (e.g.,
+                    follow-up reminders, report generation).
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Clarity:</strong> Ensure all
+                    team members are proficient in using the CRM, with
+                    standardized data entry protocols to maintain data integrity
+                    for accurate reporting and analytics.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Drive:</strong> Use CRM data
+                    to generate actionable insights for targeted broker/agent
+                    engagement strategies and to identify areas for support or
+                    intervention.
+                  </p>
+                </div>
+                <div class="strategy-point">
+                  <h5 class="text-lg font-semibold text-slate-700 mb-2">
+                    2. Advanced Broker and Agent Portals
+                  </h5>
+                  <p>
+                    <strong class="text-slate-800">Specificity:</strong> Enhance
+                    portals to include instant quoting for a wider range of
+                    standard commercial products, self-service endorsement
+                    capabilities, online claims submission and real-time
+                    tracking, and access to personalized sales performance
+                    dashboards.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Clarity:</strong> Provide
+                    comprehensive training and ongoing support to brokers and
+                    agents on portal functionalities to maximize adoption and
+                    usage.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Drive:</strong> Continuously
+                    gather user feedback to improve portal usability and add new
+                    features that enhance efficiency and user experience.
+                  </p>
+                </div>
+                <div class="strategy-point">
+                  <h5 class="text-lg font-semibold text-slate-700 mb-2">
+                    3. Data Analytics for Strategic Decision-Making
+                  </h5>
+                  <p>
+                    <strong class="text-slate-800">Specificity:</strong> Invest
+                    in data analytics capabilities to:
+                  </p>
+                  <ul>
+                    <li>
+                      Identify high-potential SME segments and geographical
+                      clusters.
+                    </li>
+                    <li>
+                      Analyze RFQ conversion funnels to pinpoint bottlenecks.
+                    </li>
+                    <li>Track product performance and profitability.</li>
+                    <li>Develop predictive models for SME lapse/churn.</li>
+                  </ul>
+                  <p>
+                    <strong class="text-slate-800">Clarity:</strong> Generate
+                    regular, easy-to-understand reports and dashboards for the
+                    internal team and Channel Head, translating data into
+                    actionable strategic insights.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Drive:</strong> Embed
+                    data-driven decision-making into all aspects of channel
+                    management, from product development and marketing campaigns
+                    to broker/agent support strategies.
+                  </p>
+                </div>
+                <div class="strategy-point">
+                  <h5 class="text-lg font-semibold text-slate-700 mb-2">
+                    4. Phased Adoption of AI/ML
+                  </h5>
+                  <p>
+                    <strong class="text-slate-800">Specificity:</strong>
+                    Initially explore AI for supporting underwriting decisions
+                    on simpler SME risks (e.g., AI-powered risk scoring based on
+                    proposal data). Implement AI-powered chatbots on
+                    broker/agent portals for instant resolution of common
+                    queries.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Clarity:</strong> Clearly
+                    communicate the purpose and benefits of AI tools to internal
+                    teams and distribution partners, ensuring they are seen as
+                    aids to efficiency rather than replacements.
+                  </p>
+                  <p>
+                    <strong class="text-slate-800">Drive:</strong> As the
+                    channel scales and data accumulates, explore more advanced
+                    AI/ML applications such as dynamic pricing, personalized
+                    product recommendations for SMEs, and fraud detection.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="roadmap" class="py-16 lg:py-24 bg-white">
+        <div class="container mx-auto px-4 lg:px-6">
+          <div class="text-center max-w-3xl mx-auto">
+            <h2 class="text-3xl font-bold text-slate-800">
+              The Roadmap: Our Journey Ahead
+            </h2>
+            <p class="mt-4 text-lg text-slate-600">
+              A goal without a timeline is just a dream. This roadmap outlines
+              our phased implementation plan, detailing the key actions and
+              objectives for the next 36 months. Interact with each phase to see
+              the specific focus areas that will build momentum toward our
+              target.
+            </p>
+          </div>
+          <div class="mt-12 max-w-6xl mx-auto">
+            <div class="relative">
+              <div
+                class="absolute left-1/2 top-4 bottom-4 w-0.5 bg-slate-200 hidden md:block"
+              ></div>
+              <div class="space-y-12">
+                <div class="phase md:grid md:grid-cols-2 md:gap-8 items-start">
+                  <div class="md:text-right md:pr-8">
+                    <div class="cursor-pointer" onclick="togglePhase(this)">
+                      <p class="text-sm font-semibold text-blue-600">
+                        PHASE 1 (0-6 Months)
+                      </p>
+                      <h3 class="text-xl font-bold text-slate-800 mt-1">
+                        Ignite & Stabilize
+                      </h3>
+                    </div>
+                  </div>
+                  <div class="relative">
+                    <div
+                      class="absolute -left-4 top-2 h-8 w-8 bg-white border-4 border-blue-600 rounded-full hidden md:block"
+                    ></div>
+                    <div
+                      class="phase-content ml-0 md:ml-8 mt-4 md:mt-0 text-slate-600 bg-slate-50 p-4 rounded-lg"
+                    >
+                      Establish foundations: Train top brokers, design new agent
+                      strategy, launch 1-2 pilot products, and implement CRM.
+                      Goal is to build initial momentum.
+                    </div>
+                  </div>
+                </div>
+                <div class="phase md:grid md:grid-cols-2 md:gap-8 items-start">
+                  <div class="md:text-right md:pr-8">
+                    <div class="cursor-pointer" onclick="togglePhase(this)">
+                      <p class="text-sm font-semibold text-blue-600">
+                        PHASE 2 (6-18 Months)
+                      </p>
+                      <h3 class="text-xl font-bold text-slate-800 mt-1">
+                        Accelerate & Expand
+                      </h3>
+                    </div>
+                  </div>
+                  <div class="relative">
+                    <div
+                      class="absolute -left-4 top-2 h-8 w-8 bg-white border-2 border-slate-400 rounded-full hidden md:block"
+                    ></div>
+                    <div
+                      class="phase-content ml-0 md:ml-8 mt-4 md:mt-0 text-slate-600 bg-slate-50 p-4 rounded-lg"
+                    >
+                      Scale successful initiatives: Roll out training to all
+                      brokers, actively recruit new-profile agents, launch more
+                      products, and deploy advanced digital tools. Goal is
+                      consistent GWP growth.
+                    </div>
+                  </div>
+                </div>
+                <div class="phase md:grid md:grid-cols-2 md:gap-8 items-start">
+                  <div class="md:text-right md:pr-8">
+                    <div class="cursor-pointer" onclick="togglePhase(this)">
+                      <p class="text-sm font-semibold text-blue-600">
+                        PHASE 3 (18-36 Months)
+                      </p>
+                      <h3 class="text-xl font-bold text-slate-800 mt-1">
+                        Consolidate & Innovate
+                      </h3>
+                    </div>
+                  </div>
+                  <div class="relative">
+                    <div
+                      class="absolute -left-4 top-2 h-8 w-8 bg-white border-2 border-slate-400 rounded-full hidden md:block"
+                    ></div>
+                    <div
+                      class="phase-content ml-0 md:ml-8 mt-4 md:mt-0 text-slate-600 bg-slate-50 p-4 rounded-lg"
+                    >
+                      Achieve market leadership: Deepen high-value partnerships,
+                      drive continuous product innovation, and leverage
+                      AI/analytics for predictive insights. Goal is to
+                      consistently exceed the ₹5 Cr target.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="kpi" class="py-16 lg:py-24 bg-slate-50">
+        <div class="container mx-auto px-4 lg:px-6">
+          <div class="text-center max-w-3xl mx-auto">
+            <h2 class="text-3xl font-bold text-slate-800">
+              KPI Tracker: Measuring Our Success
+            </h2>
+            <p class="mt-4 text-lg text-slate-600">
+              This dashboard represents how we will monitor our progress. Input
+              the latest figures daily to see a live view. By tracking these key
+              performance indicators, we can ensure we stay on course, make
+              data-driven decisions, and hold ourselves accountable to the
+              ambitious goals we've set.
+            </p>
+            <p class="mt-2 text-xs text-slate-500">
+              Note: Data entered here is for this session only and will not be
+              saved permanently without a backend database.
+            </p>
+          </div>
+          <div
+            class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto"
+          >
+            <div
+              class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm flex flex-col items-center"
+            >
+              <h4 class="font-semibold text-slate-800">Monthly GWP (Cr)</h4>
+              <input
+                type="number"
+                id="gwp-input"
+                value="0.1"
+                step="0.1"
+                class="input-sm mt-2 w-24 text-center"
+              />
+              <div class="kpi-gauge-wrap my-2">
+                <div id="gwp-gauge-fill" class="kpi-gauge-fill"></div>
+                <div class="kpi-gauge-cover"></div>
+                <div
+                  id="gwp-gauge-text"
+                  class="kpi-gauge-text font-bold text-2xl text-slate-800"
+                >
+                  ₹0.1 Cr
+                </div>
+              </div>
+              <p class="text-sm text-slate-500">Target: ₹5 Cr</p>
+            </div>
+            <div
+              class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm text-center"
+            >
+              <h4 class="font-semibold text-slate-800">
+                RFQ Conversion Rate (%)
+              </h4>
+              <input
+                type="number"
+                id="rfq-conversion-input"
+                value="8"
+                class="input-sm mt-2 w-20 text-center"
+              />
+              <p
+                id="rfq-conversion-display"
+                class="text-4xl font-bold text-blue-600 my-2"
+              >
+                8%
+              </p>
+              <p class="text-sm text-slate-500">Target: 25-30%</p>
+            </div>
+            <div
+              class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm text-center"
+            >
+              <h4 class="font-semibold text-slate-800">
+                EB Conversion Rate (%)
+              </h4>
+              <input
+                type="number"
+                id="eb-conversion-input"
+                value="5"
+                class="input-sm mt-2 w-20 text-center"
+              />
+              <p
+                id="eb-conversion-display"
+                class="text-4xl font-bold text-blue-600 my-2"
+              >
+                &lt;5%
+              </p>
+              <p class="text-sm text-slate-500">Target: 15-20%</p>
+            </div>
+            <div
+              class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm text-center"
+            >
+              <h4 class="font-semibold text-slate-800">
+                New Active Commercial Agents
+              </h4>
+              <input
+                type="number"
+                id="new-agents-input"
+                value="0"
+                class="input-sm mt-2 w-20 text-center"
+              />
+              <p
+                id="new-agents-display"
+                class="text-4xl font-bold text-blue-600 my-2"
+              >
+                0
+              </p>
+              <p class="text-sm text-slate-500">Year 1 Target: 20-25</p>
+            </div>
+            <div
+              class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm text-center"
+            >
+              <h4 class="font-semibold text-slate-800">
+                New SME Clients Acquired
+              </h4>
+              <input
+                type="number"
+                id="new-clients-input"
+                value="15"
+                class="input-sm mt-2 w-20 text-center"
+              />
+              <p
+                id="new-clients-display"
+                class="text-4xl font-bold text-blue-600 my-2"
+              >
+                15
+              </p>
+              <p class="text-sm text-slate-500">Monthly Target: 200-300</p>
+            </div>
+            <div
+              class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm text-center"
+            >
+              <h4 class="font-semibold text-slate-800">
+                Overall Loss Ratio (%)
+              </h4>
+              <input
+                type="number"
+                id="loss-ratio-input"
+                value="72"
+                class="input-sm mt-2 w-20 text-center"
+              />
+              <p
+                id="loss-ratio-display"
+                class="text-4xl font-bold text-green-600 my-2"
+              >
+                72%
+              </p>
+              <p class="text-sm text-slate-500">Target: &lt; 70%</p>
+            </div>
+          </div>
+          <div class="mt-8 text-center">
+            <button
+              id="update-kpi-button"
+              class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition-colors"
+            >
+              Update KPIs
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section id="activity-log" class="py-16 lg:py-24 bg-white">
+        <div class="container mx-auto px-4 lg:px-6">
+          <div class="text-center max-w-3xl mx-auto">
+            <h2 class="text-3xl font-bold text-slate-800">
+              Team Empowerment: Daily Activity Log
+            </h2>
+            <p class="mt-4 text-lg text-slate-600">
+              Use this section to log daily activities and progress for key team
+              empowerment initiatives. This helps maintain focus and track
+              collective efforts towards building a stronger, more capable team.
+            </p>
+            <p class="mt-2 text-xs text-slate-500">
+              Note: Logged activities are for this session only and will not be
+              saved permanently without a backend database.
+            </p>
+          </div>
+
+          <div class="mt-12 max-w-4xl mx-auto space-y-8">
+            <div>
+              <h3 class="text-xl font-semibold text-slate-700 mb-3">
+                1. Clear Goals & KPIs
+              </h3>
+              <textarea
+                id="goals-kpi-activity"
+                rows="3"
+                class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Log activities related to defining, communicating, or tracking team/individual goals and KPIs..."
+              ></textarea>
+              <div id="goals-kpi-log-display" class="mt-3"></div>
+            </div>
+            <div>
+              <h3 class="text-xl font-semibold text-slate-700 mb-3">
+                2. Skill Development
+              </h3>
+              <textarea
+                id="skill-dev-activity"
+                rows="3"
+                class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Log training attended, coaching sessions conducted/received, new skills practiced or applied..."
+              ></textarea>
+              <div id="skill-dev-log-display" class="mt-3"></div>
+            </div>
+            <div>
+              <h3 class="text-xl font-semibold text-slate-700 mb-3">
+                3. Digital Transformation
+              </h3>
+              <textarea
+                id="digital-transform-activity"
+                rows="3"
+                class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Log progress on CRM implementation, new tool adoption, process automation efforts, data analysis activities..."
+              ></textarea>
+              <div id="digital-transform-log-display" class="mt-3"></div>
+            </div>
+            <div class="text-center mt-8">
+              <button
+                id="log-activities-button"
+                class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition-colors"
+              >
+                Log Today's Activities
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="bg-white border-t border-slate-200">
+      <div
+        class="container mx-auto px-4 lg:px-6 py-6 text-center text-sm text-slate-500"
+      >
+        <p>
+          &copy; 2025 Your General Insurance Company | SME Commercial Lines
+          Strategic Plan
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const marketGrowthChartCtx = document
+          .getElementById("marketGrowthChart")
+          .getContext("2d");
+        new Chart(marketGrowthChartCtx, {
+          type: "line",
+          data: {
+            labels: ["2023", "2024 (e)", "2025 (f)"],
+            datasets: [
+              {
+                label: "Non-Life Premium Growth (%)",
+                data: [6.1, 5.7, 7.3],
+                borderColor: "#2563eb",
+                backgroundColor: "rgba(37, 99, 235, 0.1)",
+                fill: true,
+                tension: 0.3,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: false,
+                ticks: { callback: (value) => value + "%" },
+              },
+            },
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: (context) =>
+                    `${context.dataset.label}: ${context.raw}%`,
+                },
+              },
+            },
+          },
+        });
+
+        const smeSizeChartCtx = document
+          .getElementById("smeSizeChart")
+          .getContext("2d");
+        new Chart(smeSizeChartCtx, {
+          type: "doughnut",
+          data: {
+            labels: ["Medium Enterprises", "Micro & Small (Untapped)"],
+            datasets: [
+              {
+                label: "Market Share by Enterprise Size",
+                data: [47, 53],
+                backgroundColor: ["#3b82f6", "#fbbf24"],
+                borderColor: "#ffffff",
+                borderWidth: 4,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: "bottom" },
+              tooltip: {
+                callbacks: {
+                  label: (context) => `${context.label}: ${context.raw}%`,
+                },
+              },
+            },
+          },
+        });
+
+        const industryChartCtx = document
+          .getElementById("industryChart")
+          .getContext("2d");
+        new Chart(industryChartCtx, {
+          type: "bar",
+          data: {
+            labels: [
+              "Retail",
+              "Manufacturing",
+              "Hospitality",
+              "Healthcare",
+              "Construction",
+            ],
+            datasets: [
+              {
+                label: "Market Share by Industry",
+                data: [35, 25, 18, 12, 10],
+                backgroundColor: [
+                  "#60a5fa",
+                  "#93c5fd",
+                  "#bfdbfe",
+                  "#dbeafe",
+                  "#eff6ff",
+                ],
+                borderRadius: 4,
+              },
+            ],
+          },
+          options: {
+            indexAxis: "y",
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: (context) => `${context.label}: ${context.raw}%`,
+                },
+              },
+            },
+            scales: { x: { ticks: { callback: (value) => value + "%" } } },
+          },
+        });
+
+        const tabButtons = document.querySelectorAll(".tab-btn");
+        const tabContents = document.querySelectorAll(".tab-content");
+        tabButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            const tab = button.dataset.tab;
+            tabButtons.forEach((btn) => {
+              btn.classList.remove("tab-active");
+              btn.classList.add("tab-inactive");
+            });
+            button.classList.add("tab-active");
+            button.classList.remove("tab-inactive");
+            tabContents.forEach((content) => {
+              content.classList.add("hidden");
+              if (content.id === `tab-content-${tab}`) {
+                content.classList.remove("hidden");
+              }
+            });
+          });
+        });
+
+        const mobileMenuButton = document.getElementById("mobile-menu-button");
+        const mobileMenu = document.getElementById("mobile-menu");
+        mobileMenuButton.addEventListener("click", () => {
+          mobileMenu.classList.toggle("hidden");
+        });
+        mobileMenu.addEventListener("click", () => {
+          mobileMenu.classList.add("hidden");
+        });
+
+        const gwpGaugeFill = document.getElementById("gwp-gauge-fill");
+        const gwpGaugeText = document.getElementById("gwp-gauge-text");
+        const gwpInput = document.getElementById("gwp-input");
+        const rfqConversionInput = document.getElementById(
+          "rfq-conversion-input"
+        );
+        const rfqConversionDisplay = document.getElementById(
+          "rfq-conversion-display"
+        );
+        const ebConversionInput = document.getElementById(
+          "eb-conversion-input"
+        );
+        const ebConversionDisplay = document.getElementById(
+          "eb-conversion-display"
+        );
+        const newAgentsInput = document.getElementById("new-agents-input");
+        const newAgentsDisplay = document.getElementById("new-agents-display");
+        const newClientsInput = document.getElementById("new-clients-input");
+        const newClientsDisplay = document.getElementById(
+          "new-clients-display"
+        );
+        const lossRatioInput = document.getElementById("loss-ratio-input");
+        const lossRatioDisplay = document.getElementById("loss-ratio-display");
+        const updateKpiButton = document.getElementById("update-kpi-button");
+
+        function updateGwpGauge(currentValue, targetValue = 5) {
+          const percentage = Math.min(100, (currentValue / targetValue) * 100);
+          gwpGaugeFill.style.background = `conic-gradient(#2563eb ${
+            percentage * 1.8
+          }deg, #dbeafe ${percentage * 1.8}deg)`;
+          gwpGaugeText.textContent = `₹${currentValue} Cr`;
+        }
+
+        updateGwpGauge(parseFloat(gwpInput.value));
+
+        updateKpiButton.addEventListener("click", () => {
+          const gwpValue = parseFloat(gwpInput.value) || 0;
+          updateGwpGauge(gwpValue);
+
+          const rfqConvValue = parseFloat(rfqConversionInput.value) || 0;
+          rfqConversionDisplay.textContent = `${rfqConvValue}%`;
+
+          const ebConvValue = parseFloat(ebConversionInput.value) || 0;
+          ebConversionDisplay.textContent = `${ebConvValue}%`;
+          if (ebConvValue < 5 && ebConvValue > 0)
+            ebConversionDisplay.textContent = `<${ebConvValue}%`;
+
+          const newAgentsValue = parseInt(newAgentsInput.value) || 0;
+          newAgentsDisplay.textContent = newAgentsValue;
+
+          const newClientsValue = parseInt(newClientsInput.value) || 0;
+          newClientsDisplay.textContent = newClientsValue;
+
+          const lossRatioValue = parseFloat(lossRatioInput.value) || 0;
+          lossRatioDisplay.textContent = `${lossRatioValue}%`;
+          lossRatioDisplay.className = `text-4xl font-bold my-2 ${
+            lossRatioValue < 70 ? "text-green-600" : "text-red-600"
+          }`;
+        });
+
+        const goalsKpiActivityInput =
+          document.getElementById("goals-kpi-activity");
+        const goalsKpiLogDisplay = document.getElementById(
+          "goals-kpi-log-display"
+        );
+        const skillDevActivityInput =
+          document.getElementById("skill-dev-activity");
+        const skillDevLogDisplay = document.getElementById(
+          "skill-dev-log-display"
+        );
+        const digitalTransformActivityInput = document.getElementById(
+          "digital-transform-activity"
+        );
+        const digitalTransformLogDisplay = document.getElementById(
+          "digital-transform-log-display"
+        );
+        const logActivitiesButton = document.getElementById(
+          "log-activities-button"
+        );
+
+        logActivitiesButton.addEventListener("click", () => {
+          const now = new Date();
+          const timestamp = now.toLocaleString("en-IN", {
+            dateStyle: "short",
+            timeStyle: "short",
+          });
+
+          logActivity(
+            goalsKpiActivityInput,
+            goalsKpiLogDisplay,
+            "Goals & KPIs",
+            timestamp
+          );
+          logActivity(
+            skillDevActivityInput,
+            skillDevLogDisplay,
+            "Skill Development",
+            timestamp
+          );
+          logActivity(
+            digitalTransformActivityInput,
+            digitalTransformLogDisplay,
+            "Digital Transformation",
+            timestamp
+          );
+
+          logActivitiesButton.textContent = "Activities Logged for Today!";
+          setTimeout(() => {
+            logActivitiesButton.textContent = "Log Today's Activities";
+          }, 3000);
+        });
+
+        function logActivity(
+          inputElement,
+          displayElement,
+          category,
+          timestamp
+        ) {
+          const activityText = inputElement.value.trim();
+          if (activityText) {
+            const entryDiv = document.createElement("div");
+            entryDiv.className = "activity-log-entry";
+            entryDiv.innerHTML = `
+                        <p class="text-xs text-slate-500">${timestamp} - ${category}</p>
+                        <p class="text-sm text-slate-700 mt-1">${activityText.replace(
+                          /\n/g,
+                          "<br>"
+                        )}</p>
+                    `;
+            displayElement.prepend(entryDiv);
+            inputElement.value = "";
+          }
+        }
+      });
+
+      function toggleDetails(id) {
+        document.getElementById(id).classList.toggle("hidden");
+      }
+
+      function togglePhase(element) {
+        const phase = element.closest(".phase");
+        const icon = phase.querySelector(".absolute");
+        const allPhases = document.querySelectorAll(".phase");
+        const allIcons = document.querySelectorAll(".phase .absolute");
+
+        allIcons.forEach((ic) => {
+          if (ic) {
+            ic.classList.remove("border-blue-600", "border-4");
+            ic.classList.add("border-slate-400", "border-2");
+          }
+        });
+
+        if (phase.classList.contains("active")) {
+          phase.classList.remove("active");
+        } else {
+          allPhases.forEach((p) => p.classList.remove("active"));
+          phase.classList.add("active");
+          if (icon) {
+            icon.classList.add("border-blue-600", "border-4");
+            icon.classList.remove("border-slate-400", "border-2");
+          }
+        }
+      }
+    </script>
+  </body>
+</html>

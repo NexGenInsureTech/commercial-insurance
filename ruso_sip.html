@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IRDAI RUSO & AP SIP Interactive Explorer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Visualization & Content Choices:
+        - Report Info: Executive Summary -> Goal: Inform -> Presentation: Static text -> Interaction: None -> Justification: Concise overview.
+        - Report Info: RUSO Definitions (Rural, Social, Lives) -> Goal: Inform -> Presentation: Clickable cards/accordion -> Interaction: Click to expand/reveal -> Justification: Saves space, allows focused reading. Library/Method: HTML/JS.
+        - Report Info: RUSO Compliance Criteria (Table 1) -> Goal: Inform/Compare -> Presentation: Interactive HTML table, Bar Chart (30% dwellings/vehicles, 10% social lives) -> Interaction: Sort table, hover on chart -> Justification: Clear presentation of criteria, visual for key targets. Library/Method: HTML/JS, Chart.js.
+        - Report Info: Bima Trinity -> Goal: Inform -> Presentation: Icon-based cards -> Interaction: Click for details (modal/expand) -> Justification: Visually appealing, quick understanding of components. Library/Method: HTML/JS.
+        - Report Info: Challenges vs. Opportunities in AP -> Goal: Compare/Inform -> Presentation: Two-column layout with expandable items -> Interaction: Click to expand -> Justification: Direct comparison, detailed exploration on demand. Library/Method: HTML/JS.
+        - Report Info: Strategic Roadmap (Table 2) -> Goal: Organize/Inform -> Presentation: Filterable card grid -> Interaction: Filter by category, click card for details -> Justification: Easy navigation of diverse strategies. Library/Method: HTML/JS.
+        - Report Info: KPIs (Table 3) -> Goal: Inform/Track -> Presentation: Interactive HTML table, Gauge/Bar charts for targets -> Interaction: Sort table, view visual targets -> Justification: Clear KPI overview and visual benchmarks. Library/Method: HTML/JS, Chart.js.
+        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      header img {
+        max-width: 100%; /* Adjust as needed for your desired maximum width */
+        max-height: 80px; /* Adjust as needed for your desired maximum height */
+        width: auto;
+        height: auto;
+      }
+      .tab-button.active {
+        border-color: #0d9488;
+        color: #0d9488;
+        background-color: #f0fdfa;
+      }
+      .tab-button {
+        transition: all 0.3s ease;
+      }
+      .content-section {
+        display: none;
+      }
+      .content-section.active {
+        display: block;
+      }
+      .card {
+        background-color: white;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+      }
+      .chart-container {
+        position: relative;
+        width: 100%;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        height: 300px;
+        max-height: 400px;
+      }
+      @media (min-width: 768px) {
+        .chart-container {
+          height: 350px;
+        }
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 0.75rem;
+        border: 1px solid #e5e7eb;
+      }
+      th {
+        background-color: #f3f4f6;
+      }
+      .kpi-card {
+        border: 1px solid #d1d5db;
+      }
+      .details-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease-out;
+      }
+      .details-content.open {
+        max-height: 1000px;
+      } /* Adjust as needed */
+      .filter-button.active {
+        background-color: #0d9488;
+        color: white;
+      }
+    </style>
+  </head>
+  <body class="bg-slate-50 text-slate-800">
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+      <header class="mb-8 text-center">
+        <img
+          src="images/usgi.png"
+          alt="Company Logo"
+          class="mx-auto mb-4 rounded-md"
+        />
+        <h1 class="text-3xl sm:text-4xl font-bold text-teal-700">
+          Strategic Imperatives for General Insurers
+        </h1>
+        <p class="text-lg text-slate-600 mt-2">
+          Navigating IRDAI RUSO Obligations and Andhra Pradesh's State Insurance
+          Plan
+        </p>
+      </header>
+
+      <nav class="mb-8">
+        <div class="flex flex-wrap justify-center border-b border-slate-300">
+          <button
+            class="tab-button py-3 px-4 sm:px-6 border-b-2 border-transparent hover:border-amber-500 focus:outline-none active"
+            data-tab="overview"
+          >
+            Overview
+          </button>
+          <button
+            class="tab-button py-3 px-4 sm:px-6 border-b-2 border-transparent hover:border-amber-500 focus:outline-none"
+            data-tab="ruso"
+          >
+            RUSO Deep Dive
+          </button>
+          <button
+            class="tab-button py-3 px-4 sm:px-6 border-b-2 border-transparent hover:border-amber-500 focus:outline-none"
+            data-tab="sip"
+          >
+            SIP - Andhra Pradesh
+          </button>
+          <button
+            class="tab-button py-3 px-4 sm:px-6 border-b-2 border-transparent hover:border-amber-500 focus:outline-none"
+            data-tab="synergy"
+          >
+            RUSO+SIP Synergy
+          </button>
+          <button
+            class="tab-button py-3 px-4 sm:px-6 border-b-2 border-transparent hover:border-amber-500 focus:outline-none"
+            data-tab="roadmap"
+          >
+            904 Villages Roadmap
+          </button>
+          <button
+            class="tab-button py-3 px-4 sm:px-6 border-b-2 border-transparent hover:border-amber-500 focus:outline-none"
+            data-tab="kpis"
+          >
+            KPIs
+          </button>
+        </div>
+      </nav>
+
+      <main>
+        <section id="overview" class="content-section active">
+          <h2 class="text-2xl font-semibold text-teal-600 mb-4">
+            I. Executive Summary
+          </h2>
+          <div class="card">
+            <p class="mb-4">
+              The Insurance Regulatory and Development Authority of India
+              (IRDAI) has introduced the Master Circular on Rural, Social
+              Sector, and Motor Third-Party (RUSO) Obligations, marking a
+              pivotal shift towards granular, outcome-based compliance for
+              general insurers. This regulatory evolution emphasizes geographic
+              penetration at the Gram Panchayat level, aligning with the State
+              Insurance Plan (SIP) in Andhra Pradesh, a key component of IRDAI's
+              "Insurance for All by 2047" vision.
+            </p>
+            <p class="mb-4">
+              For a general insurance company allotted 904 Villages in Andhra
+              Pradesh, this presents both a compliance imperative and a market
+              development opportunity. Success requires tailored products,
+              innovative distribution, technology integration, and community
+              engagement.
+            </p>
+            <p>
+              This interactive application provides a structured exploration of
+              these strategic imperatives, helping to understand the regulatory
+              landscape, state-specific plans, and a potential roadmap for
+              achieving compliance and growth.
+            </p>
+          </div>
+        </section>
+
+        <section id="ruso" class="content-section">
+          <h2 class="text-2xl font-semibold text-teal-600 mb-4">
+            II. Understanding the Regulatory Framework: IRDAI Master Circular on
+            RUSO
+          </h2>
+          <p class="mb-6 text-slate-600">
+            This section delves into the IRDAI Master Circular on Rural, Social
+            Sector, and Motor Third-Party (RUSO) Obligations. It outlines the
+            shift towards qualitative outcomes, revised definitions critical for
+            compliance, and specific criteria for general insurance companies.
+            Explore the interactive elements to understand the nuances of these
+            obligations.
+          </p>
+
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <div
+              class="card_ruso_def card cursor-pointer hover:shadow-lg transition-shadow"
+              data-detail="ruso_rural_def"
+            >
+              <h3 class="text-xl font-semibold text-amber-700 mb-2">
+                Revised Definition: Rural Sector
+              </h3>
+              <p class="text-sm text-slate-600">
+                Areas under Gram Panchayats. Click to see details.
+              </p>
+              <div id="ruso_rural_def" class="details-content mt-2 text-sm">
+                <p>
+                  Updated to include areas administered under Gram Panchayats,
+                  as constituted by State Governments. Replaces Census-based
+                  classification. Requires coordination with Gram Sarpanch and
+                  Gram Sachiv.
+                </p>
+              </div>
+            </div>
+            <div
+              class="card_ruso_def card cursor-pointer hover:shadow-lg transition-shadow"
+              data-detail="ruso_social_def"
+            >
+              <h3 class="text-xl font-semibold text-amber-700 mb-2">
+                Revised Definition: Social Sector
+              </h3>
+              <p class="text-sm text-slate-600">
+                Expanded scope. Click to see details.
+              </p>
+              <div id="ruso_social_def" class="details-content mt-2 text-sm">
+                <p>
+                  "Unorganised sector" aligned with Unorganised Workers Social
+                  Security Act, 2008 (enterprises <10 workers). "Persons with
+                  disability" aligned with Rights of Persons with Disabilities
+                  Act, 2016.
+                </p>
+              </div>
+            </div>
+            <div
+              class="card_ruso_def card cursor-pointer hover:shadow-lg transition-shadow"
+              data-detail="ruso_lives_def"
+            >
+              <h3 class="text-xl font-semibold text-amber-700 mb-2">
+                Revised Definition: "Lives"
+              </h3>
+              <p class="text-sm text-slate-600">
+                Human lives insured. Click to see details.
+              </p>
+              <div id="ruso_lives_def" class="details-content mt-2 text-sm">
+                <p>
+                  Refers to human lives insured, irrespective of whether they
+                  were newly insured during the financial year. Renewals and
+                  existing covers contribute.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <h3 class="text-xl font-semibold text-teal-600 mb-3">
+            General Insurance Company Compliance Criteria (FY 2024-25 - Pilot
+            Basis)
+          </h3>
+          <div class="card mb-8">
+            <p class="mb-4 text-sm text-slate-600">
+              The table below summarizes the key compliance criteria for general
+              insurers for FY 2024-25. Note the specific targets for rural,
+              social, and motor third-party segments. A chart visualizes key
+              percentage targets.
+            </p>
+            <div class="overflow-x-auto mb-6">
+              <table id="rusoComplianceTable">
+                <thead>
+                  <tr>
+                    <th>Category</th>
+                    <th>Obligation Type</th>
+                    <th>Specific Criteria (FY 2024-25)</th>
+                    <th>Key Notes</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+            <div class="chart-container">
+              <canvas id="rusoTargetsChart"></canvas>
+            </div>
+            <p class="mt-4 text-xs text-slate-500">
+              Interact with the table headers to sort data (functionality
+              illustrative, full sort not implemented in this static example).
+              The chart highlights key percentage-based targets from the Rural
+              and Social sectors.
+            </p>
+          </div>
+
+          <h3 class="text-xl font-semibold text-teal-600 mb-3">
+            Role of Industry Councils
+          </h3>
+          <div class="card">
+            <p>
+              The Life Insurance Council and General Insurance Council play an
+              enhanced role in ensuring compliance, allocating Gram Panchayats,
+              collating data, and collaborating with authorities to identify
+              uninsured vehicles. This centralized coordination aims to
+              streamline efforts and ensure equitable distribution of targets.
+            </p>
+          </div>
+        </section>
+
+        <section id="sip" class="content-section">
+          <h2 class="text-2xl font-semibold text-teal-600 mb-4">
+            III. The State Insurance Plan (SIP) in Andhra Pradesh
+          </h2>
+          <p class="mb-6 text-slate-600">
+            This section explores Andhra Pradesh's State Insurance Plan (SIP), a
+            key initiative for IRDAI's "Insurance for All by 2047" vision. It
+            covers the "Bima Trinity" program, the Lead Insurer concept, and
+            AP's specific insurance initiatives, highlighting the collaborative
+            framework envisioned.
+          </p>
+
+          <h3 class="text-xl font-semibold text-teal-600 mb-3">
+            The "Bima Trinity" Program
+          </h3>
+          <div class="grid md:grid-cols-3 gap-6 mb-8">
+            <div class="card text-center">
+              <span class="text-4xl text-amber-600">🛍️</span>
+              <h4 class="font-semibold mt-2">Bima Sugam</h4>
+              <p class="text-sm text-slate-600 mt-1">
+                Open marketplace for sale, service, and claims (Digital Public
+                Infrastructure).
+              </p>
+            </div>
+            <div class="card text-center">
+              <span class="text-4xl text-amber-600">🛡️</span>
+              <h4 class="font-semibold mt-2">Bima Vistar</h4>
+              <p class="text-sm text-slate-600 mt-1">
+                Comprehensive bundled risk cover (life, health, property,
+                casualty) with defined benefits for faster payouts.
+              </p>
+            </div>
+            <div class="card text-center">
+              <span class="text-4xl text-amber-600">👩‍💼</span>
+              <h4 class="font-semibold mt-2">Bima Vaahaks</h4>
+              <p class="text-sm text-slate-600 mt-1">
+                Women-centric workforce at Gram Sabha level for last-mile
+                penetration. Portal soft launch expected April 2025.
+              </p>
+            </div>
+          </div>
+
+          <h3 class="text-xl font-semibold text-teal-600 mb-3">
+            Lead Insurer Concept in Andhra Pradesh
+          </h3>
+          <div class="card mb-8">
+            <p class="mb-2">
+              Central to SIP implementation. Designated insurers for AP:
+            </p>
+            <ul class="list-disc list-inside text-slate-700">
+              <li>Universal Sompo General Insurance Company</li>
+              <li>Star Health and Allied Insurance Company Limited</li>
+              <li>MetLife Insurance Company Limited</li>
+            </ul>
+            <p class="mt-2">
+              Lead Insurers foster collaboration, develop actionable plans to
+              increase penetration, and support state government initiatives.
+              They also play a pivotal role in driving collective Gram Panchayat
+              targets for RUSO.
+            </p>
+          </div>
+
+          <h3 class="text-xl font-semibold text-teal-600 mb-3">
+            Andhra Pradesh's Specific Insurance Initiatives
+          </h3>
+          <div class="card mb-8">
+            <p class="mb-2">
+              AP has strong state-sponsored health schemes (e.g., Rs 25 lakh
+              health coverage per family via hybrid model). This indicates a
+              robust framework for government-private sector collaboration.
+            </p>
+            <p>
+              General insurers can align RUSO efforts with these schemes,
+              leveraging existing infrastructure and trust, potentially
+              cross-selling property/motor insurance.
+            </p>
+          </div>
+          <h3 class="text-xl font-semibold text-teal-600 mb-3">
+            Framework for Collaboration
+          </h3>
+          <div class="card">
+            <p class="mb-2">
+              IRDAI emphasizes multi-stakeholder collaboration: government,
+              regulators, insurers, InsurTech, NGOs, SHGs, local bodies, etc.
+              This ecosystem approach is crucial for reaching the "last mile."
+              For insurers, this means seeking partnerships beyond traditional
+              channels.
+            </p>
+            <p class="mt-2">
+              To further streamline efforts and ensure cohesive implementation,
+              the formation of a **State Level Insurance Committee (SLIC)**,
+              akin to the State Level Bankers Committee (SLBC), is envisioned.
+              This committee would serve as a unified forum for all insurers
+              operating in the state, along with state government
+              representatives, Lead Insurers, and other key stakeholders. Its
+              primary role would be to facilitate regular coordination, review
+              progress on SIP and RUSO targets, address operational challenges,
+              and collectively strategize for deeper insurance penetration
+              across Andhra Pradesh. Such a committee would ensure that all
+              efforts are aligned, resources are optimally utilized, and a
+              consistent approach is adopted across the state, fostering a truly
+              collaborative environment for achieving "Insurance for All by
+              2047."
+            </p>
+          </div>
+        </section>
+
+        <section id="synergy" class="content-section">
+          <h2 class="text-2xl font-semibold text-teal-600 mb-4">
+            IV. Strategic Overlay: Harmonizing RUSO Compliance with AP's SIP
+          </h2>
+          <p class="mb-6 text-slate-600">
+            This section examines how IRDAI's RUSO obligations and Andhra
+            Pradesh's SIP can be harmonized. It analyzes the challenges and
+            opportunities for rural insurance penetration in AP and discusses
+            how SIP structures can aid efficient RUSO fulfillment.
+          </p>
+
+          <div class="card mb-8">
+            <p class="mb-4">
+              RUSO's Gram Panchayat focus complements SIP's state-level goals.
+              Inclusion of government schemes in RUSO links directly to AP's
+              health programs. Viewing RUSO as part of SIP and "Insurance for
+              All by 2047" optimizes resources and impact.
+            </p>
+          </div>
+
+          <h3 class="text-xl font-semibold text-teal-600 mb-3">
+            Challenges and Opportunities in Rural AP
+          </h3>
+          <div class="grid md:grid-cols-2 gap-6 mb-8">
+            <div class="card">
+              <h4 class="font-semibold text-red-600 mb-2">Challenges</h4>
+              <ul class="list-disc list-inside text-sm space-y-1">
+                <li>Lack of awareness & financial literacy</li>
+                <li>Trust and credibility issues (vs. PSUs)</li>
+                <li>Affordability and economic constraints</li>
+                <li>Accessibility and distribution hurdles</li>
+                <li>Product design and pricing suitability</li>
+                <li>Digital divide (connectivity, access)</li>
+                <li>Overcoming "trust deficit" is paramount.</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h4 class="font-semibold text-green-600 mb-2">Opportunities</h4>
+              <ul class="list-disc list-inside text-sm space-y-1">
+                <li>Vast untapped rural market (70%+ population)</li>
+                <li>Government support & schemes (subsidies, integration)</li>
+                <li>Growing digital infrastructure (mobile/internet)</li>
+                <li>Existing community networks (NGOs, SHGs, CSCs)</li>
+                <li>Focus on specific rural needs (tailored products)</li>
+              </ul>
+            </div>
+          </div>
+          <p class="mb-4 text-sm text-slate-600">
+            The key to unlocking opportunities lies in addressing the
+            challenges, particularly by building trust through transparency,
+            simple processes, local presence, and leveraging community networks.
+            The Bima Vaahaks initiative directly targets this.
+          </p>
+
+          <h3 class="text-xl font-semibold text-teal-600 mb-3">
+            Leveraging SIP Structures for RUSO Fulfillment
+          </h3>
+          <div class="card">
+            <p>
+              Active participation in state-level meetings with Lead Insurers
+              (Universal Sompo, Star Health, MetLife) is crucial for alignment,
+              avoiding duplication, and sharing best practices. Collaboration
+              with Councils for data (e.g., uninsured vehicles) and exploring
+              co-insurance or joint initiatives for products like Bima Vistar
+              can enhance efficiency. The SIP framework aids market mapping and
+              target identification.
+            </p>
+          </div>
+        </section>
+
+        <section id="roadmap" class="content-section">
+          <h2 class="text-2xl font-semibold text-teal-600 mb-4">
+            V. Strategic Roadmap for 904 Allotted Villages in AP
+          </h2>
+          <p class="mb-6 text-slate-600">
+            This section outlines a multi-pronged strategic roadmap to achieve
+            SIP objectives and RUSO compliance in 1000 allotted villages. It
+            covers granular needs assessment, product development, distribution,
+            technology integration, awareness campaigns, and operational
+            frameworks. Use the filters to explore initiatives by category.
+          </p>
+
+          <div class="mb-6 flex flex-wrap gap-2">
+            <button
+              class="filter-button bg-slate-200 hover:bg-slate-300 text-slate-700 text-sm py-2 px-3 rounded-md active"
+              data-filter="all"
+            >
+              All Categories
+            </button>
+            <button
+              class="filter-button bg-slate-200 hover:bg-slate-300 text-slate-700 text-sm py-2 px-3 rounded-md"
+              data-filter="Needs Assessment"
+            >
+              Needs Assessment
+            </button>
+            <button
+              class="filter-button bg-slate-200 hover:bg-slate-300 text-slate-700 text-sm py-2 px-3 rounded-md"
+              data-filter="Product Development"
+            >
+              Product Development
+            </button>
+            <button
+              class="filter-button bg-slate-200 hover:bg-slate-300 text-slate-700 text-sm py-2 px-3 rounded-md"
+              data-filter="Distribution"
+            >
+              Distribution
+            </button>
+            <button
+              class="filter-button bg-slate-200 hover:bg-slate-300 text-slate-700 text-sm py-2 px-3 rounded-md"
+              data-filter="Technology"
+            >
+              Technology
+            </button>
+            <button
+              class="filter-button bg-slate-200 hover:bg-slate-300 text-slate-700 text-sm py-2 px-3 rounded-md"
+              data-filter="Awareness & Education"
+            >
+              Awareness & Education
+            </button>
+            <button
+              class="filter-button bg-slate-200 hover:bg-slate-300 text-slate-700 text-sm py-2 px-3 rounded-md"
+              data-filter="Operations & Monitoring"
+            >
+              Operations & Monitoring
+            </button>
+          </div>
+
+          <div
+            id="roadmapInitiativesGrid"
+            class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
+          ></div>
+          <p class="mt-6 text-xs text-slate-500">
+            Each card represents a strategic initiative. Click the filter
+            buttons to narrow down the initiatives by their strategic category.
+            This helps in understanding the multifaceted approach required for
+            successful rural penetration.
+          </p>
+        </section>
+
+        <section id="kpis" class="content-section">
+          <h2 class="text-2xl font-semibold text-teal-600 mb-4">
+            VI. Key Performance Indicators (KPIs) for SIP & RUSO Compliance
+          </h2>
+          <p class="mb-6 text-slate-600">
+            This section presents Key Performance Indicators (KPIs) to monitor
+            progress towards SIP and RUSO compliance in the allotted villages.
+            It includes targets for rural coverage, social sector, motor
+            third-party, distribution, awareness, and operational efficiency.
+            The table provides an overview, and charts will visualize some key
+            targets.
+          </p>
+
+          <div class="card mb-8">
+            <p class="mb-4 text-sm text-slate-600">
+              The following table outlines illustrative KPIs and targets for FY
+              2024-25. Monitoring these metrics is crucial for tracking progress
+              and making strategic adjustments.
+            </p>
+            <div class="overflow-x-auto mb-6">
+              <table id="kpiTable">
+                <thead>
+                  <tr>
+                    <th>Category</th>
+                    <th>Key Performance Indicator (KPI)</th>
+                    <th>Target (FY 2024-25, Illustrative)</th>
+                    <th>Measurement Frequency</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+            <p class="mt-2 text-xs text-slate-500">
+              This table provides a comprehensive list of KPIs. Specific targets
+              like rural dwelling/vehicle coverage and social sector lives are
+              critical for RUSO compliance.
+            </p>
+          </div>
+
+          <h3 class="text-xl font-semibold text-teal-600 mb-3">
+            Visualizing Key Targets
+          </h3>
+          <p class="mb-4 text-sm text-slate-600">
+            The charts below provide a visual representation of some critical
+            target KPIs, such as rural coverage percentages and distribution
+            network growth.
+          </p>
+          <div class="grid md:grid-cols-2 gap-6">
+            <div class="card">
+              <h4 class="font-semibold mb-2 text-center">
+                Rural Coverage Targets (%)
+              </h4>
+              <div class="chart-container h-64 sm:h-72">
+                <canvas id="kpiRuralCoverageChart"></canvas>
+              </div>
+              <p class="mt-2 text-xs text-slate-500 text-center">
+                Target: 30% dwellings and 30% vehicles insured in allocated Gram
+                Panchayats.
+              </p>
+            </div>
+            <div class="card">
+              <h4 class="font-semibold mb-2 text-center">
+                Distribution Network Growth
+              </h4>
+              <div class="chart-container h-64 sm:h-72">
+                <canvas id="kpiDistributionChart"></canvas>
+              </div>
+              <p class="mt-2 text-xs text-slate-500 text-center">
+                Illustrative targets for Bima Vaahaks and CSC/VLE partnerships.
+              </p>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="mt-12 pt-8 border-t border-slate-300 text-center">
+        <p class="text-sm text-slate-500">
+          &copy; USGICL | 2024 General Insurer Strategic Planning Tool.
+          Information based on IRDAI Master Circular Ref: IRDAI/NL/CIR/77/5/2024
+          and related analyses.
+        </p>
+      </footer>
+    </div>
+
+    <script>
+      const tabButtons = document.querySelectorAll(".tab-button");
+      const contentSections = document.querySelectorAll(".content-section");
+      const rusoDefCards = document.querySelectorAll(".card_ruso_def");
+
+      tabButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          tabButtons.forEach((btn) => btn.classList.remove("active"));
+          button.classList.add("active");
+          const tabName = button.getAttribute("data-tab");
+          contentSections.forEach((section) => {
+            section.classList.remove("active");
+            if (section.id === tabName) {
+              section.classList.add("active");
+            }
+          });
+        });
+      });
+
+      rusoDefCards.forEach((card) => {
+        card.addEventListener("click", () => {
+          const detailId = card.getAttribute("data-detail");
+          const detailElement = document.getElementById(detailId);
+          detailElement.classList.toggle("open");
+        });
+      });
+
+      const rusoComplianceData = [
+        {
+          category: "Rural Sector",
+          type: "Gram Panchayat Coverage (Collective)",
+          criteria: "Minimum 25,000 Gram Panchayats across India",
+          notes:
+            "Councils allocate specific GPs to insurers to prevent overlap.",
+        },
+        {
+          category: "Rural Sector",
+          type: "Dwellings & Shops (Individual GP)",
+          criteria:
+            "Minimum 30% of dwellings and shops in each allocated Gram Panchayat",
+          notes: "Applies to dwellings under fire insurance.",
+        },
+        {
+          category: "Rural Sector",
+          type: "Vehicles (Individual GP)",
+          criteria: "Minimum 30% of vehicles in each allocated Gram Panchayat",
+          notes:
+            "Applies to vehicles under motor insurance (Comprehensive and TP).",
+        },
+        {
+          category: "Social Sector",
+          type: "Lives Covered",
+          criteria: "Minimum 10% of total insured lives",
+          notes:
+            "Applies to all general insurers, regardless of age. Councils collate and share data.",
+        },
+        {
+          category: "Social Sector",
+          type: "Self-Certification",
+          criteria:
+            "Up to 20% of total social sector obligations can be fulfilled via self-certification with proofs.",
+          notes:
+            "Beyond 20%, government-backed identity cards or other formal proofs are required.",
+        },
+        {
+          category: "Motor Third-Party",
+          type: "Vehicle Segment Increase",
+          criteria:
+            "Increase in goods-carrying, passenger-carrying vehicles, and tractors based on previous FY market share.",
+          notes: "New insurers have no exemption.",
+        },
+        {
+          category: "Motor Third-Party",
+          type: "Minimum Vehicle Thresholds",
+          criteria:
+            "5,000 goods-carrying vehicles, 5,000 passenger-carrying vehicles, 1,000 tractors (miscellaneous segment).",
+          notes: "Applies to all general insurers.",
+        },
+        {
+          category: "Overall",
+          type: "Incentives",
+          criteria:
+            "Suitable rewards for exceeding minimum obligations and increasing spread of insurance.",
+          notes: 'Encourages "complete saturation" of Gram Panchayats.',
+        },
+      ];
+
+      const rusoTableBody = document
+        .getElementById("rusoComplianceTable")
+        .getElementsByTagName("tbody")[0];
+      rusoComplianceData.forEach((item) => {
+        let row = rusoTableBody.insertRow();
+        row.insertCell().textContent = item.category;
+        row.insertCell().textContent = item.type;
+        row.insertCell().textContent = item.criteria;
+        row.insertCell().textContent = item.notes;
+      });
+
+      const rusoTargetsCtx = document
+        .getElementById("rusoTargetsChart")
+        .getContext("2d");
+      new Chart(rusoTargetsCtx, {
+        type: "bar",
+        data: {
+          labels: [
+            "Dwellings/Shops (Rural GP)",
+            "Vehicles (Rural GP)",
+            "Social Sector Lives",
+          ],
+          datasets: [
+            {
+              label: "Minimum Coverage Target (%)",
+              data: [30, 30, 10],
+              backgroundColor: ["#0D9488", "#0F766E", "#14B8A6"],
+              borderColor: ["#047857", "#065F46", "#0D9488"],
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 40,
+              title: { display: true, text: "Percentage (%)" },
+            },
+          },
+          plugins: {
+            legend: { display: false },
+            title: {
+              display: true,
+              text: "Key RUSO Percentage Targets (FY 2024-25)",
+            },
+          },
+        },
+      });
+
+      const roadmapInitiatives = [
+        {
+          category: "Needs Assessment",
+          action: "Conduct village-level surveys and FGDs in all 904 Villages.",
+          stakeholders: "Rural Sales Team, Market Research, Local Partners",
+          outcome: "Detailed village risk profiles & socio-economic data.",
+        },
+        {
+          category: "Needs Assessment",
+          action:
+            "Map existing community networks (SHGs, NGOs, CSCs) & government schemes.",
+          stakeholders:
+            "Rural Sales Team, Partnerships, Local Government Liaison",
+          outcome:
+            "Database of local partners & scheme integration opportunities.",
+        },
+        {
+          category: "Product Development",
+          action:
+            "Design 3-5 new microinsurance/package policies for common rural risks (e.g., crop, livestock, dwelling, motor).",
+          stakeholders: "Product Development, Actuarial, Underwriting",
+          outcome: "Launch of tailored, affordable, and simple products.",
+        },
+        {
+          category: "Product Development",
+          action:
+            "Integrate products with identified government social security schemes.",
+          stakeholders: "Product Development, Legal, Partnerships",
+          outcome:
+            "Increased social sector lives covered via scheme beneficiaries.",
+        },
+        {
+          category: "Distribution",
+          action:
+            "Onboard & train 500 Bima Vaahaks (50% from each village cluster).",
+          stakeholders: "HR, Training, Rural Sales Team, Local Partners",
+          outcome: "Active, women-centric field force with local trust.",
+        },
+        {
+          category: "Distribution",
+          action:
+            "Establish partnerships with 200 Common Service Centres (CSCs) & their VLEs/RAPs.",
+          stakeholders: "Partnerships, Rural Sales Team",
+          outcome: "Expanded physical touchpoints for policy sales & service.",
+        },
+        {
+          category: "Distribution",
+          action:
+            "Collaborate with 100 local SHGs/NGOs for outreach & distribution.",
+          stakeholders: "Partnerships, Rural Sales Team",
+          outcome: "Leveraging existing trusted community networks.",
+        },
+        {
+          category: "Technology",
+          action:
+            "Deploy mobile-first application for policy issuance, premium collection & basic claims intimation.",
+          stakeholders: "IT, Product Development, Rural Sales Team",
+          outcome:
+            "80% digital policy issuance & 50% digital premium collection.",
+        },
+        {
+          category: "Technology",
+          action:
+            "Implement AI-driven chatbots for local language support & basic queries.",
+          stakeholders: "IT, Customer Service",
+          outcome: "Improved customer experience & reduced operational load.",
+        },
+        {
+          category: "Technology",
+          action:
+            "Utilize satellite imagery/drones for crop damage assessment (where applicable).",
+          stakeholders: "Claims, Underwriting, IT",
+          outcome: "Faster & more accurate agricultural claim settlements.",
+        },
+        {
+          category: "Awareness & Education",
+          action:
+            "Conduct 2 workshops per village annually on financial literacy & insurance benefits.",
+          stakeholders: "Marketing, Rural Sales Team, Local Partners",
+          outcome:
+            "20% increase in insurance awareness scores in target villages.",
+        },
+        {
+          category: "Awareness & Education",
+          action:
+            "Develop localized communication materials (brochures, short videos) in regional languages.",
+          stakeholders: "Marketing",
+          outcome: "Enhanced understanding & engagement with products.",
+        },
+        {
+          category: "Operations & Monitoring",
+          action:
+            "Establish a dedicated rural business unit with clear targets.",
+          stakeholders: "Senior Management, Operations",
+          outcome: "Streamlined focus & accountability for rural penetration.",
+        },
+        {
+          category: "Operations & Monitoring",
+          action:
+            "Implement flexible premium payment options (monthly/seasonal).",
+          stakeholders: "Operations, Finance",
+          outcome: "Improved affordability & reduced policy lapses.",
+        },
+        {
+          category: "Operations & Monitoring",
+          action:
+            "Regular reporting & review meetings with Lead Insurers & Councils.",
+          stakeholders: "Senior Management, Compliance",
+          outcome: "Alignment with SIP & collective RUSO targets.",
+        },
+      ];
+
+      const roadmapGrid = document.getElementById("roadmapInitiativesGrid");
+      const filterButtons = document.querySelectorAll(".filter-button");
+
+      function displayInitiatives(filter = "all") {
+        roadmapGrid.innerHTML = "";
+        const filteredInitiatives =
+          filter === "all"
+            ? roadmapInitiatives
+            : roadmapInitiatives.filter((item) => item.category === filter);
+
+        if (filteredInitiatives.length === 0) {
+          roadmapGrid.innerHTML = `<p class="col-span-full text-center text-slate-500">No initiatives found for this category.</p>`;
+          return;
+        }
+
+        filteredInitiatives.forEach((item) => {
+          const card = document.createElement("div");
+          card.className = "card roadmap-item";
+          card.setAttribute("data-category", item.category);
+          card.innerHTML = `
+                <h4 class="font-semibold text-amber-700 mb-1">${item.action}</h4>
+                <p class="text-xs text-teal-600 mb-2"><strong>Category:</strong> ${item.category}</p>
+                <p class="text-sm mb-1"><strong>Stakeholders:</strong> ${item.stakeholders}</p>
+                <p class="text-sm"><strong>Expected Outcome:</strong> ${item.outcome}</p>
+            `;
+          roadmapGrid.appendChild(card);
+        });
+      }
+
+      filterButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          filterButtons.forEach((btn) => btn.classList.remove("active"));
+          button.classList.add("active");
+          displayInitiatives(button.getAttribute("data-filter"));
+        });
+      });
+      displayInitiatives();
+
+      const kpiData = [
+        {
+          area: "Rural Coverage",
+          kpi: "Number of Gram Panchayats with active policies",
+          target: "All 1000 allotted villages",
+          frequency: "Quarterly",
+        },
+        {
+          area: "Rural Coverage",
+          kpi: "% of Dwellings Insured in allocated GPs",
+          target: "30% of dwellings in each allocated GP",
+          frequency: "Annually",
+        },
+        {
+          area: "Rural Coverage",
+          kpi: "% of Vehicles Insured in allocated GPs",
+          target: "30% of vehicles in each allocated GP",
+          frequency: "Annually",
+        },
+        {
+          area: "Social Sector",
+          kpi: "% of Social Sector Lives Covered (of total lives insured)",
+          target: "10% of total lives covered",
+          frequency: "Annually",
+        },
+        {
+          area: "Social Sector",
+          kpi: "% of Self-Certified Social Sector Policies",
+          target: "Max 20% of total social sector obligations",
+          frequency: "Annually",
+        },
+        {
+          category: "Motor Third-Party",
+          kpi: "Incremental Goods-Carrying Vehicles Insured",
+          target: "X% increase based on market share, min. 5,000 vehicles",
+          frequency: "Annually",
+        },
+        {
+          category: "Motor Third-Party",
+          kpi: "Incremental Passenger-Carrying Vehicles Insured",
+          target: "Y% increase based on market share, min. 5,000 vehicles",
+          frequency: "Annually",
+        },
+        {
+          category: "Motor Third-Party",
+          kpi: "Incremental Tractors (Misc.) Insured",
+          target: "Z% increase based on market share, min. 1,000 vehicles",
+          frequency: "Annually",
+        },
+        {
+          area: "Distribution",
+          kpi: "Number of Active Bima Vaahaks onboarded",
+          target: "500",
+          frequency: "Quarterly",
+        },
+        {
+          area: "Distribution",
+          kpi: "Number of Active CSC/VLE partnerships",
+          target: "200",
+          frequency: "Quarterly",
+        },
+        {
+          area: "Distribution",
+          kpi: "% of policies issued digitally",
+          target: "80%",
+          frequency: "Monthly",
+        },
+        {
+          area: "Awareness & Trust",
+          kpi: "% Increase in Financial Literacy Scores (pre/post workshops)",
+          target: "20%",
+          frequency: "Annually",
+        },
+        {
+          area: "Awareness & Trust",
+          kpi: "Average Claim Settlement Time (rural policies)",
+          target: "< 7 days (for defined benefit/microinsurance)",
+          frequency: "Quarterly",
+        },
+        {
+          area: "Awareness & Trust",
+          kpi: "Customer Satisfaction Score (rural segment)",
+          target: "> 80%",
+          frequency: "Biannually",
+        },
+        {
+          area: "Operational Efficiency",
+          kpi: "Cost of Acquisition per Rural Policy",
+          target: "Reduction by 15%",
+          frequency: "Annually",
+        },
+        {
+          area: "Operational Efficiency",
+          kpi: "Policy Renewal Rate (rural segment)",
+          target: "> 70%",
+          frequency: "Annually",
+        },
+      ];
+
+      const kpiTableBody = document
+        .getElementById("kpiTable")
+        .getElementsByTagName("tbody")[0];
+      kpiData.forEach((item) => {
+        let row = kpiTableBody.insertRow();
+        row.insertCell().textContent = item.area;
+        row.insertCell().textContent = item.kpi;
+        row.insertCell().textContent = item.target;
+        row.insertCell().textContent = item.frequency;
+      });
+
+      const kpiRuralCtx = document
+        .getElementById("kpiRuralCoverageChart")
+        .getContext("2d");
+      new Chart(kpiRuralCtx, {
+        type: "doughnut",
+        data: {
+          labels: [
+            "Dwellings Target Met (Illustrative)",
+            "Dwellings Target Remaining",
+            "Vehicles Target Met (Illustrative)",
+            "Vehicles Target Remaining",
+          ],
+          datasets: [
+            {
+              label: "Rural Coverage %",
+              data: [15, 15, 10, 20], // Illustrative actual vs remaining for 30% target
+              backgroundColor: ["#0D9488", "#A7F3D0", "#0F766E", "#99F6E4"],
+              hoverOffset: 4,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: "bottom" },
+            title: { display: false },
+          },
+        },
+      });
+
+      const kpiDistCtx = document
+        .getElementById("kpiDistributionChart")
+        .getContext("2d");
+      new Chart(kpiDistCtx, {
+        type: "bar",
+        data: {
+          labels: ["Bima Vaahaks Onboarded", "CSC/VLE Partnerships"],
+          datasets: [
+            {
+              label: "Target Count",
+              data: [500, 200],
+              backgroundColor: ["#F59E0B", "#D97706"],
+            },
+            {
+              label: "Achieved (Illustrative)",
+              data: [250, 100], // Illustrative actual
+              backgroundColor: ["#FEF3C7", "#FFECCB"],
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: { beginAtZero: true, title: { display: true, text: "Number" } },
+          },
+          plugins: {
+            legend: { position: "bottom" },
+            title: { display: false },
+          },
+        },
+      });
+
+      Chart.defaults.font.family = "Inter, sans-serif";
+      Chart.defaults.color = "#334155"; // slate-700
+    </script>
+  </body>
+</html>

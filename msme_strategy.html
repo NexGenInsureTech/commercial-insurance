@@ -10,14 +10,15 @@
       rel="stylesheet"
     />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chosen Palette: Warm Neutrals with Teal Accent (Background: Amber-50, Containers: White/Amber-100, Text: Neutral-800, Accent: Teal-600) -->
     <!-- Application Structure Plan: 
         Theme: "Navigating the MSME Insurance Landscape in India."
         Structure: A multi-section SPA with a sticky top navigation bar.
         1.  Home/Dashboard: Executive Summary highlights, key MSME statistics (contribution to GDP, employment, total number), and the core problem (low insurance penetration). Interaction: Dynamic display of key stats.
         2.  MSME Profile: Detailed information on MSME classification (interactive table for old vs. new criteria), overview of their economic contribution, and a section on MSME clusters (interactive table of prominent clusters). Interaction: Toggle for classification table, potential filters for cluster table.
         3.  The Insurance Gap: Focus on the current state of insurance penetration (prominent display of low rates), key reasons for underinsurance (interactive cards/list), and common business risks faced by MSMEs (categorized list). Interaction: Clickable elements for details on reasons.
-        4.  Tailored Insurance Solutions: Interactive section where users can select an MSME sector (Manufacturing, Services, Retail, Food Processing, Textile) to see specific risks and recommended insurance types. Also, factors influencing pricing. Interaction: Sector selection dynamically updates content.
-        5.  Strategic Outreach: Covering value proposition points, strategies to overcome reluctance, effective communication channels, and leveraging government initiatives (interactive table of schemes). Interaction: Accordions or clickable cards for strategies.
+        4.  Tailored Insurance Solutions: Interactive section where users can select an MSME sector (Manufacturing, Services, Retail, Food Processing, Textile) to see specific risks and recommended insurance types. Now enhanced with detailed product structures (customer info, actuarial, underwriting, operations, pricing, benefits, exclusions, add-ons, reinsurance) for core products and a "BUY" journey simulation. Interaction: Sector selection dynamically updates content, "View Details" launches product modal, "Buy Now" launches mock purchase journey. The "Buy Now" journey is now dynamically tailored to the specific product selected, collecting relevant risk information using a simplified SPIN-like approach. PII collection is moved after quote generation. A discount option with caveats for lower premiums is also integrated.
+        5.  Strategic Outreach: Covering value proposition points, strategies to overcome reluctance, effective communication channels, and leveraging government initiatives (interactive table of schemes). Now elaborated with detailed sales and marketing plans. Interaction: Accordions or clickable cards for strategies.
         6.  Key Recommendations: Summarizing key recommendations from the report.
         User Flow: Users navigate via the top menu or scroll. Interactive elements encourage exploration.
         Why this structure?: This thematic structure breaks the report into digestible sections, flowing from general overview to specific solutions and strategies, making complex information accessible and supporting user understanding of the MSME insurance domain.
@@ -32,9 +33,14 @@
         - Insurance Needs by Sector (Table 3): Interactive Sector Selector updating content cards (HTML/CSS/JS). Goal: Compare & Inform (sector-specific). Justification: Targeted information delivery.
         - Factors Influencing Pricing: Informative Cards/List (HTML/CSS). Goal: Inform. Justification: Explains determinants.
         - Government Schemes (Table 4): Interactive HTML Table. Goal: Organize & Inform. Justification: Clear presentation.
+        - New: Detailed Product Structures for core insurance types per sector: Displayed in a modal. Goal: Inform, provide depth. Justification: Allows drilling down into product specifics.
+        - New: Mock Illustrations for products: Simple HTML/CSS/Unicode icons. Goal: Visual appeal, quick identification. Justification: Enhances user experience without heavy assets.
+        - New: "BUY" Journey Simulation: Multi-step modal with dynamically tailored input fields based on product type (capturing situation, problem, implication, need-payoff aspects relevant to insurance). PII collected later. Discount option with transparent trade-offs. Goal: Simulate process, gather relevant risk info, improve UX. Justification: Provides a more realistic and data-driven mock purchase experience with enhanced transparency.
+        - New: Elaborated Sales & Marketing Plan: Detailed text in the Strategic Outreach section. Goal: Provide actionable insights. Justification: Expands on strategic recommendations.
         - Charts: MSME Contribution (e.g., 30% GDP) visualized as simple bar chart (Chart.js). Goal: Visualize. Justification: Visual comparison.
         - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
     -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
       body {
         font-family: "Inter", sans-serif;
@@ -110,9 +116,52 @@
       .accordion-item.open .accordion-content {
         max-height: 1000px; /* Arbitrary large number */
       }
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 100;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.4);
+      }
+      .modal-content {
+        background-color: #fefefe;
+        margin: 5% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 90%;
+        max-width: 800px;
+        border-radius: 0.5rem;
+        position: relative;
+      }
+      .close-button {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+      .close-button:hover,
+      .close-button:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+      }
+      .product-card {
+        border: 1px solid #fde68a;
+        background-color: #fffbeb;
+      }
+      .buy-journey-modal-content {
+        height: 75vh;
+        overflow-y: auto;
+      } /* Increased height and scroll for buy journey modal */
     </style>
   </head>
   <body class="bg-amber-50 text-neutral-800">
+    <!-- Navigation -->
     <nav class="bg-white shadow-md sticky top-0 z-50">
       <div
         class="container mx-auto px-6 py-3 flex justify-between items-center"
@@ -173,6 +222,7 @@
           </button>
         </div>
       </div>
+      <!-- Mobile Menu -->
       <div id="mobile-menu" class="md:hidden hidden bg-white shadow-lg">
         <a
           href="#home"
@@ -207,7 +257,9 @@
       </div>
     </nav>
 
+    <!-- Main Content -->
     <div class="container mx-auto px-6 py-8">
+      <!-- Home/Dashboard Section -->
       <section id="home" class="mb-16">
         <h1 class="text-3xl font-bold text-teal-700 mb-4">
           Strategic Blueprint for MSME Commercial Insurance
@@ -262,6 +314,7 @@
         </div>
       </section>
 
+      <!-- MSME Profile Section -->
       <section id="msme-profile" class="mb-16">
         <h2 class="section-title">Understanding India's MSME Landscape</h2>
         <p class="mb-6 text-neutral-700">
@@ -391,6 +444,7 @@
         </div>
       </section>
 
+      <!-- Insurance Gap Section -->
       <section id="insurance-gap" class="mb-16">
         <h2 class="section-title">The Commercial Insurance Gap</h2>
         <p class="mb-6 text-neutral-700">
@@ -405,7 +459,7 @@
               Alarmingly Low Penetration
             </h3>
             <p class="text-5xl font-bold text-red-500 mb-3">&lt;15%</p>
-            <p class="text-neutral-600">
+            <p class="text-neutral-600 mt-2">
               Of MSMEs have adequate insurance. Some estimates are as low as 3%.
             </p>
             <p class="text-neutral-600 mt-2">
@@ -532,13 +586,15 @@
         </div>
       </section>
 
+      <!-- Tailored Solutions Section -->
       <section id="solutions" class="mb-16">
         <h2 class="section-title">Tailoring Insurance Solutions for MSMEs</h2>
         <p class="mb-6 text-neutral-700">
           Effectively serving the MSME market requires understanding diverse
           sectoral needs and offering customized, simplified products. This
           section explores insurance requirements by sector and factors
-          influencing pricing.
+          influencing pricing. Here you can also delve into the full product
+          structures and simulate a purchase journey.
         </p>
 
         <div class="card mb-8">
@@ -546,8 +602,8 @@
             Insurance Needs by MSME Sector
           </h3>
           <p class="text-neutral-600 mb-4">
-            Select a sector to view its specific risks and recommended insurance
-            coverage:
+            Select a sector to view its specific risks, recommended insurance
+            coverage, and detailed product structures:
           </p>
           <div class="mb-6 flex flex-wrap gap-2" id="sector-filter-buttons">
             <button
@@ -589,6 +645,13 @@
               Select a sector above to see details.
             </p>
           </div>
+
+          <div
+            id="product-cards-container"
+            class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8"
+          >
+            <!-- Product cards will be dynamically inserted here -->
+          </div>
         </div>
 
         <div class="card">
@@ -624,12 +687,718 @@
         </div>
       </section>
 
+      <!-- Product Detail Modal -->
+      <div id="product-detail-modal" class="modal">
+        <div class="modal-content">
+          <span class="close-button" id="close-product-modal">&times;</span>
+          <h3
+            id="modal-product-title"
+            class="text-2xl font-bold text-teal-700 mb-4"
+          ></h3>
+          <div id="modal-product-details" class="space-y-4 text-neutral-700">
+            <div>
+              <h4 class="font-semibold text-neutral-800 text-lg mb-1">
+                Customer Information Sheet (Key Data Points)
+              </h4>
+              <ul
+                id="modal-customer-info"
+                class="list-disc list-inside text-neutral-600 space-y-0.5"
+              ></ul>
+            </div>
+            <div>
+              <h4 class="font-semibold text-neutral-800 text-lg mb-1">
+                Actuarial Note
+              </h4>
+              <p id="modal-actuarial-note" class="text-neutral-600"></p>
+            </div>
+            <div>
+              <h4 class="font-semibold text-neutral-800 text-lg mb-1">
+                Underwriting Philosophy
+              </h4>
+              <p
+                id="modal-underwriting-philosophy"
+                class="text-neutral-600"
+              ></p>
+            </div>
+            <div>
+              <h4 class="font-semibold text-neutral-800 text-lg mb-1">
+                Operating Model (Policy Servicing & Claims)
+              </h4>
+              <p id="modal-operating-model" class="text-neutral-600"></p>
+            </div>
+            <div>
+              <h4 class="font-semibold text-neutral-800 text-lg mb-1">
+                Pricing Methodology
+              </h4>
+              <p id="modal-pricing-methodology" class="text-neutral-600"></p>
+            </div>
+            <div>
+              <h4 class="font-semibold text-neutral-800 text-lg mb-1">
+                Benefits / Coverages / Features
+              </h4>
+              <ul
+                id="modal-benefits"
+                class="list-disc list-inside text-neutral-600 space-y-0.5"
+              ></ul>
+            </div>
+            <div>
+              <h4 class="font-semibold text-neutral-800 text-lg mb-1">
+                Exclusions
+              </h4>
+              <ul
+                id="modal-exclusions"
+                class="list-disc list-inside text-neutral-600 space-y-0.5"
+              ></ul>
+            </div>
+            <div>
+              <h4 class="font-semibold text-neutral-800 text-lg mb-1">
+                Optional Add-ons / Riders
+              </h4>
+              <ul
+                id="modal-addons"
+                class="list-disc list-inside text-neutral-600 space-y-0.5"
+              ></ul>
+            </div>
+            <div>
+              <h4 class="font-semibold text-neutral-800 text-lg mb-1">
+                Reinsurance Structure
+              </h4>
+              <p id="modal-reinsurance" class="text-neutral-600"></p>
+            </div>
+          </div>
+          <button
+            id="buy-product-button"
+            class="mt-6 bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-md shadow-md"
+          >
+            Buy Now
+          </button>
+        </div>
+      </div>
+
+      <!-- Buy Journey Modal -->
+      <div id="buy-journey-modal" class="modal">
+        <div class="modal-content buy-journey-modal-content">
+          <span class="close-button" id="close-buy-journey-modal">&times;</span>
+          <h3
+            id="buy-journey-title"
+            class="text-2xl font-bold text-teal-700 mb-4"
+          >
+            Purchase Journey: <span id="current-product-name"></span>
+          </h3>
+
+          <div
+            id="buy-journey-steps"
+            class="flex justify-between mb-6 text-sm font-medium text-neutral-500"
+          >
+            <div
+              class="flex flex-col items-center flex-1 step active"
+              data-step="1"
+            >
+              <div
+                class="w-8 h-8 rounded-full flex items-center justify-center bg-teal-600 text-white mb-1"
+              >
+                1
+              </div>
+              Business Info
+            </div>
+            <div class="flex flex-col items-center flex-1 step" data-step="2">
+              <div
+                class="w-8 h-8 rounded-full flex items-center justify-center bg-amber-200 text-neutral-700 mb-1"
+              >
+                2
+              </div>
+              Review Quote
+            </div>
+            <div class="flex flex-col items-center flex-1 step" data-step="3">
+              <div
+                class="w-8 h-8 rounded-full flex items-center justify-center bg-amber-200 text-neutral-700 mb-1"
+              >
+                3
+              </div>
+              Contact Details
+            </div>
+            <div class="flex flex-col items-center flex-1 step" data-step="4">
+              <div
+                class="w-8 h-8 rounded-full flex items-center justify-center bg-amber-200 text-neutral-700 mb-1"
+              >
+                4
+              </div>
+              Payment
+            </div>
+            <div class="flex flex-col items-center flex-1 step" data-step="5">
+              <div
+                class="w-8 h-8 rounded-full flex items-center justify-center bg-amber-200 text-neutral-700 mb-1"
+              >
+                5
+              </div>
+              Confirmation
+            </div>
+          </div>
+
+          <div id="buy-journey-content">
+            <!-- Step 1: Customer Info (Business Details for Quote) -->
+            <div
+              id="buy-step-1"
+              class="buy-step current-step p-4 border border-amber-200 rounded-md bg-amber-50"
+            >
+              <h4 class="text-xl font-semibold text-neutral-700 mb-3">
+                Step 1: Tell Us About Your Business
+              </h4>
+              <form id="customer-info-form-quote" class="space-y-4">
+                <h5
+                  class="text-lg font-medium text-neutral-800 border-b pb-2 mb-3 border-amber-200"
+                >
+                  Your Business Overview (Situation)
+                </h5>
+                <div>
+                  <label
+                    for="businessName"
+                    class="block text-sm font-medium text-neutral-700"
+                    >Business Name</label
+                  >
+                  <input
+                    type="text"
+                    id="businessName"
+                    class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500"
+                    placeholder="e.g., Sharma Textiles"
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    for="udyogAadhaar"
+                    class="block text-sm font-medium text-neutral-700"
+                    >Udyam Registration Number (Optional)</label
+                  >
+                  <input
+                    type="text"
+                    id="udyogAadhaar"
+                    class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500"
+                    placeholder="e.g., UDYAM-MH-01-0000001"
+                  />
+                </div>
+                <div>
+                  <label
+                    for="industry"
+                    class="block text-sm font-medium text-neutral-700"
+                    >Industry Sector</label
+                  >
+                  <input
+                    type="text"
+                    id="industry"
+                    class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 bg-neutral-100"
+                    readonly
+                  />
+                </div>
+                <div>
+                  <label
+                    for="turnover"
+                    class="block text-sm font-medium text-neutral-700"
+                    >Annual Turnover (₹)</label
+                  >
+                  <input
+                    type="number"
+                    id="turnover"
+                    class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500"
+                    placeholder="e.g., 5000000"
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    for="location"
+                    class="block text-sm font-medium text-neutral-700"
+                    >Business Location (PIN Code)</label
+                  >
+                  <input
+                    type="text"
+                    id="location"
+                    class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500"
+                    placeholder="e.g., 400001"
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    for="numEmployees"
+                    class="block text-sm font-medium text-neutral-700"
+                    >Number of Employees</label
+                  >
+                  <input
+                    type="number"
+                    id="numEmployees"
+                    class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500"
+                    placeholder="e.g., 15"
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    for="buildingType"
+                    class="block text-sm font-medium text-neutral-700"
+                    >Main Building Construction Type</label
+                  >
+                  <select
+                    id="buildingType"
+                    class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500"
+                    required
+                  >
+                    <option value="">Select Type</option>
+                    <option value="pucca">Pucca (Concrete/Brick)</option>
+                    <option value="semi-pucca">Semi-Pucca</option>
+                    <option value="kutcha">Kutcha (Temporary/Thatched)</option>
+                  </select>
+                </div>
+                <div>
+                  <label
+                    for="fireSafety"
+                    class="block text-sm font-medium text-neutral-700"
+                    >Existing Fire Safety Measures</label
+                  >
+                  <select
+                    id="fireSafety"
+                    class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500"
+                    required
+                  >
+                    <option value="">Select Level</option>
+                    <option value="none">None</option>
+                    <option value="basic">
+                      Basic (e.g., Fire Extinguishers)
+                    </option>
+                    <option value="advanced">
+                      Advanced (e.g., Sprinklers, Alarms)
+                    </option>
+                  </select>
+                </div>
+                <div>
+                  <label
+                    for="claimHistory"
+                    class="block text-sm font-medium text-neutral-700"
+                    >Past 3 Years Claim History</label
+                  >
+                  <select
+                    id="claimHistory"
+                    class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500"
+                    required
+                  >
+                    <option value="">Select Option</option>
+                    <option value="none">No Claims</option>
+                    <option value="one">1 Small Claim</option>
+                    <option value="multiple">Multiple / Large Claims</option>
+                  </select>
+                </div>
+
+                <!-- Dynamic Product-Specific Fields will be inserted here -->
+                <div id="product-specific-fields" class="space-y-4"></div>
+
+                <!-- Problem Questions (Simplified as Key Concerns) -->
+                <h5
+                  class="text-lg font-medium text-neutral-800 border-b pb-2 mb-3 border-amber-200 mt-6"
+                >
+                  Your Key Business Concerns (Problem)
+                </h5>
+                <p class="text-sm text-neutral-600 mb-2">
+                  Select all that apply to your business:
+                </p>
+                <div class="flex flex-wrap gap-x-4 gap-y-2">
+                  <label class="flex items-center space-x-2 text-neutral-700">
+                    <input
+                      type="checkbox"
+                      name="concern"
+                      value="property_damage"
+                      class="rounded border-amber-300 text-teal-600 shadow-sm focus:border-teal-300 focus:ring focus:ring-teal-200 focus:ring-opacity-50"
+                    />
+                    <span>Property Damage (Fire, Theft, Natural Disaster)</span>
+                  </label>
+                  <label class="flex items-center space-x-2 text-neutral-700">
+                    <input
+                      type="checkbox"
+                      name="concern"
+                      value="business_interruption"
+                      class="rounded border-amber-300 text-teal-600 shadow-sm focus:border-teal-300 focus:ring focus:ring-teal-200 focus:ring-opacity-50"
+                    />
+                    <span>Business Interruption / Loss of Revenue</span>
+                  </label>
+                  <label class="flex items-center space-x-2 text-neutral-700">
+                    <input
+                      type="checkbox"
+                      name="concern"
+                      value="cyber_attacks"
+                      class="rounded border-amber-300 text-teal-600 shadow-sm focus:border-teal-300 focus:ring focus:ring-teal-200 focus:ring-opacity-50"
+                    />
+                    <span>Cyber Attacks / Data Breaches</span>
+                  </label>
+                  <label class="flex items-center space-x-2 text-neutral-700">
+                    <input
+                      type="checkbox"
+                      name="concern"
+                      value="legal_liability"
+                      class="rounded border-amber-300 text-teal-600 shadow-sm focus:border-teal-300 focus:ring focus:ring-teal-200 focus:ring-opacity-50"
+                    />
+                    <span>Legal Liabilities / Third-Party Claims</span>
+                  </label>
+                  <label class="flex items-center space-x-2 text-neutral-700">
+                    <input
+                      type="checkbox"
+                      name="concern"
+                      value="supply_chain"
+                      class="rounded border-amber-300 text-teal-600 shadow-sm focus:border-teal-300 focus:ring focus:ring-teal-200 focus:ring-opacity-50"
+                    />
+                    <span>Supply Chain Disruptions</span>
+                  </label>
+                  <label class="flex items-center space-x-2 text-neutral-700">
+                    <input
+                      type="checkbox"
+                      name="concern"
+                      value="employee_injury"
+                      class="rounded border-amber-300 text-teal-600 shadow-sm focus:border-teal-300 focus:ring focus:ring-teal-200 focus:ring-opacity-50"
+                    />
+                    <span>Employee Injury / Illness</span>
+                  </label>
+                </div>
+
+                <!-- Implication Question -->
+                <h5
+                  class="text-lg font-medium text-neutral-800 border-b pb-2 mb-3 border-amber-200 mt-6"
+                >
+                  Understanding Impact (Implication)
+                </h5>
+                <div>
+                  <label
+                    for="impactConcern"
+                    class="block text-sm font-medium text-neutral-700"
+                    >How concerned are you about the financial impact of these
+                    risks on your business?</label
+                  >
+                  <select
+                    id="impactConcern"
+                    class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500"
+                    required
+                  >
+                    <option value="">Select Level</option>
+                    <option value="not_concerned">Not Concerned</option>
+                    <option value="moderately_concerned">
+                      Moderately Concerned
+                    </option>
+                    <option value="highly_concerned">Highly Concerned</option>
+                  </select>
+                </div>
+
+                <!-- Need-Payoff Question -->
+                <h5
+                  class="text-lg font-medium text-neutral-800 border-b pb-2 mb-3 border-amber-200 mt-6"
+                >
+                  Value & Peace of Mind (Need-Payoff)
+                </h5>
+                <div>
+                  <label
+                    for="safetyNetImportance"
+                    class="block text-sm font-medium text-neutral-700"
+                    >How important is it for your business to have a safety net
+                    for unexpected events?</label
+                  >
+                  <select
+                    id="safetyNetImportance"
+                    class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500"
+                    required
+                  >
+                    <option value="">Select Importance</option>
+                    <option value="not_important">Not Important</option>
+                    <option value="somewhat_important">
+                      Somewhat Important
+                    </option>
+                    <option value="very_important">Very Important</option>
+                  </select>
+                </div>
+
+                <button
+                  type="submit"
+                  class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-md shadow-md"
+                >
+                  Get Quote
+                </button>
+              </form>
+            </div>
+
+            <!-- Step 2: Review Quote -->
+            <div
+              id="buy-step-2"
+              class="buy-step hidden p-4 border border-amber-200 rounded-md bg-amber-50"
+            >
+              <h4 class="text-xl font-semibold text-neutral-700 mb-3">
+                Step 2: Review Your Quote
+              </h4>
+              <div id="quote-details" class="space-y-2 text-neutral-600 mb-4">
+                <p>
+                  <strong>Product:</strong> <span id="quote-product"></span>
+                </p>
+                <p class="text-2xl font-bold text-teal-600">
+                  Annual Premium: ₹ <span id="quote-premium"></span>
+                </p>
+                <p><strong>Coverage Summary:</strong></p>
+                <ul
+                  id="quote-coverages"
+                  class="list-disc list-inside ml-4"
+                ></ul>
+                <p class="text-sm italic mt-2">
+                  This is a mock quote for illustration purposes only. Actual
+                  quotes may vary.
+                </p>
+              </div>
+
+              <!-- Discount Section -->
+              <div
+                id="discount-section"
+                class="mt-6 p-4 rounded-md bg-amber-100 border border-amber-300 hidden"
+              >
+                <h5 class="font-semibold text-neutral-700 mb-2">
+                  Looking for a lower premium?
+                </h5>
+                <p class="text-sm text-neutral-600 mb-3">
+                  You can adjust your coverage to potentially reduce your
+                  premium. But be aware of what you might miss!
+                </p>
+                <div class="flex flex-wrap gap-2 mb-3">
+                  <button
+                    data-discount-type="deductible"
+                    class="discount-option-button bg-white hover:bg-teal-500 hover:text-white text-neutral-700 font-medium py-2 px-4 rounded-md text-sm"
+                  >
+                    Increase Deductible (Lower Premium)
+                  </button>
+                  <button
+                    data-discount-type="coverage"
+                    class="discount-option-button bg-white hover:bg-teal-500 hover:text-white text-neutral-700 font-medium py-2 px-4 rounded-md text-sm"
+                  >
+                    Reduce Coverage Limits (Lower Premium)
+                  </button>
+                </div>
+                <div
+                  id="discount-output"
+                  class="text-sm font-medium text-red-700 mt-2 hidden"
+                >
+                  <p id="discount-message"></p>
+                  <p id="what-you-miss"></p>
+                </div>
+                <button
+                  id="apply-discount-button"
+                  class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-md shadow-md mt-4 hidden"
+                >
+                  Apply Discount & Get New Quote
+                </button>
+              </div>
+              <!-- End Discount Section -->
+
+              <div class="flex justify-between mt-6">
+                <button
+                  id="prev-step-2"
+                  class="bg-amber-300 hover:bg-amber-400 text-neutral-800 font-bold py-2 px-4 rounded-md shadow-md"
+                >
+                  Back
+                </button>
+                <button
+                  id="next-step-2"
+                  class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-md shadow-md"
+                >
+                  Proceed to Contact Details
+                </button>
+              </div>
+            </div>
+
+            <!-- Step 3: PII Collection -->
+            <div
+              id="buy-step-3"
+              class="buy-step hidden p-4 border border-amber-200 rounded-md bg-amber-50"
+            >
+              <h4 class="text-xl font-semibold text-neutral-700 mb-3">
+                Step 3: Provide Contact Details
+              </h4>
+              <form id="customer-info-form-contact" class="space-y-3">
+                <div>
+                  <label
+                    for="contactPersonFinal"
+                    class="block text-sm font-medium text-neutral-700"
+                    >Contact Person Name</label
+                  >
+                  <input
+                    type="text"
+                    id="contactPersonFinal"
+                    class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500"
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    for="contactEmailFinal"
+                    class="block text-sm font-medium text-neutral-700"
+                    >Email</label
+                  >
+                  <input
+                    type="email"
+                    id="contactEmailFinal"
+                    class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500"
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    for="contactPhoneFinal"
+                    class="block text-sm font-medium text-neutral-700"
+                    >Phone Number</label
+                  >
+                  <input
+                    type="tel"
+                    id="contactPhoneFinal"
+                    class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500"
+                    placeholder="e.g., 9876543210"
+                    required
+                  />
+                </div>
+                <div class="flex justify-between">
+                  <button
+                    type="button"
+                    id="prev-step-3"
+                    class="bg-amber-300 hover:bg-amber-400 text-neutral-800 font-bold py-2 px-4 rounded-md shadow-md"
+                  >
+                    Back
+                  </button>
+                  <button
+                    type="submit"
+                    class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-md shadow-md"
+                  >
+                    Proceed to Payment
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Step 4: Payment -->
+            <div
+              id="buy-step-4"
+              class="buy-step hidden p-4 border border-amber-200 rounded-md bg-amber-50"
+            >
+              <h4 class="text-xl font-semibold text-neutral-700 mb-3">
+                Step 4: Make Payment
+              </h4>
+              <div class="text-neutral-600 mb-4">
+                <p>
+                  You are about to purchase
+                  <strong id="payment-product"></strong> for an annual premium
+                  of
+                  <strong class="text-teal-700"
+                    >₹ <span id="payment-premium"></span></strong
+                  >.
+                </p>
+                <p class="mt-2">
+                  This is a simulated payment gateway. No actual transaction
+                  will occur.
+                </p>
+                <div class="mt-4 space-y-3">
+                  <div>
+                    <label
+                      for="cardNumber"
+                      class="block text-sm font-medium text-neutral-700"
+                      >Card Number</label
+                    >
+                    <input
+                      type="text"
+                      id="cardNumber"
+                      class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2"
+                      placeholder="XXXX XXXX XXXX XXXX"
+                      maxlength="16"
+                    />
+                  </div>
+                  <div class="grid grid-cols-2 gap-4">
+                    <div>
+                      <label
+                        for="expiryDate"
+                        class="block text-sm font-medium text-neutral-700"
+                        >Expiry (MM/YY)</label
+                      >
+                      <input
+                        type="text"
+                        id="expiryDate"
+                        class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2"
+                        placeholder="MM/YY"
+                        maxlength="5"
+                      />
+                    </div>
+                    <div>
+                      <label
+                        for="cvv"
+                        class="block text-sm font-medium text-neutral-700"
+                        >CVV</label
+                      >
+                      <input
+                        type="text"
+                        id="cvv"
+                        class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2"
+                        placeholder="XXX"
+                        maxlength="3"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="flex justify-between">
+                <button
+                  id="prev-step-4"
+                  class="bg-amber-300 hover:bg-amber-400 text-neutral-800 font-bold py-2 px-4 rounded-md shadow-md"
+                >
+                  Back
+                </button>
+                <button
+                  id="next-step-4"
+                  class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-md shadow-md"
+                >
+                  Pay Now
+                </button>
+              </div>
+            </div>
+
+            <!-- Step 5: Confirmation -->
+            <div
+              id="buy-step-5"
+              class="buy-step hidden p-4 border border-amber-200 rounded-md bg-amber-50 text-center"
+            >
+              <h4 class="text-xl font-semibold text-neutral-700 mb-3">
+                Step 5: Purchase Confirmed! 🎉
+              </h4>
+              <div class="text-neutral-600 mb-4">
+                <p class="text-lg font-medium text-teal-600">
+                  Congratulations, <span id="confirmation-name"></span>!
+                </p>
+                <p class="mt-2">
+                  Your <strong id="confirmation-product"></strong> policy has
+                  been successfully processed.
+                </p>
+                <p class="mt-1">
+                  A confirmation email with your policy documents has been sent
+                  to <strong id="confirmation-email"></strong>.
+                </p>
+                <p class="text-sm italic mt-4">
+                  Thank you for choosing us to protect your business. We look
+                  forward to serving you.
+                </p>
+              </div>
+              <button
+                id="close-buy-journey-final"
+                class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-md shadow-md"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Strategic Outreach Section -->
       <section id="outreach" class="mb-16">
         <h2 class="section-title">Strategic Outreach & Engagement</h2>
         <p class="mb-6 text-neutral-700">
           Reaching MSMEs effectively involves a consultative approach,
           leveraging appropriate communication channels, and aligning with
-          government initiatives. This section outlines key strategies.
+          government initiatives. This section outlines key strategies for a
+          comprehensive sales and marketing plan.
         </p>
 
         <div class="grid md:grid-cols-2 gap-8 mb-8">
@@ -686,6 +1455,158 @@
           </div>
         </div>
 
+        <div class="card mb-8">
+          <h3 class="text-xl font-semibold text-neutral-700 mb-3">
+            Elaborate Sales & Marketing Plan
+          </h3>
+          <h4 class="text-lg font-medium text-neutral-700 mb-2">
+            Phase 1: Data-Driven Prospecting & Engagement
+          </h4>
+          <ul class="list-disc list-inside text-neutral-600 space-y-1 mb-4">
+            <li>
+              <strong>Cluster Identification & Mapping:</strong> Utilize Udyam
+              Registration data (via API integration) to identify and map active
+              MSME clusters by state, district, and dominant sector (e.g.,
+              manufacturing hubs in Pune, textile clusters in Tirupur). This
+              informs geographical targeting.
+            </li>
+            <li>
+              <strong>Segmented Database Creation:</strong> Build a dynamic
+              database of MSMEs, enriching Udyam data with NIC codes and other
+              public information to enable granular segmentation (e.g., by
+              turnover, number of employees, specific sub-sector).
+            </li>
+            <li>
+              <strong>Targeted Digital Lead Generation:</strong>
+              <ul class="list-circle list-inside ml-4">
+                <li>
+                  Run highly segmented digital ad campaigns (Google Ads, Meta
+                  Ads) targeting MSME owners based on business type, location,
+                  and inferred needs.
+                </li>
+                <li>
+                  Develop compelling landing pages with lead magnets (e.g.,
+                  "MSME Risk Assessment Checklist," "Insurance Needs by Industry
+                  Guide").
+                </li>
+                <li>
+                  Implement Local SEO strategies to rank for "business insurance
+                  near me" or "manufacturing insurance Mumbai."
+                </li>
+              </ul>
+            </li>
+            <li>
+              <strong>Direct Digital Outreach:</strong>
+              <ul class="list-circle list-inside ml-4">
+                <li>
+                  Leverage WhatsApp for Business for direct, personalized
+                  communication (e.g., sending simplified product brochures,
+                  inviting to webinars, follow-ups).
+                </li>
+                <li>
+                  Develop tailored email marketing sequences for different MSME
+                  segments, offering educational content and inviting
+                  consultations.
+                </li>
+              </ul>
+            </li>
+          </ul>
+
+          <h4 class="text-lg font-medium text-neutral-700 mb-2">
+            Phase 2: Consultative Sales & Trust Building
+          </h4>
+          <ul class="list-disc list-inside text-neutral-600 space-y-1 mb-4">
+            <li>
+              <strong>Risk Advisor Training:</strong> Train sales professionals
+              to be "risk advisors" rather than just "sellers." This involves
+              deep understanding of MSME operational nuances, industry-specific
+              risks, and a shift to a problem-solving approach.
+            </li>
+            <li>
+              <strong>Localized Workshops & Seminars:</strong> Conduct physical
+              workshops within identified MSME clusters (e.g., in industrial
+              estates, association meeting halls). Focus on educating owners
+              about specific risks (e.g., fire hazards in textile units, cyber
+              threats for IT services) and how insurance mitigates these.
+            </li>
+            <li>
+              <strong>Personalized Consultations:</strong> Offer free, on-site
+              or virtual risk assessments for interested MSMEs. This allows for
+              a deeper understanding of their unique needs and building rapport.
+            </li>
+            <li>
+              <strong>Product Simplification & Customization:</strong> Present
+              products in modular, easy-to-understand language. Demonstrate how
+              policies can be customized to fit specific budgets and coverage
+              requirements, starting with essential protections.
+            </li>
+            <li>
+              <strong>Transparency in Pricing & Claims:</strong> Explicitly
+              explain the factors influencing premiums. Provide clear, simple
+              guidance on the claims process. Publicize positive (anonymized)
+              claim settlement experiences to build trust.
+            </li>
+          </ul>
+
+          <h4 class="text-lg font-medium text-neutral-700 mb-2">
+            Phase 3: Partnerships & Ecosystem Integration
+          </h4>
+          <ul class="list-disc list-inside text-neutral-600 space-y-1 mb-4">
+            <li>
+              <strong>Collaboration with MSME Associations:</strong> Form
+              strategic alliances with national and regional MSME associations
+              (e.g., FICCI-CMSME, CII). Offer group insurance schemes through
+              these bodies at preferential rates. Co-host webinars or workshops.
+            </li>
+            <li>
+              <strong>Bank & NBFC Partnerships:</strong> Partner with banks and
+              Non-Banking Financial Companies (NBFCs) that lend to MSMEs.
+              Integrate insurance offerings into their loan application
+              processes, as insurance is often a prerequisite for credit.
+            </li>
+            <li>
+              <strong>Government Scheme Alignment:</strong> Actively promote and
+              develop products that align with Ministry of MSME initiatives
+              (e.g., CBFTE for exporters, ZED for quality). Educate MSMEs on how
+              to avail government premium reimbursements (where applicable).
+            </li>
+            <li>
+              <strong>Digital Platform Integration:</strong> Explore API
+              integrations with popular MSME platforms (e.g., accounting
+              software, e-commerce platforms, Udyam Assist) to offer contextual
+              insurance at the point of need (e.g., marine cover on e-way bill
+              generation).
+            </li>
+          </ul>
+
+          <h4 class="text-lg font-medium text-neutral-700 mb-2">
+            Phase 4: Post-Purchase Engagement & Retention
+          </h4>
+          <ul class="list-disc list-inside text-neutral-600 space-y-1">
+            <li>
+              <strong>Onboarding & Education:</strong> Provide clear, digital
+              onboarding kits. Offer simple guides on policy terms and how to
+              file a claim.
+            </li>
+            <li>
+              <strong>Proactive Communication:</strong> Send regular updates,
+              risk alerts relevant to their sector, and reminders for renewals
+              via preferred digital channels.
+            </li>
+            <li>
+              <strong>Simplified Claims Process:</strong> Ensure claims are
+              processed quickly and transparently, ideally with digital
+              submission and tracking capabilities. A positive claims experience
+              is the strongest retention tool.
+            </li>
+            <li>
+              <strong>Annual Policy Review:</strong> Conduct annual reviews with
+              MSMEs to adjust coverage based on business growth, new assets, or
+              changing risk profiles.
+            </li>
+          </ul>
+        </div>
+
         <div class="card">
           <h3 class="text-xl font-semibold text-neutral-700 mb-3">
             Leveraging Government Initiatives
@@ -734,6 +1655,7 @@
         </div>
       </section>
 
+      <!-- Recommendations Section -->
       <section id="recommendations" class="mb-16">
         <h2 class="section-title">Key Recommendations</h2>
         <p class="mb-6 text-neutral-700">
@@ -819,6 +1741,7 @@
       </section>
     </div>
 
+    <!-- Footer -->
     <footer class="bg-neutral-800 text-amber-50 py-8 text-center">
       <p>
         &copy; <span id="currentYear"></span> MSME Insurance Strategy Explorer.
@@ -846,24 +1769,14 @@
         navLinks.forEach((link) => {
           link.addEventListener("click", function (e) {
             if (this.hash !== "") {
-              // e.preventDefault(); // Only prevent if not mobile menu link which needs to close
               const hash = this.hash;
               const targetElement = document.querySelector(hash);
               if (targetElement) {
-                // For mobile menu, close it after click
                 if (mobileMenu && !mobileMenu.classList.contains("hidden")) {
                   mobileMenu.classList.add("hidden");
                 }
-                // Smooth scroll if supported, otherwise jump
-                if ("scrollBehavior" in document.documentElement.style) {
-                  // No need for explicit scroll if default browser behavior is used for fragment links
-                } else {
-                  // Fallback for browsers that don't support smooth scroll on fragment links
-                  // window.scrollTo(0, targetElement.offsetTop - 60); // Adjust offset for sticky nav
-                }
               }
             }
-            // Active link styling handled by scroll listener
           });
         });
 
@@ -873,8 +1786,11 @@
           let current = "";
           sections.forEach((section) => {
             const sectionTop = section.offsetTop;
-            if (pageYOffset >= sectionTop - 70) {
-              // 70 for nav height + شويه buffer
+            const sectionHeight = section.clientHeight;
+            if (
+              pageYOffset >= sectionTop - 70 &&
+              pageYOffset < sectionTop + sectionHeight - 70
+            ) {
               current = section.getAttribute("id");
             }
           });
@@ -885,7 +1801,6 @@
               link.classList.add("active");
             }
           });
-          // Ensure first link is active if at top or no section matched
           if (!current && pageYOffset < sections[0].offsetTop - 70) {
             const firstLink = document.querySelector('.nav-link[href="#home"]');
             if (firstLink) firstLink.classList.add("active");
@@ -907,8 +1822,6 @@
             if (!isOpen) {
               item.classList.add("open");
               icon.style.transform = "rotate(180deg)";
-            } else {
-              icon.style.transform = "rotate(0deg)";
             }
           });
         });
@@ -917,6 +1830,9 @@
         const sectorButtons = document.querySelectorAll(".sector-button");
         const sectorDetailsContent = document.getElementById(
           "sector-details-content"
+        );
+        const productCardsContainer = document.getElementById(
+          "product-cards-container"
         );
 
         const sectorData = {
@@ -928,6 +1844,149 @@
               "Property Insurance, Business Interruption, Machinery Breakdown (MBD)/Electronic Equipment Insurance (EEI), Commercial General Liability (CGL), Product Liability.",
             rationale:
               "Protects significant capital investment in physical assets and addresses liabilities from production processes and products.",
+            products: [
+              {
+                id: "manufacturing-property-insurance",
+                name: "Property Insurance",
+                icon: "🏠",
+                description:
+                  "Covers physical assets like buildings, machinery, and inventory against fire, natural disasters, and other perils.",
+                customerInfoSheet: [
+                  "Business Name & Address",
+                  "Type of Construction (building)",
+                  "Year of Construction",
+                  "Total Sum Insured (Building)",
+                  "Total Sum Insured (Machinery/Equipment)",
+                  "Total Sum Insured (Stock)",
+                  "Nature of Business Activities",
+                  "Fire Protection Systems Available",
+                  "Claim History (last 3-5 years)",
+                ],
+                actuarialNote:
+                  "Pricing is based on sum insured, location (zone for natural disasters), construction type, nature of occupancy (risk class), and fire protection systems. Claims history is also a key factor. Data from industry bodies and historical loss ratios are used.",
+                underwritingPhilosophy:
+                  "To provide comprehensive asset protection with flexible coverage options, assessing risks based on physical exposures and industry standards. Focus on loss prevention measures taken by the MSME.",
+                operatingModel:
+                  "Direct digital sales or via agents. Policy issuance is automated post-payment. Claims initiated via portal/app, surveyor assigned for assessment, settlement within defined TAT (e.g., 7-15 days for simple claims).",
+                pricingMethodology:
+                  "Risk-adjusted premium calculation based on actuarial tables. Base premium determined by Sum Insured, adjusted for industry risk factor, geographical zone, construction materials, and safety measures. Discounts for good claims history or enhanced safety features.",
+                benefits: [
+                  "Covers loss/damage to buildings, machinery, and stock due to fire, lightning, explosion, implosion.",
+                  "Protection against natural calamities like storm, cyclone, flood, earthquake, landslide.",
+                  "Covers damage due to riots, strikes, malicious damage, and terrorism acts.",
+                  "Includes impact damage by rail/road vehicles and bursting/overflowing of water tanks/pipes.",
+                ],
+                exclusions: [
+                  "War and nuclear perils.",
+                  "Consequential loss (loss of profit).",
+                  "Loss/damage to electronic data.",
+                  "Theft without forced entry.",
+                  "Wear and tear, gradual deterioration.",
+                  "Damage due to faulty design/workmanship.",
+                ],
+                addons: [
+                  "Business Interruption (Loss of Profit)",
+                  "Machinery Breakdown",
+                  "Electronic Equipment Insurance",
+                  "Terrorism Cover",
+                  "Removal of Debris",
+                  "Architects, Surveyors and Consulting Engineers Fees",
+                ],
+                reinsurance:
+                  "Facultative or treaty reinsurance arrangements with global reinsurers to manage large property risks and catastrophic perils, ensuring financial stability for large claims.",
+              },
+              {
+                id: "manufacturing-business-interruption",
+                name: "Business Interruption Insurance",
+                icon: "⏳",
+                description:
+                  "Covers loss of gross profit and increased cost of working due to a business interruption caused by insured perils.",
+                customerInfoSheet: [
+                  "Business Name & Address",
+                  "Historical Gross Profit Data (last 3 years)",
+                  "Fixed Operating Expenses",
+                  "Maximum Indemnity Period (e.g., 6, 12, 18 months)",
+                  "Dependent Business Processes (e.g., specific machinery, supplier)",
+                  "Interdependent sites",
+                ],
+                actuarialNote:
+                  "Based on projected gross profit and fixed expenses. Factors in indemnity period, industry recovery rates, and property insurance underlying perils. Data on industry-specific downtime costs is used.",
+                underwritingPhilosophy:
+                  "To restore the MSME to its pre-loss financial position by covering lost income and necessary expenses during covered business disruptions, ensuring minimal financial impact.",
+                operatingModel:
+                  "Closely linked with underlying property policy. Requires detailed financial documentation for claim assessment. Claims processed post-property damage claim settlement, often involving forensic accountants.",
+                pricingMethodology:
+                  "Calculated as a percentage of the gross profit sum insured. Influenced by the maximum indemnity period, type of industry (recovery time), and nature of underlying property perils. Premiums are generally lower for shorter indemnity periods.",
+                benefits: [
+                  "Covers loss of Gross Profit dueed to reduction in turnover or increase in cost of working resulting from a covered peril (e.g., fire, flood).",
+                  "Covers standing charges/fixed expenses (rent, salaries, taxes) during the interruption.",
+                  "Provides for additional expenses incurred to minimize the interruption (e.g., temporary relocation, hiring alternative machinery).",
+                ],
+                exclusions: [
+                  "Loss not caused by a covered property damage event.",
+                  "Loss due to market conditions or loss of customers unrelated to physical damage.",
+                  "Loss beyond the maximum indemnity period.",
+                  "Power failure from public supply (unless caused by insured peril).",
+                  "Willful negligence.",
+                ],
+                addons: [
+                  "Contingent Business Interruption (Supplier/Customer Dependence)",
+                  "Auditor's Fees",
+                  "Disease/Deterioration of Stock",
+                  "Loss of Utilities",
+                ],
+                reinsurance:
+                  "Often part of a property treaty, with specific layers dedicated to contingent business interruption exposures to manage large-scale supply chain or industry-wide disruption risks.",
+              },
+              {
+                id: "manufacturing-cgl-insurance",
+                name: "Commercial General Liability (CGL) Insurance",
+                icon: "⚖️",
+                description:
+                  "Protects the business against legal liabilities arising from third-party bodily injury or property damage due to business operations or products.",
+                customerInfoSheet: [
+                  "Business Name & Address",
+                  "Nature of Operations/Products",
+                  "Annual Turnover",
+                  "Number of Employees",
+                  "Premises Details",
+                  "Territorial Scope (India/Worldwide)",
+                  "Claim History (last 5 years)",
+                  "Subcontractor Details",
+                ],
+                actuarialNote:
+                  "Based on industry risk class (e.g., manufacturing vs. services), annual turnover, number of employees, and past claims experience. Consideration of potential for large-scale incidents. Analysis of tort law trends in India.",
+                underwritingPhilosophy:
+                  "To safeguard the MSME from unforeseen liabilities arising from everyday business operations and products, ensuring financial protection against costly legal claims while fostering responsible business conduct.",
+                operatingModel:
+                  "Direct sales/brokers. Policy issuance streamlined. Claims require detailed incident reports, police/medical records (if bodily injury). Legal defense provided by insurer. Settlement via negotiation or court order.",
+                pricingMethodology:
+                  "Premium is generally a percentage of annual turnover or a fixed rate per employee, adjusted by industry risk factor (higher for hazardous industries), geographical scope, chosen limits of indemnity, and deductibles. Loading for adverse claims history.",
+                benefits: [
+                  "Covers legal liability for third-party bodily injury or property damage occurring on premises or arising from operations.",
+                  "Product Liability coverage for claims from defective products sold or supplied.",
+                  "Advertising Injury & Personal Injury coverage (e.g., libel, slander, copyright infringement in advertisements).",
+                  "Defense costs, even if the lawsuit is groundless or false.",
+                ],
+                exclusions: [
+                  "Professional liability (Errors & Omissions).",
+                  "Employee compensation/Workmen's Compensation.",
+                  "Pollution liability (unless sudden and accidental).",
+                  "Contractual liability.",
+                  "Damage to own property.",
+                  "Known incidents prior to policy inception.",
+                  "Intentional acts.",
+                ],
+                addons: [
+                  "Pollution Legal Liability (broader cover)",
+                  "Lift Liability",
+                  "Act of God perils (e.g., earthquake, flood extension)",
+                  "Vendor's Liability",
+                ],
+                reinsurance:
+                  "Excess of Loss (XOL) reinsurance treaties to protect against large, infrequent liability claims, especially for product liability exposures.",
+              },
+            ],
           },
           services: {
             title: "Services MSMEs",
@@ -937,6 +1996,101 @@
               "Public Liability Insurance, Professional Indemnity (Errors & Omissions), Cyber Insurance, Employee Compensation Insurance.",
             rationale:
               "Addresses intangible risks, legal claims related to service delivery, data handling, and digital vulnerabilities.",
+            products: [
+              {
+                id: "services-professional-indemnity",
+                name: "Professional Indemnity Insurance",
+                icon: "✍️",
+                description:
+                  "Protects service-based MSMEs against financial losses arising from legal claims of professional negligence or errors in their services.",
+                customerInfoSheet: [
+                  "Business Name",
+                  "Nature of Professional Services",
+                  "Annual Gross Revenue",
+                  "Number of Professionals/Employees",
+                  "Key Clients & Contracts",
+                  "Previous Claims/Complaints",
+                  "Professional Qualifications/Certifications",
+                ],
+                actuarialNote:
+                  "Pricing based on profession type (risk level, e.g., IT vs. marketing), annual revenue, number of professionals, and past claims. Market data on professional negligence lawsuits is analyzed.",
+                underwritingPhilosophy:
+                  "To offer robust protection for service professionals against potential legal liabilities arising from their advice or services, enabling them to operate with confidence and uphold their professional standards.",
+                operatingModel:
+                  "Primarily direct sales or through specialized brokers. Policy issuance post due diligence on professional background. Claims are complex, requiring legal assessment; insurer provides defense.",
+                pricingMethodology:
+                  "Premium is calculated based on the Indemnity Limit chosen, revenue, and profession risk category. Factors include claims history, quality control measures, and contractual liabilities. Higher limits and riskier professions lead to higher premiums.",
+                benefits: [
+                  "Covers legal defense costs for claims of professional negligence, errors, omissions, or breaches of duty.",
+                  "Pays compensation awarded to third parties if the MSME is found liable.",
+                  "Covers libel and slander arising from professional services.",
+                  "Includes costs of investigation and inquiry related to a claim.",
+                ],
+                exclusions: [
+                  "Fraudulent or dishonest acts.",
+                  "Known claims/circumstances before policy inception.",
+                  "Bodily injury or property damage claims (covered by CGL).",
+                  "Breach of contract (unless also a professional negligence claim).",
+                  "Fines and penalties.",
+                  "War & nuclear perils.",
+                ],
+                addons: [
+                  "Cyber Liability Extension (for data breaches related to professional services)",
+                  "Dishonesty of Employees",
+                  "Loss of Documents",
+                  "Extended Reporting Period",
+                ],
+                reinsurance:
+                  "Quota share or excess of loss treaties, especially for professions with high aggregate claim potential or emerging risk classes.",
+              },
+              {
+                id: "services-cyber-insurance",
+                name: "Cyber Insurance",
+                icon: "🔒",
+                description:
+                  "Protects businesses from financial losses and liabilities arising from cyberattacks, data breaches, and other digital risks.",
+                customerInfoSheet: [
+                  "Business Name",
+                  "Annual Turnover",
+                  "Type of Data Stored (e.g., PII, financial, health)",
+                  "Number of Records",
+                  "IT Security Measures (firewalls, antivirus, MFA, backups)",
+                  "Website/E-commerce Presence",
+                  "Industry Sector",
+                  "Previous Cyber Incidents",
+                ],
+                actuarialNote:
+                  "Complex pricing based on data sensitivity, volume of records, industry, existing security posture (audits), and incident response plans. Threat landscape analysis and historical breach costs are key inputs.",
+                underwritingPhilosophy:
+                  "To provide comprehensive financial protection against the evolving landscape of cyber threats, recognizing the critical role of digital infrastructure for modern MSMEs while encouraging robust cybersecurity practices.",
+                operatingModel:
+                  "Digital-first sales often, with specialized risk assessment questionnaires. Claims require immediate notification, forensic investigation, and often involve incident response teams (legal, PR, IT forensics).",
+                pricingMethodology:
+                  "Calculated based on chosen indemnity limits, number of records stored, revenue, and industry risk. Significant adjustments made for implemented security controls (e.g., MFA, encryption, employee training). Higher risk profile (e.g., healthcare data) leads to higher premiums.",
+                benefits: [
+                  "Covers first-party costs like business interruption losses due to cyber incidents.",
+                  "Data recovery and restoration costs.",
+                  "Costs for forensic investigation, public relations, and customer notification.",
+                  "Third-party liability for privacy breaches or network security failures.",
+                  "Legal expenses, fines, and penalties related to cyber incidents.",
+                ],
+                exclusions: [
+                  "Bodily injury or property damage from cyber incidents.",
+                  "Future loss of profit unrelated to a direct cyber event.",
+                  "Known vulnerabilities not remediated.",
+                  "Costs to improve security beyond incident restoration.",
+                  "War & terrorism (cyber warfare exclusion).",
+                ],
+                addons: [
+                  "Ransomware Negotiation & Payment",
+                  "Cyber Extortion",
+                  "Social Engineering Fraud",
+                  "Reputational Damage",
+                ],
+                reinsurance:
+                  "Specialized cyber reinsurance programs due to the systemic and evolving nature of cyber risks, often involving sophisticated modeling of aggregated exposures.",
+              },
+            ],
           },
           retail: {
             title: "Retail & Trading MSMEs",
@@ -946,6 +2100,56 @@
               "Shop Owners Insurance (package policy), Fire & Burglary Insurance, Money Insurance, Business Interruption.",
             rationale:
               "Safeguards inventory, cash transactions, physical premises, and covers liability from customer foot traffic.",
+            products: [
+              {
+                id: "retail-shop-owners-package",
+                name: "Shop Owners Package Policy",
+                icon: "🛍️",
+                description:
+                  "A comprehensive bundled policy for retail businesses covering property, stock, money, and public liability.",
+                customerInfoSheet: [
+                  "Shop Name & Address",
+                  "Nature of Business/Goods Sold",
+                  "Sum Insured (Building, Stock, Furniture)",
+                  "Annual Turnover",
+                  "Security Measures (alarms, CCTV)",
+                  "Fire Extinguishers Available",
+                  "Daily Cash Handled",
+                  "Claim History",
+                ],
+                actuarialNote:
+                  "Based on location risk (e.g., crime rates, natural disaster zones), sum insured of assets, type of goods (perishable, high value), and security measures. Combines multiple perils into a single premium calculation.",
+                underwritingPhilosophy:
+                  "To offer a simplified, all-in-one risk solution for small retail businesses, enabling them to protect their diverse assets and operations with ease and affordability.",
+                operatingModel:
+                  "Simplified proposal forms, often single point of contact for all claims within the package. Digital policy issuance and renewal. Fast track claims for small losses (e.g., petty theft).",
+                pricingMethodology:
+                  "Package premium based on total sum insured and risk profile of the shop (location, type of goods, security). Discounts for multiple coverages bundled or for robust security. Actuarial models combine individual peril premiums.",
+                benefits: [
+                  "Covers building and contents against fire, explosion, lightning, natural calamities, riots, and terrorism.",
+                  "Burglary & Theft coverage for stock and contents.",
+                  "Money Insurance for cash in safe or in transit.",
+                  "Public Liability for third-party injury/property damage on premises.",
+                  "Optional: Personal Accident for owner/employees, Business Interruption.",
+                ],
+                exclusions: [
+                  "Consequential loss (unless Business Interruption added).",
+                  "War and nuclear perils.",
+                  "Wear and tear.",
+                  "Stock shortages not due to covered peril.",
+                  "Employee dishonesty (unless FGI added).",
+                ],
+                addons: [
+                  "Business Interruption",
+                  "Personal Accident (owner/employees)",
+                  "Fidelity Guarantee (employee dishonesty)",
+                  "Electronic Equipment Insurance",
+                  "Plate Glass Cover",
+                ],
+                reinsurance:
+                  "Combination of property and liability treaties covering the different components of the package policy.",
+              },
+            ],
           },
           food: {
             title: "Food Processing MSMEs",
@@ -955,6 +2159,55 @@
               "Product Liability Insurance (critical), General Liability Insurance, Business Interruption Insurance.",
             rationale:
               "Mitigates highly specialized and potentially catastrophic risks related to food safety, product integrity, and consumer health.",
+            products: [
+              {
+                id: "food-product-liability",
+                name: "Product Liability Insurance",
+                icon: "🍴",
+                description:
+                  "Essential for food processors, covering legal liability for bodily injury or property damage caused by their manufactured food products.",
+                customerInfoSheet: [
+                  "Business Name",
+                  "Types of Food Products Manufactured",
+                  "Annual Sales Revenue",
+                  "Production Capacity",
+                  "Quality Control & Safety Certifications (e.g., FSSAI, ISO 22000)",
+                  "Distribution Channels",
+                  "Recall Procedures in Place",
+                  "Claim History",
+                ],
+                actuarialNote:
+                  "Highly sensitive to product type (e.g., dairy vs. packaged snacks), production volume, and quality control measures. History of product recalls and industry-specific litigation trends are crucial. FSSAI compliance is a key factor.",
+                underwritingPhilosophy:
+                  "To protect food processing MSMEs from the severe financial repercussions of product-related claims, promoting rigorous quality standards and swift incident response, safeguarding consumer health and business reputation.",
+                operatingModel:
+                  "Specialized underwriting and claims handling due to complex nature of product liability. Requires detailed incident reports, lab tests, and recall plans. Legal defense support is central to the offering.",
+                pricingMethodology:
+                  "Premium is calculated based on annual turnover, product risk classification (e.g., high-risk like meat/dairy vs. lower risk like dry goods), limits of indemnity, and geographical scope of sales. Strong quality control and certifications may lead to discounts.",
+                benefits: [
+                  "Covers legal costs and damages arising from bodily injury or property damage caused by a defective or contaminated product.",
+                  "Includes defense costs, even for groundless claims.",
+                  "Covers expenses related to product recall (e.g., notification, disposal, logistics) if specifically endorsed.",
+                  "Protects against liability for mislabeled products or failure to warn.",
+                ],
+                exclusions: [
+                  "Damage to the product itself.",
+                  "Contractual liability beyond product liability.",
+                  "Intentional adulteration.",
+                  "Recall costs (unless specifically added).",
+                  "Loss of market/reputation not directly linked to a covered bodily injury/property damage event.",
+                  "Fines and penalties.",
+                ],
+                addons: [
+                  "Product Recall Expenses",
+                  "Vendors Extension",
+                  "Supply Chain Liability",
+                  "Export Liability",
+                ],
+                reinsurance:
+                  "Essential for high-risk product lines, often involving structured facultative or treaty arrangements to cover catastrophic product liability exposures.",
+              },
+            ],
           },
           textile: {
             title: "Textile MSMEs",
@@ -964,8 +2217,829 @@
               "Fire Insurance, Loss of Profit Insurance, Boiler and Pressure Plant Insurance, EEI/MBD, Credit Insurance, Marine Insurance, Fidelity Guarantee, Public Liability.",
             rationale:
               "Covers capital-intensive operations, complex manufacturing processes, supply chain vulnerabilities, and export-related financial risks.",
+            products: [
+              {
+                id: "textile-fire-loss-profit",
+                name: "Fire & Loss of Profit Insurance",
+                icon: "�",
+                description:
+                  "Combines property protection against fire and allied perils with coverage for lost income due to business interruption in the textile sector.",
+                customerInfoSheet: [
+                  "Factory Address",
+                  "Type of Fabric/Yarn Processed",
+                  "Building Sum Insured",
+                  "Machinery Sum Insured",
+                  "Stock Sum Insured",
+                  "Annual Gross Profit",
+                  "Fire Safety Measures (sprinklers, alarms)",
+                  "Claim History",
+                  "Maximum Indemnity Period",
+                ],
+                actuarialNote:
+                  "Based on high fire risk associated with textile materials and processes. Considers sum insured, fire protection systems, and susceptibility to business interruption. Data on textile industry fire incidents and recovery times is crucial.",
+                underwritingPhilosophy:
+                  "To offer integrated protection for the textile industry, mitigating the severe impact of fire and operational disruptions on valuable assets and ongoing revenues, fostering business continuity.",
+                operatingModel:
+                  "Standard property claims process with a specific focus on fire investigation. Business interruption claims require financial audits to quantify lost profit. Emphasizes risk engineering services for fire prevention.",
+                pricingMethodology:
+                  "Combined premium. Fire portion based on sum insured, construction, and fire protection. Loss of Profit portion based on gross profit, indemnity period, and industry vulnerability to interruption. Discounts for advanced fire suppression systems and good safety records.",
+                benefits: [
+                  "Covers physical damage to buildings, machinery, and stock due to fire, lightning, explosion.",
+                  "Protection against natural calamities like flood, storm, earthquake, and acts of terrorism.",
+                  "Covers loss of gross profit and increased cost of working during business interruption due to covered perils.",
+                  "Provides for standing charges (fixed expenses) even if turnover drops.",
+                ],
+                exclusions: [
+                  "Loss of market or customer base unrelated to direct physical damage.",
+                  "War and nuclear perils.",
+                  "Faulty design/workmanship causing fire.",
+                  "Theft without forced entry.",
+                  "Wear and tear.",
+                ],
+                addons: [
+                  "Machinery Breakdown",
+                  "Boiler and Pressure Plant Insurance",
+                  "Deterioration of Stock in cold storage (if applicable)",
+                  "Cyber Insurance",
+                ],
+                reinsurance:
+                  "Standard property and business interruption treaties, with specific consideration for the high concentration of values and fire hazards in textile clusters.",
+              },
+            ],
           },
         };
+
+        // --- Product Detail Modal Logic ---
+        const productDetailModal = document.getElementById(
+          "product-detail-modal"
+        );
+        const closeProductModalButton = document.getElementById(
+          "close-product-modal"
+        );
+        const modalProductTitle = document.getElementById(
+          "modal-product-title"
+        );
+        const modalCustomerInfo = document.getElementById(
+          "modal-customer-info"
+        );
+        const modalActuarialNote = document.getElementById(
+          "modal-actuarial-note"
+        );
+        const modalUnderwritingPhilosophy = document.getElementById(
+          "modal-underwriting-philosophy"
+        );
+        const modalOperatingModel = document.getElementById(
+          "modal-operating-model"
+        );
+        const modalPricingMethodology = document.getElementById(
+          "modal-pricing-methodology"
+        );
+        const modalBenefits = document.getElementById("modal-benefits");
+        const modalExclusions = document.getElementById("modal-exclusions");
+        const modalAddons = document.getElementById("modal-addons");
+        const modalReinsurance = document.getElementById("modal-reinsurance");
+        const buyProductButton = document.getElementById("buy-product-button");
+        const productSpecificFieldsContainer = document.getElementById(
+          "product-specific-fields"
+        ); // Get the container for dynamic fields
+
+        let currentSelectedProduct = null;
+        let originalPremium = 0; // Store the original calculated premium
+        let discountedPremium = 0; // Store the discounted premium
+        let isDiscountApplied = false; // Flag to track if discount is applied
+
+        function openProductDetailModal(product) {
+          currentSelectedProduct = product;
+          modalProductTitle.textContent = product.name;
+
+          function populateList(element, items) {
+            element.innerHTML = "";
+            items.forEach((item) => {
+              const li = document.createElement("li");
+              li.textContent = item;
+              element.appendChild(li);
+            });
+          }
+
+          populateList(modalCustomerInfo, product.customerInfoSheet);
+          modalActuarialNote.textContent = product.actuarialNote;
+          modalUnderwritingPhilosophy.textContent =
+            product.underwritingPhilosophy;
+          modalOperatingModel.textContent = product.operatingModel;
+          modalPricingMethodology.textContent = product.pricingMethodology;
+          populateList(modalBenefits, product.benefits);
+          populateList(modalExclusions, product.exclusions);
+          populateList(modalAddons, product.addons);
+          modalReinsurance.textContent = product.reinsurance;
+
+          productDetailModal.style.display = "block";
+        }
+
+        closeProductModalButton.addEventListener("click", () => {
+          productDetailModal.style.display = "none";
+        });
+
+        window.addEventListener("click", (event) => {
+          if (event.target == productDetailModal) {
+            productDetailModal.style.display = "none";
+          }
+        });
+
+        // --- Buy Journey Modal Logic ---
+        const buyJourneyModal = document.getElementById("buy-journey-modal");
+        const closeBuyJourneyModalButton = document.getElementById(
+          "close-buy-journey-modal"
+        );
+        const closeBuyJourneyFinalButton = document.getElementById(
+          "close-buy-journey-final"
+        );
+        const buyJourneyStepsContainer =
+          document.getElementById("buy-journey-steps");
+        const buySteps = document.querySelectorAll(".buy-step");
+        let currentBuyStep = 1;
+
+        // Forms for different steps
+        const customerInfoFormQuote = document.getElementById(
+          "customer-info-form-quote"
+        ); // Step 1 form
+        const customerInfoFormContact = document.getElementById(
+          "customer-info-form-contact"
+        ); // Step 3 form
+
+        // Buttons for navigation
+        const getQuoteButton = customerInfoFormQuote.querySelector(
+          'button[type="submit"]'
+        );
+        const proceedToContactDetailsButton =
+          document.getElementById("next-step-2");
+        const prevStep2Button = document.getElementById("prev-step-2");
+        const proceedToPaymentButton = customerInfoFormContact.querySelector(
+          'button[type="submit"]'
+        );
+        const prevStep3Button = document.getElementById("prev-step-3");
+        const payNowButton = document.getElementById("next-step-4");
+        const prevStep4Button = document.getElementById("prev-step-4");
+
+        // Elements for dynamic content
+        const currentProductNameSpan = document.getElementById(
+          "current-product-name"
+        );
+        const industryInput = document.getElementById("industry");
+        const quoteProductSpan = document.getElementById("quote-product");
+        const quotePremiumSpan = document.getElementById("quote-premium");
+        const quoteCoveragesList = document.getElementById("quote-coverages");
+        const paymentProductSpan = document.getElementById("payment-product");
+        const paymentPremiumSpan = document.getElementById("payment-premium");
+        const confirmationNameSpan =
+          document.getElementById("confirmation-name");
+        const confirmationProductSpan = document.getElementById(
+          "confirmation-product"
+        );
+        const confirmationEmailSpan =
+          document.getElementById("confirmation-email");
+
+        // Discount elements
+        const discountSection = document.getElementById("discount-section");
+        const discountOptionButtons = document.querySelectorAll(
+          ".discount-option-button"
+        );
+        const discountOutput = document.getElementById("discount-output");
+        const discountMessage = document.getElementById("discount-message");
+        const whatYouMiss = document.getElementById("what-you-miss");
+        const applyDiscountButton = document.getElementById(
+          "apply-discount-button"
+        );
+
+        function showBuyStep(stepNumber) {
+          buySteps.forEach((stepDiv, index) => {
+            stepDiv.classList.add("hidden");
+            stepDiv.classList.remove("current-step");
+            buyJourneyStepsContainer.children[index]
+              .querySelector("div")
+              .classList.remove("bg-teal-600", "text-white");
+            buyJourneyStepsContainer.children[index]
+              .querySelector("div")
+              .classList.add("bg-amber-200", "text-neutral-700");
+          });
+
+          const targetStepDiv = document.getElementById(
+            `buy-step-${stepNumber}`
+          );
+          if (targetStepDiv) {
+            targetStepDiv.classList.remove("hidden");
+            targetStepDiv.classList.add("current-step");
+            buyJourneyStepsContainer.children[stepNumber - 1]
+              .querySelector("div")
+              .classList.remove("bg-amber-200", "text-neutral-700");
+            buyJourneyStepsContainer.children[stepNumber - 1]
+              .querySelector("div")
+              .classList.add("bg-teal-600", "text-white");
+          }
+          currentBuyStep = stepNumber;
+        }
+
+        buyProductButton.addEventListener("click", () => {
+          if (currentSelectedProduct) {
+            productDetailModal.style.display = "none"; // Close product details modal
+            buyJourneyModal.style.display = "block";
+            currentProductNameSpan.textContent = currentSelectedProduct.name;
+
+            // Reset forms and discount options
+            customerInfoFormQuote.reset();
+            customerInfoFormContact.reset();
+            industryInput.value = document.querySelector(
+              ".sector-button.active"
+            ).textContent; // Pre-fill industry
+            productSpecificFieldsContainer.innerHTML = ""; // Clear dynamic fields initially
+            discountSection.classList.add("hidden");
+            discountOutput.classList.add("hidden");
+            applyDiscountButton.classList.add("hidden");
+            isDiscountApplied = false; // Reset discount flag
+
+            // Dynamically load product-specific fields for Step 1
+            let productSpecificFieldsHtml = "";
+            if (
+              currentSelectedProduct.id.includes("property") ||
+              currentSelectedProduct.id.includes("shop-owners") ||
+              currentSelectedProduct.id.includes("fire-loss-profit")
+            ) {
+              productSpecificFieldsHtml = `
+                        <h5 class="text-lg font-medium text-neutral-800 border-b pb-2 mb-3 border-amber-200 mt-6">Property Details</h5>
+                        <div>
+                            <label for="sumInsuredBuilding" class="block text-sm font-medium text-neutral-700">Sum Insured - Building (₹)</label>
+                            <input type="number" id="sumInsuredBuilding" class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500" placeholder="e.g., 5000000" required>
+                        </div>
+                        <div>
+                            <label for="sumInsuredMachinery" class="block text-sm font-medium text-neutral-700">Sum Insured - Machinery (₹)</label>
+                            <input type="number" id="sumInsuredMachinery" class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500" placeholder="e.g., 2000000" required>
+                        </div>
+                        <div>
+                            <label for="sumInsuredStock" class="block text-sm font-medium text-neutral-700">Sum Insured - Stock (₹)</label>
+                            <input type="number" id="sumInsuredStock" class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500" placeholder="e.g., 1000000" required>
+                        </div>
+                        <div>
+                            <label for="goodsNature" class="block text-sm font-medium text-neutral-700">Nature of Goods/Raw Materials</label>
+                            <input type="text" id="goodsNature" class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500" placeholder="e.g., Flammable chemicals, Cotton fabric" required>
+                        </div>
+                    `;
+            } else if (
+              currentSelectedProduct.id.includes("business-interruption")
+            ) {
+              productSpecificFieldsHtml = `
+                        <h5 class="text-lg font-medium text-neutral-800 border-b pb-2 mb-3 border-amber-200 mt-6">Business Interruption Details</h5>
+                        <div>
+                            <label for="estimatedGrossProfit" class="block text-sm font-medium text-neutral-700">Estimated Annual Gross Profit (₹)</label>
+                            <input type="number" id="estimatedGrossProfit" class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500" placeholder="e.g., 1500000" required>
+                        </div>
+                        <div>
+                            <label for="indemnityPeriod" class="block text-sm font-medium text-neutral-700">Desired Indemnity Period (Months)</label>
+                            <select id="indemnityPeriod" class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500" required>
+                                <option value="">Select</option>
+                                <option value="6">6 Months</option>
+                                <option value="12">12 Months</option>
+                                <option value="18">18 Months</option>
+                                <option value="24">24 Months</option>
+                            </select>
+                        </div>
+                    `;
+            } else if (
+              currentSelectedProduct.id.includes("professional-indemnity")
+            ) {
+              productSpecificFieldsHtml = `
+                        <h5 class="text-lg font-medium text-neutral-800 border-b pb-2 mb-3 border-amber-200 mt-6">Professional Services Details</h5>
+                        <div>
+                            <label for="numProfessionals" class="block text-sm font-medium text-neutral-700">Number of Professionals/Consultants</label>
+                            <input type="number" id="numProfessionals" class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500" placeholder="e.g., 5" required>
+                        </div>
+                        <div>
+                            <label for="certifications" class="block text-sm font-medium text-neutral-700">Relevant Professional Certifications (e.g., ISO, Bar Council No.)</label>
+                            <input type="text" id="certifications" class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500" placeholder="e.g., ISO 27001" required>
+                        </div>
+                    `;
+            } else if (currentSelectedProduct.id.includes("cyber-insurance")) {
+              productSpecificFieldsHtml = `
+                        <h5 class="text-lg font-medium text-neutral-800 border-b pb-2 mb-3 border-amber-200 mt-6">Cyber Security Details</h5>
+                        <div>
+                            <label for="dataType" class="block text-sm font-medium text-neutral-700">Type of Data Stored/Processed</label>
+                            <select id="dataType" class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500" required>
+                                <option value="">Select</option>
+                                <option value="customer_pii">Customer PII (Personal Identifiable Info)</option>
+                                <option value="financial">Financial Data</option>
+                                <option value="health">Health Data</option>
+                                <option value="operational">Operational/Business Data Only</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="numRecords" class="block text-sm font-medium text-neutral-700">Approx. Number of Digital Records</label>
+                            <input type="number" id="numRecords" class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500" placeholder="e.g., 10000" required>
+                        </div>
+                        <div>
+                            <label for="securityMeasures" class="block text-sm font-medium text-neutral-700">Key Security Measures in Place</label>
+                            <select id="securityMeasures" class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500" required>
+                                <option value="">Select</option>
+                                <option value="basic">Basic (Antivirus, Firewall)</option>
+                                <option value="mfa">Advanced (MFA, Encryption, Regular Backups)</option>
+                                <option value="comprehensive">Comprehensive (SOC, Incident Response Plan)</option>
+                            </select>
+                        </div>
+                    `;
+            } else if (
+              currentSelectedProduct.id.includes("product-liability")
+            ) {
+              productSpecificFieldsHtml = `
+                        <h5 class="text-lg font-medium text-neutral-800 border-b pb-2 mb-3 border-amber-200 mt-6">Product Details (Food/Manufacturing)</h5>
+                        <div>
+                            <label for="productCategory" class="block text-sm font-medium text-neutral-700">Type of Product Manufactured</label>
+                            <input type="text" id="productCategory" class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500" placeholder="e.g., Packaged Snacks, Dairy Products" required>
+                        </div>
+                        <div>
+                            <label for="certificationsQuality" class="block text-sm font-medium text-neutral-700">Quality Certifications (e.g., FSSAI, ISO)</label>
+                            <input type="text" id="certificationsQuality" class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500" placeholder="e.g., FSSAI License No." required>
+                        </div>
+                        <div>
+                            <label for="recallPlan" class="block text-sm font-medium text-neutral-700">Do you have a Product Recall Plan?</label>
+                            <select id="recallPlan" class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500" required>
+                                <option value="">Select</option>
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                            </select>
+                        </div>
+                    `;
+            } else {
+              productSpecificFieldsHtml = `<!-- No specific fields for CGL as it largely uses general business info -->`;
+            }
+            productSpecificFieldsContainer.innerHTML =
+              productSpecificFieldsHtml;
+
+            showBuyStep(1); // Start at step 1
+          }
+        });
+
+        closeBuyJourneyModalButton.addEventListener("click", () => {
+          buyJourneyModal.style.display = "none";
+        });
+
+        closeBuyJourneyFinalButton.addEventListener("click", () => {
+          buyJourneyModal.style.display = "none";
+        });
+
+        window.addEventListener("click", (event) => {
+          if (event.target == buyJourneyModal) {
+            buyJourneyModal.style.display = "none";
+          }
+        });
+
+        // Step 1: Submit Business Info for Quote
+        customerInfoFormQuote.addEventListener("submit", (e) => {
+          e.preventDefault();
+
+          // Basic validation for quote-related fields
+          const requiredFields = [
+            "businessName",
+            "turnover",
+            "location",
+            "numEmployees",
+            "buildingType",
+            "fireSafety",
+            "claimHistory",
+            "impactConcern",
+            "safetyNetImportance",
+          ];
+          let allFieldsFilled = true;
+          for (const fieldId of requiredFields) {
+            const field = document.getElementById(fieldId);
+            if (field && field.closest("#buy-step-1") && !field.value) {
+              // Only check if field exists in this step
+              allFieldsFilled = false;
+              break;
+            }
+          }
+
+          // Check dynamically added required fields for Step 1
+          if (
+            currentSelectedProduct.id.includes("property") ||
+            currentSelectedProduct.id.includes("shop-owners") ||
+            currentSelectedProduct.id.includes("fire-loss-profit")
+          ) {
+            if (
+              !document.getElementById("sumInsuredBuilding").value ||
+              !document.getElementById("sumInsuredMachinery").value ||
+              !document.getElementById("sumInsuredStock").value ||
+              !document.getElementById("goodsNature").value
+            ) {
+              allFieldsFilled = false;
+            }
+          } else if (
+            currentSelectedProduct.id.includes("business-interruption")
+          ) {
+            if (
+              !document.getElementById("estimatedGrossProfit").value ||
+              !document.getElementById("indemnityPeriod").value
+            ) {
+              allFieldsFilled = false;
+            }
+          } else if (
+            currentSelectedProduct.id.includes("professional-indemnity")
+          ) {
+            if (
+              !document.getElementById("numProfessionals").value ||
+              !document.getElementById("certifications").value
+            ) {
+              allFieldsFilled = false;
+            }
+          } else if (currentSelectedProduct.id.includes("cyber-insurance")) {
+            if (
+              !document.getElementById("dataType").value ||
+              !document.getElementById("numRecords").value ||
+              !document.getElementById("securityMeasures").value
+            ) {
+              allFieldsFilled = false;
+            }
+          } else if (currentSelectedProduct.id.includes("product-liability")) {
+            if (
+              !document.getElementById("productCategory").value ||
+              !document.getElementById("certificationsQuality").value ||
+              !document.getElementById("recallPlan").value
+            ) {
+              allFieldsFilled = false;
+            }
+          }
+
+          if (!allFieldsFilled) {
+            alert(
+              "Please fill in all required business and product-specific details for your quote."
+            );
+            return;
+          }
+
+          // Simulate quote generation based on selected product and inputs
+          const annualTurnover = parseFloat(
+            document.getElementById("turnover").value
+          );
+          const numEmployees = parseInt(
+            document.getElementById("numEmployees").value
+          );
+          const buildingType = document.getElementById("buildingType").value;
+          const fireSafety = document.getElementById("fireSafety").value;
+          const claimHistory = document.getElementById("claimHistory").value;
+          const impactConcern = document.getElementById("impactConcern").value;
+          const safetyNetImportance = document.getElementById(
+            "safetyNetImportance"
+          ).value;
+          const selectedConcerns = Array.from(
+            document.querySelectorAll('input[name="concern"]:checked')
+          ).map((cb) => cb.value);
+
+          let simulatedPremiumCalc = 0;
+          let basePremium = 0;
+          let turnoverFactor = 0;
+          let employeeFactor = 0;
+          let productSpecificRiskFactor = 1;
+
+          if (
+            currentSelectedProduct.id.includes("property") ||
+            currentSelectedProduct.id.includes("shop-owners") ||
+            currentSelectedProduct.id.includes("fire-loss-profit")
+          ) {
+            basePremium = 5000;
+            turnoverFactor = 0.001;
+            const sumInsuredBuilding = parseFloat(
+              document.getElementById("sumInsuredBuilding").value || 0
+            );
+            const sumInsuredMachinery = parseFloat(
+              document.getElementById("sumInsuredMachinery").value || 0
+            );
+            const sumInsuredStock = parseFloat(
+              document.getElementById("sumInsuredStock").value || 0
+            );
+            const goodsNature = document
+              .getElementById("goodsNature")
+              .value.toLowerCase();
+
+            simulatedPremiumCalc +=
+              (sumInsuredBuilding + sumInsuredMachinery + sumInsuredStock) *
+              0.0001; // 0.01% of total sum insured
+
+            if (buildingType === "kutcha") productSpecificRiskFactor += 0.2;
+            else if (buildingType === "semi-pucca")
+              productSpecificRiskFactor += 0.1;
+            if (fireSafety === "none") productSpecificRiskFactor += 0.15;
+            else if (fireSafety === "basic") productSpecificRiskFactor += 0.05;
+            if (
+              goodsNature.includes("flammable") ||
+              goodsNature.includes("chemical")
+            )
+              productSpecificRiskFactor += 0.15;
+          } else if (
+            currentSelectedProduct.id.includes("business-interruption")
+          ) {
+            basePremium = 4000;
+            turnoverFactor = 0.0008;
+            const estimatedGrossProfit = parseFloat(
+              document.getElementById("estimatedGrossProfit").value || 0
+            );
+            const indemnityPeriod = parseInt(
+              document.getElementById("indemnityPeriod").value || 0
+            );
+
+            simulatedPremiumCalc +=
+              estimatedGrossProfit * 0.0005 + indemnityPeriod * 1000; // 0.05% of gross profit + 1000 per month
+          } else if (
+            currentSelectedProduct.id.includes("liability") &&
+            !currentSelectedProduct.id.includes("product-liability")
+          ) {
+            // CGL
+            basePremium = 3000;
+            turnoverFactor = 0.0005;
+            employeeFactor = 500; // Per employee
+          } else if (
+            currentSelectedProduct.id.includes("professional-indemnity")
+          ) {
+            basePremium = 3500;
+            turnoverFactor = 0.0007;
+            const numProfessionals = parseInt(
+              document.getElementById("numProfessionals").value || 0
+            );
+            const certifications = document
+              .getElementById("certifications")
+              .value.toLowerCase();
+
+            employeeFactor = 600; // Per professional
+            simulatedPremiumCalc += numProfessionals * employeeFactor;
+            if (certifications.includes("none") || certifications === "")
+              productSpecificRiskFactor += 0.1;
+          } else if (currentSelectedProduct.id.includes("cyber-insurance")) {
+            basePremium = 6000;
+            turnoverFactor = 0.0012;
+            const dataType = document.getElementById("dataType").value;
+            const numRecords = parseInt(
+              document.getElementById("numRecords").value || 0
+            );
+            const securityMeasures =
+              document.getElementById("securityMeasures").value;
+
+            if (dataType === "health" || dataType === "financial")
+              productSpecificRiskFactor += 0.2;
+            else if (dataType === "customer_pii")
+              productSpecificRiskFactor += 0.1;
+
+            if (numRecords > 50000)
+              productSpecificRiskFactor += 0.2; // Higher records, higher risk
+            else if (numRecords > 10000) productSpecificRiskFactor += 0.1;
+
+            if (securityMeasures === "none") productSpecificRiskFactor += 0.25;
+            else if (securityMeasures === "basic")
+              productSpecificRiskFactor += 0.1;
+            else if (securityMeasures === "comprehensive")
+              productSpecificRiskFactor -= 0.05; // Discount for comprehensive
+          } else if (currentSelectedProduct.id.includes("product-liability")) {
+            basePremium = 7000;
+            turnoverFactor = 0.0015;
+            const productCategory = document
+              .getElementById("productCategory")
+              .value.toLowerCase();
+            const certificationsQuality = document
+              .getElementById("certificationsQuality")
+              .value.toLowerCase();
+            const recallPlan = document.getElementById("recallPlan").value;
+
+            if (
+              productCategory.includes("dairy") ||
+              productCategory.includes("meat") ||
+              productCategory.includes("perishable")
+            )
+              productSpecificRiskFactor += 0.2;
+            if (
+              certificationsQuality.includes("none") ||
+              certificationsQuality === ""
+            )
+              productSpecificRiskFactor += 0.15;
+            if (recallPlan === "no") productSpecificRiskFactor += 0.1;
+          }
+
+          simulatedPremiumCalc += basePremium + turnoverFactor * annualTurnover;
+
+          // Adjust for claim history
+          if (claimHistory === "one")
+            productSpecificRiskFactor *= 1.1; // 10% loading
+          else if (claimHistory === "multiple")
+            productSpecificRiskFactor *= 1.25; // 25% loading
+
+          // Adjust for impact concern (higher concern -> slightly higher premium as it indicates higher perceived value/risk)
+          if (impactConcern === "highly_concerned")
+            productSpecificRiskFactor *= 1.03;
+          else if (impactConcern === "moderately_concerned")
+            productSpecificRiskFactor *= 1.01;
+
+          // Adjust for selected concerns (if specific high-risk concerns are checked)
+          if (
+            selectedConcerns.includes("cyber_attacks") &&
+            currentSelectedProduct.id.includes("cyber-insurance")
+          ) {
+            productSpecificRiskFactor *= 1.08;
+          }
+          if (
+            selectedConcerns.includes("property_damage") &&
+            (currentSelectedProduct.id.includes("property") ||
+              currentSelectedProduct.id.includes("fire-loss-profit") ||
+              currentSelectedProduct.id.includes("shop-owners"))
+          ) {
+            productSpecificRiskFactor *= 1.05;
+          }
+          if (
+            selectedConcerns.includes("legal_liability") &&
+            (currentSelectedProduct.id.includes("liability") ||
+              currentSelectedProduct.id.includes("professional-indemnity") ||
+              currentSelectedProduct.id.includes("product-liability"))
+          ) {
+            productSpecificRiskFactor *= 1.06;
+          }
+
+          simulatedPremiumCalc *= productSpecificRiskFactor;
+
+          originalPremium = Math.round(simulatedPremiumCalc / 100) * 100; // Round to nearest 100
+          discountedPremium = originalPremium; // Initially, discounted is same as original
+          isDiscountApplied = false; // Reset discount flag
+
+          quoteProductSpan.textContent = currentSelectedProduct.name;
+          quotePremiumSpan.textContent =
+            originalPremium.toLocaleString("en-IN");
+          quoteCoveragesList.innerHTML = "";
+          currentSelectedProduct.benefits.slice(0, 3).forEach((benefit) => {
+            // Show first 3 benefits
+            const li = document.createElement("li");
+            li.textContent = benefit;
+            quoteCoveragesList.appendChild(li);
+          });
+
+          // Show discount section if premium is high enough
+          const targetThresholdForDiscount = 8000; // Example threshold
+          if (originalPremium > targetThresholdForDiscount) {
+            discountSection.classList.remove("hidden");
+            discountOptionButtons.forEach((btn) =>
+              btn.classList.remove("bg-teal-600", "text-white")
+            ); // Reset button styling
+            discountOutput.classList.add("hidden"); // Hide output until option selected
+            applyDiscountButton.classList.add("hidden"); // Hide apply button
+          } else {
+            discountSection.classList.add("hidden");
+          }
+
+          showBuyStep(2); // Move to review quote step
+        });
+
+        // Step 2: Discount Option Selection
+        discountOptionButtons.forEach((button) => {
+          button.addEventListener("click", (event) => {
+            discountOptionButtons.forEach((btn) =>
+              btn.classList.remove("bg-teal-600", "text-white")
+            );
+            event.target.classList.add("bg-teal-600", "text-white");
+
+            const discountType = event.target.dataset.discountType;
+            let discountPercentage = 0.1; // 10% discount
+            let missMessage = "";
+
+            if (discountType === "deductible") {
+              discountPercentage = 0.12; // Higher discount for higher deductible
+              missMessage = `By opting for this, your deductible will be increased, meaning you pay more out-of-pocket before coverage begins.`;
+            } else if (discountType === "coverage") {
+              missMessage = `By opting for this, your overall coverage limits for certain perils will be reduced by up to 20%.`;
+            }
+
+            discountedPremium = originalPremium * (1 - discountPercentage);
+            discountedPremium = Math.round(discountedPremium / 100) * 100; // Round to nearest 100
+
+            discountMessage.textContent = `New Premium: ₹ ${discountedPremium.toLocaleString(
+              "en-IN"
+            )}`;
+            whatYouMiss.textContent = missMessage;
+            discountOutput.classList.remove("hidden");
+            applyDiscountButton.classList.remove("hidden");
+            isDiscountApplied = true; // Mark that a discount option was selected
+          });
+        });
+
+        // Step 2: Apply Discount and Update Quote
+        applyDiscountButton.addEventListener("click", () => {
+          if (isDiscountApplied) {
+            quotePremiumSpan.textContent =
+              discountedPremium.toLocaleString("en-IN");
+            alert(
+              `Premium updated to ₹ ${discountedPremium.toLocaleString(
+                "en-IN"
+              )} with applied discount.`
+            );
+            discountSection.classList.add("hidden"); // Hide discount options after applying
+            // Optionally update coverage summary based on what was "missed"
+          }
+        });
+
+        // Step 2: Proceed to Contact Details
+        proceedToContactDetailsButton.addEventListener("click", () => {
+          showBuyStep(3); // Move to PII step
+        });
+
+        // Step 2: Back button
+        prevStep2Button.addEventListener("click", () => {
+          showBuyStep(1); // Go back to business info step
+        });
+
+        // Step 3: Submit Contact Details (PII)
+        customerInfoFormContact.addEventListener("submit", (e) => {
+          e.preventDefault();
+          // Basic validation for PII fields
+          if (
+            !document.getElementById("contactPersonFinal").value ||
+            !document.getElementById("contactEmailFinal").value ||
+            !document.getElementById("contactPhoneFinal").value
+          ) {
+            alert("Please provide your contact details.");
+            return;
+          }
+          // Populate confirmation details for later steps
+          confirmationNameSpan.textContent =
+            document.getElementById("contactPersonFinal").value;
+          confirmationEmailSpan.textContent =
+            document.getElementById("contactEmailFinal").value;
+
+          showBuyStep(4); // Move to payment step
+        });
+
+        // Step 3: Back button
+        prevStep3Button.addEventListener("click", () => {
+          showBuyStep(2); // Go back to review quote step
+        });
+
+        // Step 4: Proceed to Payment
+        payNowButton.addEventListener("click", () => {
+          // Basic "payment" validation - just check if fields are non-empty
+          if (
+            !document.getElementById("cardNumber").value ||
+            !document.getElementById("expiryDate").value ||
+            !document.getElementById("cvv").value
+          ) {
+            alert("Please fill in payment details.");
+            return;
+          }
+          // Ensure final premium is reflected
+          paymentProductSpan.textContent = quoteProductSpan.textContent;
+          paymentPremiumSpan.textContent = quotePremiumSpan.textContent;
+
+          showBuyStep(5); // Move to confirmation step
+        });
+
+        // Step 4: Back button
+        prevStep4Button.addEventListener("click", () => {
+          showBuyStep(3); // Go back to contact details step
+        });
+
+        // Initial sector button click to load content
+        const allSectorProducts = {
+          manufacturing: sectorData.manufacturing.products,
+          services: sectorData.services.products,
+          retail: sectorData.retail.products,
+          food: sectorData.food.products,
+          textile: sectorData.textile.products,
+        };
+
+        function displayProductsForSector(sectorKey) {
+          productCardsContainer.innerHTML = ""; // Clear previous products
+          const products = allSectorProducts[sectorKey];
+
+          if (products) {
+            products.forEach((product) => {
+              const productCard = document.createElement("div");
+              productCard.className =
+                "product-card p-4 rounded-lg shadow-md flex flex-col items-center text-center";
+              productCard.innerHTML = `
+                        <div class="text-5xl mb-3">${product.icon}</div>
+                        <h4 class="text-xl font-semibold text-teal-700 mb-2">${product.name}</h4>
+                        <p class="text-neutral-600 text-sm mb-4">${product.description}</p>
+                        <button data-product-id="${product.id}" class="view-details-button bg-amber-200 hover:bg-teal-500 hover:text-white text-neutral-700 font-medium py-2 px-4 rounded-md mt-auto">View Details</button>
+                    `;
+              productCardsContainer.appendChild(productCard);
+            });
+
+            document
+              .querySelectorAll(".view-details-button")
+              .forEach((button) => {
+                button.addEventListener("click", (event) => {
+                  const productId = event.target.dataset.productId;
+                  let productFound = null;
+                  for (const key in allSectorProducts) {
+                    productFound = allSectorProducts[key].find(
+                      (p) => p.id === productId
+                    );
+                    if (productFound) break;
+                  }
+                  if (productFound) {
+                    openProductDetailModal(productFound);
+                  }
+                });
+              });
+          }
+        }
 
         sectorButtons.forEach((button) => {
           button.addEventListener("click", () => {
@@ -986,6 +3060,7 @@
                         <p><strong class="text-neutral-700">Rationale:</strong> ${data.rationale}</p>
                     `;
             }
+            displayProductsForSector(sector); // Call to display products
           });
         });
         // Trigger click on the first sector button by default
@@ -1002,3 +3077,4 @@
     </script>
   </body>
 </html>
+�

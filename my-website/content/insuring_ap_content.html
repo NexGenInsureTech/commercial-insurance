@@ -1,0 +1,807 @@
+
+    <main>
+        <section class="bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 text-center">
+                <h1 class="text-4xl md:text-6xl font-bold text-teal-800 leading-tight">Insuring Rural Andhra Pradesh</h1>
+                <p class="mt-4 text-lg md:text-xl text-stone-600 max-w-3xl mx-auto">An interactive dashboard translating the State Insurance Plan (SIP) strategy into an actionable vision for achieving "Insurance for All by 2047".</p>
+                <div class="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 max-w-4xl mx-auto">
+                    <div class="bg-sky-50 p-4 rounded-lg shadow-sm">
+                        <p class="text-3xl font-bold text-sky-700">13,327</p>
+                        <p class="text-sm text-sky-600">Gram Panchayats</p>
+                    </div>
+                    <div class="bg-teal-50 p-4 rounded-lg shadow-sm">
+                        <p class="text-3xl font-bold text-teal-700">~70%</p>
+                        <p class="text-sm text-teal-600">Rural Population</p>
+                    </div>
+                    <div class="bg-amber-50 p-4 rounded-lg shadow-sm">
+                        <p class="text-3xl font-bold text-amber-700">8.5L</p>
+                        <p class="text-sm text-amber-600">Self-Help Groups</p>
+                    </div>
+                    <div class="bg-stone-200 p-4 rounded-lg shadow-sm">
+                        <p class="text-3xl font-bold text-stone-700">~1%</p>
+                        <p class="text-sm text-stone-600">Gen. Insurance Penetration</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="challenge" class="py-16 md:py-20">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-teal-700">The Challenge & Opportunity</h2>
+                    <p class="mt-3 text-lg text-stone-600 max-w-3xl mx-auto">This section provides an overview of Andhra Pradesh's socio-economic landscape. Understanding these key metrics is crucial to designing an effective and inclusive insurance strategy that addresses the state's unique needs and leverages its strengths.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-2 gap-8 md:gap-12 items-start">
+                    <article class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-xl font-semibold text-center mb-4">Demographics & Literacy</h3>
+                        <div class="chart-container">
+                            <canvas id="demographicsChart"></canvas>
+                        </div>
+                        <p class="text-sm text-stone-500 mt-4 text-center">While the state has a balanced gender ratio, a significant literacy gap, especially in rural areas, poses a key challenge for financial product awareness.</p>
+                    </article>
+
+                    <article class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-xl font-semibold text-center mb-4">Livelihood Mix (GVA %)</h3>
+                        <div class="chart-container">
+                            <canvas id="livelihoodChart"></canvas>
+                        </div>
+                        <p class="text-sm text-stone-500 mt-4 text-center">The economy's heavy reliance on the agriculture and services sectors highlights the need for insurance products that protect against climate and market-related income shocks.</p>
+                    </article>
+
+                    <article class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-xl font-semibold text-center mb-4">The Digital Divide</h3>
+                        <div class="chart-container">
+                            <canvas id="digitalDivideChart"></canvas>
+                        </div>
+                        <p class="text-sm text-stone-500 mt-4 text-center">High smartphone ownership contrasts with low internet usage, especially among rural women. This demands a tech strategy with robust offline capabilities and simple interfaces.</p>
+                    </article>
+
+                    <article class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-xl font-semibold text-center mb-4">The Insurance Gap</h3>
+                         <div class="chart-container">
+                            <canvas id="insuranceGapChart"></canvas>
+                        </div>
+                         <p class="text-sm text-stone-500 mt-4 text-center">High coverage by government health schemes shows public acceptance of insurance concepts, but the vast gap in general insurance highlights a major opportunity for growth and risk mitigation.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="strategy" class="py-16 md:py-20 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-teal-700">The Strategic Blueprint</h2>
+                    <p class="mt-3 text-lg text-stone-600 max-w-3xl mx-auto">This section details the core components of the implementation plan. The strategy is designed to be phased, product-focused, and digitally enabled, leveraging local community structures to build trust and ensure last-mile reach. Use the tabs below to explore each pillar of the strategy.</p>
+                </div>
+
+                <div class="w-full max-w-4xl mx-auto">
+                    <div class="mb-8 flex flex-wrap justify-center border-b border-stone-200">
+                        <button class="tab-button px-4 py-2 font-semibold text-stone-600 rounded-t-md -mb-px" data-tab="rollout">Phased Rollout</button>
+                        <button class="tab-button px-4 py-2 font-semibold text-stone-600 rounded-t-md -mb-px" data-tab="products">Product Suite</button>
+                        <button class="tab-button px-4 py-2 font-semibold text-stone-600 rounded-t-md -mb-px" data-tab="distribution">Distribution Network</button>
+                    </div>
+
+                    <div id="rollout" class="tab-content">
+                        <h3 class="text-2xl font-semibold text-center mb-2">Phased Rollout Plan</h3>
+                        <p class="text-center text-stone-600 mb-8">Implementation will occur in 3-4 phases, prioritizing Gram Panchayat clusters based on a composite vulnerability and opportunity index. Click on a phase to see its focus.</p>
+                        <div class="flex flex-col md:flex-row gap-6">
+                            <div class="w-full md:w-1/2 bg-stone-50 p-4 rounded-lg flex items-center justify-center">
+                                <div class="relative w-full max-w-sm aspect-square grid grid-cols-3 gap-2">
+                                    <div class="phase-map-zone col-span-2 bg-teal-200 rounded-lg flex items-center justify-center font-semibold text-center p-2" data-phase="1">Phase 1</div>
+                                    <div class="phase-map-zone bg-sky-200 rounded-lg flex items-center justify-center font-semibold text-center p-2" data-phase="2">Phase 2</div>
+                                    <div class="phase-map-zone bg-sky-200 rounded-lg flex items-center justify-center font-semibold text-center p-2" data-phase="2">Phase 2</div>
+                                    <div class="phase-map-zone col-span-2 bg-amber-200 rounded-lg flex items-center justify-center font-semibold text-center p-2" data-phase="3">Phase 3</div>
+                                    <div class="phase-map-zone col-span-3 bg-stone-300 rounded-lg flex items-center justify-center font-semibold text-center p-2" data-phase="4">Phase 4</div>
+                                </div>
+                            </div>
+                            <div class="w-full md:w-1/2">
+                                <div id="phase-details" class="bg-stone-100 p-6 rounded-lg min-h-[200px]">
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="products" class="tab-content hidden">
+                        <h3 class="text-2xl font-semibold text-center mb-8">Affordable & Relevant Product Suite</h3>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="bg-teal-50 border border-teal-200 p-6 rounded-lg">
+                                <h4 class="text-xl font-bold text-teal-800">Bima Vistaar (Core Offering)</h4>
+                                <p class="text-sm text-teal-700 mt-1">Simple, affordable, bundled protection</p>
+                                <ul class="mt-4 space-y-2 text-stone-700">
+                                    <li class="flex items-start"><span class="text-teal-600 mr-2 text-lg">&#10004;</span> <div><strong>Property:</strong> Dwelling/contents cover up to ₹2 Lakh.</div></li>
+                                    <li class="flex items-start"><span class="text-teal-600 mr-2 text-lg">&#10004;</span> <div><strong>Personal Accident:</strong> Benefit of ₹2 Lakh.</div></li>
+                                    <li class="flex items-start"><span class="text-teal-600 mr-2 text-lg">&#10004;</span> <div><strong>Health Cash:</strong> ₹500/day for 10 days hospitalization.</div></li>
+                                    <li class="flex items-start"><span class="text-teal-600 mr-2 text-lg">&#10004;</span> <div><strong>Target Premium:</strong> ~₹1,500/year for an individual.</div></li>
+                                </ul>
+                            </div>
+                             <div class="bg-sky-50 border border-sky-200 p-6 rounded-lg">
+                                <h4 class="text-xl font-bold text-sky-800">Modular Add-Ons</h4>
+                                <p class="text-sm text-sky-700 mt-1">Tailored covers for specific rural needs</p>
+                                <ul class="mt-4 space-y-2 text-stone-700 list-disc list-inside">
+                                    <li><strong>Motor Insurance:</strong> Mandatory TP & basic OD.</li>
+                                    <li><strong>Livestock Shield:</strong> For cattle death (accident/disease).</li>
+                                    <li><strong>Crop Peril Guard:</strong> Parametric cover for specific risks.</li>
+                                    <li><strong>MSME Suraksha:</strong> Basic cover for small shops.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="distribution" class="tab-content hidden">
+                         <h3 class="text-2xl font-semibold text-center mb-8">Women-Centric, Tech-Enabled Distribution</h4>
+                         <p class="text-center text-stone-600 mb-8">The strategy relies on a trusted, local network to overcome barriers of low literacy and trust deficit. This diagram illustrates the flow of information and services from the insurer to the rural customer.</p>
+                         <div class="bg-stone-50 p-6 rounded-lg">
+                             <div class="flex flex-col space-y-4 items-center">
+                                 <div class="bg-teal-600 text-white font-bold p-3 rounded-lg shadow-lg w-full max-w-xs text-center">LEAD INSURER</div>
+                                 <div class="text-2xl text-stone-400">&darr;</div>
+                                 <div class="text-center w-full max-w-xs">
+                                     <div class="bg-white p-4 rounded-lg shadow-md inline-block">
+                                         <h4 class="font-semibold">Technology & Training Platform</h4>
+                                         <p class="text-xs text-stone-500">Mobile-First App, Offline Capable, Telugu Language</p>
+                                     </div>
+                                 </div>
+                                 <div class="text-2xl text-stone-400">&darr;</div>
+                                 <div class="w-full grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                                     <div class="bg-sky-100 p-4 rounded-lg shadow">
+                                         <div class="font-bold text-sky-800">Bima Vahaks</div>
+                                         <p class="text-sm text-sky-700">Primary Force (Women-centric)</p>
+                                     </div>
+                                     <div class="bg-amber-100 p-4 rounded-lg shadow">
+                                        <div class="font-bold text-amber-800">SHGs</div>
+                                        <p class="text-sm text-amber-700">Community Mobilization & Trust</p>
+                                     </div>
+                                     <div class="bg-stone-200 p-4 rounded-lg shadow">
+                                         <div class="font-bold text-stone-800">CSCs</div>
+                                         <p class="text-sm text-stone-700">Digital Service Points</p>
+                                     </div>
+                                 </div>
+                                 <div class="text-2xl text-stone-400">&darr;</div>
+                                 <div class="bg-green-600 text-white font-bold p-3 rounded-lg shadow-lg w-full max-w-xs text-center">RURAL HOUSEHOLDS & MSMEs</div>
+                             </div>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="mea" class="py-16 md:py-20">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-teal-700">Measuring Success & Managing Risk</h2>
+                    <p class="mt-3 text-lg text-stone-600 max-w-3xl mx-auto">A robust Monitoring & Evaluation (M&E) framework will track progress against key targets, while a proactive risk management plan will address potential challenges like mis-selling and fraud.</p>
+                </div>
+                 <div class="grid md:grid-cols-2 gap-8 md:gap-12">
+                    <div>
+                        <h3 class="text-2xl font-semibold mb-6 text-center">Key Performance Indicators (KPIs)</h3>
+                        <div class="space-y-4">
+                            <div class="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                                <p class="font-semibold text-stone-700">% of GPs Covered & Households Insured</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                                <p class="font-semibold text-stone-700">RUSO Compliance (% Dwellings, Vehicles, Lives)</p>
+                            </div>
+                             <div class="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                                <p class="font-semibold text-stone-700">Claim Settlement Ratio (Target >95%) & Turnaround Time (Target <15 days)</p>
+                            </div>
+                             <div class="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                                <p class="font-semibold text-stone-700">Grievance Incidence & Redressal TAT</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-semibold mb-6 text-center">Risk Mitigation Strategy</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="risk-card bg-white p-4 rounded-lg shadow-sm" data-risk="mis-selling">
+                                <h4 class="font-semibold text-stone-700">Mis-selling</h4>
+                                <p class="text-xs text-stone-500">Click to see mitigation</p>
+                            </div>
+                             <div class="risk-card bg-white p-4 rounded-lg shadow-sm" data-risk="fraud">
+                                <h4 class="font-semibold text-stone-700">Fraud</h4>
+                                <p class="text-xs text-stone-500">Click to see mitigation</p>
+                            </div>
+                             <div class="risk-card bg-white p-4 rounded-lg shadow-sm" data-risk="operational">
+                                <h4 class="font-semibold text-stone-700">Operational</h4>
+                                <p class="text-xs text-stone-500">Click to see mitigation</p>
+                            </div>
+                             <div class="risk-card bg-white p-4 rounded-lg shadow-sm" data-risk="claims">
+                                <h4 class="font-semibold text-stone-700">Claim Delays</h4>
+                                <p class="text-xs text-stone-500">Click to see mitigation</p>
+                            </div>
+                        </div>
+                         <div id="risk-details" class="bg-stone-200 mt-4 p-4 rounded-lg min-h-[100px]">
+                            <p class="text-stone-600">Click on a risk category above to view the corresponding mitigation strategy.</p>
+                         </div>
+                    </div>
+                 </div>
+            </div>
+        </section>
+
+        <section id="stakeholders" class="py-16 md:py-20 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-teal-700">Collaborative Action</h2>
+                    <p class="mt-3 text-lg text-stone-600 max-w-3xl mx-auto">Success requires coordinated effort from all stakeholders. This section outlines the key responsibilities and recommendations for the primary actors involved in the State Insurance Plan.</p>
+                </div>
+                 <div class="grid md:grid-cols-1 lg:grid-cols-3 gap-8">
+                    <article class="bg-teal-50 p-6 rounded-lg border-l-4 border-teal-500 shadow-md">
+                        <h3 class="text-xl font-bold text-teal-800">Lead Insurer</h3>
+                        <ul class="mt-4 space-y-3 text-stone-700 list-disc list-inside">
+                            <li>Establish strong state-level coordination unit.</li>
+                            <li>Develop GP prioritization index and phasing plan.</li>
+                            <li>Invest in technology and multilingual training.</li>
+                            <li>Forge partnerships with SHGs, CSCs, and Banks.</li>
+                            <li>Build local support infrastructure for claims and grievances.</li>
+                        </ul>
+                    </article>
+                     <article class="bg-sky-50 p-6 rounded-lg border-l-4 border-sky-500 shadow-md">
+                        <h3 class="text-xl font-bold text-sky-800">IRDAI & GICouncil</h3>
+                        <ul class="mt-4 space-y-3 text-stone-700 list-disc list-inside">
+                            <li>Finalize Bima Vistaar product and pricing.</li>
+                            <li>Ensure fair allocation of GPs for RUSO compliance.</li>
+                            <li>Provide clear SIP operational guidelines.</li>
+                            <li>Facilitate Bima Sugam integration.</li>
+                            <li>Monitor progress and share best practices.</li>
+                        </ul>
+                    </article>
+                     <article class="bg-amber-50 p-6 rounded-lg border-l-4 border-amber-500 shadow-md">
+                        <h3 class="text-xl font-bold text-amber-800">AP State Government</h3>
+                        <ul class="mt-4 space-y-3 text-stone-700 list-disc list-inside">
+                            <li>Champion the SIP and provide administrative support.</li>
+                            <li>Facilitate access to relevant databases (BPL, SHG etc.).</li>
+                            <li>Integrate SIP drives with existing government programs.</li>
+                            <li>Support digital and physical infrastructure development.</li>
+                            <li>Boost financial literacy through state channels.</li>
+                        </ul>
+                    </article>
+                 </div>
+            </div>
+        </section>
+
+        <section id="annexures" class="py-16 md:py-20 bg-stone-50">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-teal-700">Annexures</h2>
+                    <p class="mt-3 text-lg text-stone-600 max-w-3xl mx-auto">Supporting documentation, detailed references, and acronyms related to the State Insurance Plan strategy.</p>
+                </div>
+                <div class="space-y-4 max-w-4xl mx-auto">
+                    <div>
+                        <button class="accordion-toggle">
+                            <span>Annexure A: MoU Templates (Conceptual)</span>
+                            <span class="icon"></span>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="prose max-w-none py-2 text-stone-700">
+                                <p class="italic text-sm text-stone-500">Note: These are generic templates and should be reviewed and customized by legal counsel before execution.</p>
+                                
+                                <div class="mou-section mt-4">
+                                    <h4 class="text-lg font-semibold">1. Draft Memorandum of Understanding between Lead Insurer and State Government Nodal Department</h4>
+                                    <p><strong>MEMORANDUM OF UNDERSTANDING (MoU)</strong></p>
+                                    <p><strong>BETWEEN</strong></p>
+                                    <p>[Name of Lead Insurer], having its registered office at [Address], hereinafter referred to as the "Lead Insurer" (which expression shall unless repugnant to the context or meaning thereof include its successors and permitted assigns) of the FIRST PART;</p>
+                                    <p><strong>AND</strong></p>
+                                    <p>The Government of Andhra Pradesh, represented by [Name of Department, e.g., Department of Rural Development/Panchayat Raj], having its office at [Address], hereinafter referred to as the "Department" (which expression shall unless repugnant to the context or meaning thereof include its successors and permitted assigns) of the SECOND PART;</p>
+                                    <p>(The Lead Insurer and the Department are hereinafter collectively referred to as the "Parties" and individually as a "Party")</p>
+                                    
+                                    <h5>WHEREAS:</h5>
+                                    <ol type="A" class="list-alpha pl-5">
+                                        <li>The Insurance Regulatory and Development Authority of India (IRDAI) has envisioned "Insurance for All by 2047" and introduced the State Insurance Plan (SIP) framework to enhance insurance penetration, particularly in rural areas.</li>
+                                        <li>The Lead Insurer has been designated as the Lead General Insurer for the State of Andhra Pradesh under the SIP framework.</li>
+                                        <li>The Department is the nodal agency of the Government of Andhra Pradesh responsible for [Specify relevant functions, e.g., rural development, panchayat raj administration].</li>
+                                        <li>The Parties wish to collaborate to facilitate the successful implementation of the SIP in Andhra Pradesh, focusing on rural insurance inclusion across all Gram Panchayats (GPs).</li>
+                                    </ol>
+                                    
+                                    <p><strong>NOW, THEREFORE, THE PARTIES AGREE AS FOLLOWS:</strong></p>
+                                    <h5>1. Objective:</h5>
+                                    <p>To establish a framework for cooperation and coordination between the Lead Insurer and the Department to support the implementation of the SIP for general insurance in rural Andhra Pradesh, aligning with IRDAI guidelines and state priorities.</p>
+                                    <h5>2. Scope of Collaboration:</h5>
+                                    <p>The collaboration will encompass activities related to:</p>
+                                    <ul class="list-disc pl-5">
+                                        <li>Enhancing insurance awareness and financial literacy in rural areas.</li>
+                                        <li>Facilitating the reach of insurance distribution channels (like Bima Vahaks) to GPs.</li>
+                                        <li>Exploring potential convergence between the SIP and relevant state government schemes.</li>
+                                        <li>Facilitating coordination with district administration and Panchayati Raj Institutions (PRIs).</li>
+                                        <li>Sharing relevant data and information, subject to applicable laws and regulations.</li>
+                                    </ul>
+                                    <h5>3. Responsibilities of the Lead Insurer:</h5>
+                                    <ul class="list-disc pl-5">
+                                        <li>Drive the implementation of the SIP as per IRDAI guidelines and the approved state strategy.</li>
+                                        <li>Coordinate with other insurance companies operating in the state.</li>
+                                        <li>Develop and deploy appropriate insurance products (like Bima Vistaar) suitable for the rural populace.</li>
+                                        <li>Establish and manage distribution channels, including training Bima Vahaks.</li>
+                                        <li>Conduct insurance awareness and financial literacy campaigns.</li>
+                                        <li>Establish mechanisms for policy servicing and grievance redressal.</li>
+                                        <li>Report progress to IRDAI and the State Level Insurance Committee (SLIC) / designated state forum.</li>
+                                        <li>Adhere to data privacy and security norms.</li>
+                                    </ul>
+                                    <h5>4. Responsibilities of the Department:</h5>
+                                    <ul class="list-disc pl-5">
+                                        <li>Act as the nodal point for coordination between the Lead Insurer and various state government bodies/district administration/PRIs.</li>
+                                        <li>Facilitate the organization of awareness campaigns and leverage government platforms (e.g., Gram Sabhas) for outreach.</li>
+                                        <li>Provide guidance on state priorities and relevant welfare schemes for potential convergence.</li>
+                                        <li>Facilitate access to relevant, anonymized, or aggregated data/databases (e.g., BPL lists, SHG data) as permissible under law and policy, for planning and targeting purposes, subject to data sharing protocols.</li>
+                                        <li>Support the functioning of the SLIC or equivalent state-level coordination mechanism.</li>
+                                        <li>Encourage PRIs to support SIP activities locally.</li>
+                                    </ul>
+                                    <h5>5. Data Sharing:</h5>
+                                    <p>Any sharing of data between the Parties will be governed by a separate data sharing protocol, ensuring compliance with all applicable data protection laws, privacy regulations, and government policies. Confidentiality of individual data shall be maintained.</p>
+                                    <h5>6. State Level Insurance Committee (SLIC):</h5>
+                                    <p>The Parties agree to actively participate in the SLIC (or equivalent forum) established for overseeing the SIP implementation, contributing to its effective functioning.</p>
+                                    <h5>7. Term and Termination:</h5>
+                                    <p>This MoU shall come into effect on the date of signing and remain valid for a period of [Number] years, extendable by mutual written consent. Either Party may terminate this MoU by giving [Number, e.g., three] months' written notice to the other Party.</p>
+                                    <h5>8. Confidentiality:</h5>
+                                    <p>Both Parties shall maintain the confidentiality of information shared under this MoU, except where disclosure is required by law or regulatory mandate.</p>
+                                    <h5>9. Governing Law and Dispute Resolution:</h5>
+                                    <p>This MoU shall be governed by the laws of India. Any disputes shall be resolved amicably through mutual discussion, failing which they may be referred to [Specify mechanism, e.g., arbitration].</p>
+                                    <h5>10. Amendments:</h5>
+                                    <p>Any amendments to this MoU shall be made in writing and signed by authorized representatives of both Parties.</p>
+                                    <p><strong>IN WITNESS WHEREOF,</strong> the Parties hereto have signed this MoU on the day, month, and year first above written.</p>
+                                    <div class="grid grid-cols-2 gap-4 mt-4">
+                                        <div>
+                                            <p>For and on behalf of [Lead Insurer Name]</p>
+                                            <p>(Authorized Signatory)</p>
+                                            <p>Name:_________________________</p>
+                                            <p>Designation:____________________</p>
+                                            <p>Date:_________________________</p>
+                                            <p>Witness 1:_____________________</p>
+                                            <p>Witness 2:_____________________</p>
+                                        </div>
+                                        <div>
+                                            <p>For and on behalf of [Department Name]</p>
+                                            <p>(Authorized Signatory)</p>
+                                            <p>Name:_________________________</p>
+                                            <p>Designation:____________________</p>
+                                            <p>Date:_________________________</p>
+                                            <p>Witness 1:_____________________</p>
+                                            <p>Witness 2:_____________________</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mou-section mt-6">
+                                    <h4 class="text-lg font-semibold">2. Draft Memorandum of Understanding between Lead Insurer and SHG Federation(s)</h4>
+                                     <p><strong>MEMORANDUM OF UNDERSTANDING (MoU)</strong></p>
+                                     <p><strong>BETWEEN</strong></p>
+                                     <p>[Name of Lead Insurer], having its registered office at [Address], hereinafter referred to as the "Lead Insurer"</p>
+                                     <p><strong>AND</strong></p>
+                                     <p>[Name of SHG Federation], a registered [Society/Trust/Other] representing Self-Help Groups in [Operational Area/District], having its office at [Address], hereinafter referred to as the "Federation"</p>
+                                     <p>(Lead Insurer and Federation collectively referred to as "Parties")</p>
+                                     <h5>WHEREAS:</h5>
+                                     <ol type="A" class="list-alpha pl-5">
+                                        <li>The Lead Insurer is implementing the State Insurance Plan (SIP) in Andhra Pradesh to enhance rural insurance inclusion.</li>
+                                        <li>The Federation represents a network of Self-Help Groups (SHGs) active in rural areas, possessing strong community connect and trust.</li>
+                                        <li>The Parties recognize the potential of leveraging the SHG network for promoting insurance awareness and facilitating distribution under the SIP, particularly through the Bima Vahak model.</li>
+                                     </ol>
+                                     <p><strong>NOW, THEREFORE, THE PARTIES AGREE AS FOLLOWS:</strong></p>
+                                     <h5>1. Objective:</h5>
+                                     <p>To collaborate on promoting insurance awareness, identifying potential Bima Vahaks from SHG members, and facilitating the distribution and servicing of specified insurance products (primarily Bima Vistaar) within the Federation's operational area.</p>
+                                     <h5>2. Scope of Collaboration:</h5>
+                                     <ul class="list-disc pl-5">
+                                        <li>Identifying and mobilizing SHG members for insurance awareness programs.</li>
+                                        <li>Facilitating the identification and nomination of eligible and willing SHG members to be trained and engaged as Bima Vahaks by the Lead Insurer, as per IRDAI guidelines.</li>
+                                        <li>Utilizing SHG meetings and platforms for disseminating information about approved insurance products and the SIP.</li>
+                                        <li>Providing feedback to the Lead Insurer on community needs and product acceptance.</li>
+                                        <li>Potentially assisting Bima Vahaks (where members are engaged as such) in community outreach and follow-up, within the regulatory framework.</li>
+                                     </ul>
+                                     <h5>3. Responsibilities of the Lead Insurer:</h5>
+                                      <ul class="list-disc pl-5">
+                                        <li>Provide training materials and conduct awareness sessions on insurance for SHG members, coordinated through the Federation.</li>
+                                        <li>Conduct selection, training, certification, and engagement of Bima Vahaks as per IRDAI guidelines, giving preference to eligible candidates nominated by the Federation.</li>
+                                        <li>Provide necessary tools (e.g., handheld devices, ID cards) and support to engaged Bima Vahaks.</li>
+                                        <li>Ensure timely payment of commissions/remuneration to engaged Bima Vahaks as per agreed terms and IRDAI norms.</li>
+                                        <li>Provide simple product literature (in Telugu) and support materials.</li>
+                                        <li>Manage policy issuance, servicing, and claim settlement processes.</li>
+                                      </ul>
+                                     <h5>4. Responsibilities of the Federation:</h5>
+                                      <ul class="list-disc pl-5">
+                                        <li>Facilitate mobilization of SHG members for awareness sessions and training programs.</li>
+                                        <li>Assist in identifying potential Bima Vahak candidates from within the SHG network based on criteria provided by the Lead Insurer and IRDAI guidelines.</li>
+                                        <li>Provide a platform for the Lead Insurer/Bima Vahaks to interact with SHGs during regular meetings (with prior coordination).</li>
+                                        <li>Encourage SHG members to participate in the SIP and avail appropriate insurance cover.</li>
+                                        <li>Act as a communication channel between SHGs and the Lead Insurer for feedback and query resolution support.</li>
+                                      </ul>
+                                     <h5>5. Financial Arrangements:</h5>
+                                      <ul class="list-disc pl-5">
+                                        <li>Engagement as Bima Vahaks will be directly between the Lead Insurer and the individual SHG member, governed by IRDAI guidelines and specific agreements, including commission structures.</li>
+                                        <li>[Specify if any support/honorarium is considered for the Federation for facilitation, subject to regulations.]</li>
+                                      </ul>
+                                     <p><em>(Sections for Term and Termination, Confidentiality, Governing Law, Amendments, and Signatures would follow a similar structure to the first MoU.)</em></p>
+                                </div>
+
+                                <div class="mou-section mt-6">
+                                    <h4 class="text-lg font-semibold">3. Draft Memorandum of Understanding between Lead Insurer and CSC e-Governance Services India Limited (CSC SPV)</h4>
+                                    <p><strong>MEMORANDUM OF UNDERSTANDING (MoU)</strong></p>
+                                     <p><strong>BETWEEN</strong></p>
+                                     <p>[Name of Lead Insurer], having its registered office at [Address], hereinafter referred to as the "Lead Insurer"</p>
+                                     <p><strong>AND</strong></p>
+                                     <p>CSC e-Governance Services India Limited, a Special Purpose Vehicle (SPV) incorporated under the Companies Act, having its registered office at [Address], hereinafter referred to as "CSC SPV"</p>
+                                     <p>(Lead Insurer and CSC SPV collectively referred to as "Parties")</p>
+                                     <h5>WHEREAS:</h5>
+                                     <ol type="A" class="list-alpha pl-5">
+                                        <li>The Lead Insurer is implementing the State Insurance Plan (SIP) in Andhra Pradesh to enhance rural insurance inclusion.</li>
+                                        <li>CSC SPV oversees the network of Common Service Centres (CSCs), which act as digital access points for various services in rural and semi-urban areas.</li>
+                                        <li>The Parties wish to collaborate to leverage the CSC network for the distribution and servicing of specified insurance products under the SIP.</li>
+                                     </ol>
+                                     <p><strong>NOW, THEREFORE, THE PARTIES AGREE AS FOLLOWS:</strong></p>
+                                     <h5>1. Objective:</h5>
+                                     <p>To enable the sale and servicing of the Lead Insurer's approved insurance products (primarily Bima Vistaar and relevant add-ons) through the CSC network in Andhra Pradesh, enhancing accessibility for rural citizens.</p>
+                                     <h5>2. Scope of Collaboration:</h5>
+                                      <ul class="list-disc pl-5">
+                                        <li>Integration of the Lead Insurer's insurance products/portal with the CSC Digital Seva Portal.</li>
+                                        <li>Training and certification of CSC Village Level Entrepreneurs (VLEs) to solicit and facilitate the issuance of specified insurance products (acting as POSP or other permitted intermediary category as per IRDAI regulations).</li>
+                                        <li>Facilitating premium collection through the CSC wallet/portal.</li>
+                                        <li>Providing policy information and potentially first-level support for policy servicing and claim intimation through CSCs.</li>
+                                        <li>Jointly conducting awareness campaigns leveraging the CSC network.</li>
+                                      </ul>
+                                     <h5>3. Responsibilities of the Lead Insurer:</h5>
+                                      <ul class="list-disc pl-5">
+                                        <li>Provide necessary APIs and technical support for integrating its systems with the CSC Digital Seva Portal.</li>
+                                        <li>Develop and provide training modules and materials (including product details, sales process, compliance requirements) for VLEs.</li>
+                                        <li>Ensure regulatory compliance for products sold through the CSC channel.</li>
+                                        <li>Process applications sourced through CSCs and issue policies promptly.</li>
+                                        <li>Manage policy servicing and claim settlements for policies sourced via CSCs.</li>
+                                        <li>Provide necessary marketing and support materials to CSC SPV/VLEs.</li>
+                                        <li>Pay agreed commissions/fees to CSC SPV/VLEs as per the commercial agreement and IRDAI regulations.</li>
+                                      </ul>
+                                     <h5>4. Responsibilities of CSC SPV:</h5>
+                                      <ul class="list-disc pl-5">
+                                        <li>Facilitate the integration of the Lead Insurer's services onto the Digital Seva Portal.</li>
+                                        <li>Identify and facilitate the training and certification of VLEs for selling insurance products.</li>
+                                        <li>Ensure VLEs adhere to the code of conduct and regulatory requirements.</li>
+                                        <li>Provide a platform for secure premium collection and remittance to the Lead Insurer.</li>
+                                        <li>Monitor the performance and compliance of VLEs involved in insurance distribution.</li>
+                                        <li>Cooperate in awareness and promotional activities.</li>
+                                      </ul>
+                                     <h5>5. Commercial Terms:</h5>
+                                     <p>The specific commission structure, transaction fees, and other commercial terms shall be detailed in a separate Commercial Agreement annexed to this MoU. All financial arrangements must comply with IRDAI regulations.</p>
+                                     <p><em>(Sections for Term and Termination, Confidentiality, Governing Law, Amendments, and Signatures would follow.)</em></p>
+                                </div>
+                                
+                                <div class="mou-section mt-6">
+                                    <h4 class="text-lg font-semibold">4. Draft Agreement Template for Engaging Gram Panchayats (for Awareness/Certification Support)</h4>
+                                    <p class="italic text-sm text-stone-500">Note: This is a simpler agreement format, potentially less formal than an MoU, focusing on specific support activities. Legal review is essential.</p>
+                                    <p><strong>AGREEMENT FOR COLLABORATION</strong></p>
+                                    <p><strong>BETWEEN</strong></p>
+                                    <p>[Name of Lead Insurer], having its office at [Address], hereinafter referred to as the "Lead Insurer"</p>
+                                    <p><strong>AND</strong></p>
+                                    <p>The Gram Panchayat of [Name of Gram Panchayat], [Mandal Name], [District Name], Andhra Pradesh, represented by its Sarpanch/Panchayat Secretary, hereinafter referred to as the "Gram Panchayat"</p>
+                                    <p>(Lead Insurer and Gram Panchayat collectively referred to as "Parties")</p>
+                                    <p><strong>Purpose:</strong> To facilitate cooperation for enhancing insurance awareness and supporting the verification process under the State Insurance Plan (SIP) within the jurisdiction of the Gram Panchayat.</p>
+                                    <h5>Agreed Activities:</h5>
+                                    <h5>1. Insurance Awareness:</h5>
+                                    <ul class="list-disc pl-5">
+                                        <li>The Gram Panchayat agrees to facilitate the Lead Insurer (or its authorized representatives like Bima Vahaks) in conducting insurance awareness meetings/camps within the GP, including providing suitable dates/times for sessions during Gram Sabhas or other community gatherings, subject to availability and local schedules.</li>
+                                        <li>The Gram Panchayat may assist in disseminating information about upcoming awareness sessions through local announcements.</li>
+                                    </ul>
+                                    <h5>2. Support for RUSO Compliance Verification (as per IRDAI Regulations):</h5>
+                                     <ul class="list-disc pl-5">
+                                        <li>Where required by IRDAI regulations for Rural and Social Sector Obligations (RUSO) compliance, the Gram Panchayat Secretary (Gram Sachiv) agrees to support the verification process as mandated.</li>
+                                        <li>This may include, upon request by the Lead Insurer and presentation of necessary policyholder details/consent (as per regulatory guidelines), assisting in verifying the residency of policyholders within the GP or certifying lists/declarations related to covered lives, dwellings, shops, vehicles, or social sector status, strictly in accordance with IRDAI guidelines and prescribed formats.</li>
+                                        <li>The Lead Insurer shall provide clear formats and necessary information to facilitate this verification process.</li>
+                                     </ul>
+                                    <h5>3. Lead Insurer's Role:</h5>
+                                     <ul class="list-disc pl-5">
+                                        <li>The Lead Insurer will provide information materials in Telugu regarding insurance schemes under the SIP.</li>
+                                        <li>The Lead Insurer will coordinate with the Gram Panchayat for scheduling awareness activities.</li>
+                                        <li>The Lead Insurer will ensure its representatives/Bima Vahaks conduct themselves professionally and ethically.</li>
+                                        <li>The Lead Insurer will adhere to all regulatory guidelines regarding data privacy and verification processes.</li>
+                                     </ul>
+                                    <h5>4. Gram Panchayat's Role:</h5>
+                                     <ul class="list-disc pl-5">
+                                        <li>Provide logistical support for awareness meetings where feasible (e.g., venue access, informing community members).</li>
+                                        <li>Facilitate the verification/certification process by the Gram Sachiv as per regulatory requirements and established procedures.</li>
+                                     </ul>
+                                    <h5>5. Duration:</h5>
+                                    <p>This agreement will be valid for a period of [Number] year(s) from the date of signing, renewable upon mutual agreement.</p>
+                                    <h5>6. No Financial Obligation:</h5>
+                                    <p>This agreement does not create any direct financial obligation on the part of the Gram Panchayat towards the Lead Insurer, or vice versa, unless specifically agreed upon separately in writing for defined activities (e.g., reimbursement for specific logistical costs, if any, subject to rules).</p>
+                                    <p><strong>Agreed and Signed:</strong></p>
+                                    <div class="grid grid-cols-2 gap-4 mt-4">
+                                        <div>
+                                            <p>For [Lead Insurer Name]</p>
+                                            <p>(Authorized Representative)</p>
+                                            <p>Name:_________________________</p>
+                                            <p>Designation:____________________</p>
+                                            <p>Date:_________________________</p>
+                                            <p>Seal:_________________________</p>
+                                        </div>
+                                        <div>
+                                            <p>For [Gram Panchayat Name]</p>
+                                            <p>(Sarpanch / Panchayat Secretary)</p>
+                                            <p>Name:_________________________</p>
+                                            <p>Designation:____________________</p>
+                                            <p>Date:_________________________</p>
+                                            <p>Seal:_________________________</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <button class="accordion-toggle">
+                            <span>Annexure B: Detailed Data Tables (Illustrative Content)</span>
+                            <span class="icon"></span>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="prose max-w-none py-2 text-stone-700 overflow-x-auto">
+                                <p class="italic text-sm text-stone-500">Note: Data presented here is based on information cited in the main report. District-wise breakdowns require specific data retrieval which may not be fully available from the provided snippets. Indicate "Data Not Available" or "Requires District-Level Data" where specific figures are missing.</p>
+                                
+                                <h4 class="text-lg font-semibold mt-4">Table B.1: Andhra Pradesh - District-wise Administrative Units</h4>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>S.No.</th>
+                                            <th>District Name</th>
+                                            <th>Number of Mandals</th>
+                                            <th>Number of Gram Panchayats</th>
+                                            <th>Number of Villages</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td colspan="5" class="text-center py-2"><em>[List all 26 District Names - Requires specific LGD query or State Panchayat Raj Dept. data.]</em></td></tr>
+                                        <tr>
+                                            <td colspan="2"><strong>Total Andhra Pradesh</strong></td>
+                                            <td><strong>679</strong></td>
+                                            <td><strong>13,327</strong></td>
+                                            <td><strong>17,951</strong></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <p class="text-xs italic mt-1">Source: LGD, Wikipedia for Mandal count. GP & Village counts from LGD. District-wise breakdown requires specific LGD query or State Panchayat Raj Dept. data.</p>
+
+                                <h4 class="text-lg font-semibold mt-6">Table B.2: Andhra Pradesh - Demographic Summary (Based mainly on 2011 Census)</h4>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Parameter</th>
+                                            <th>Andhra Pradesh Value</th>
+                                            <th>Source(s)</th>
+                                            <th>Notes</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>Total Population (2011)</td><td>49.58 Million</td><td>Report</td><td>10th largest state by population (2011)</td></tr>
+                                        <tr><td>Rural Population % (2011)</td><td>70.53%</td><td>Report</td><td>Approx. 34.97 million rural residents (2011)</td></tr>
+                                        <tr><td>Urban Population % (2011)</td><td>29.47%</td><td>Report</td><td>Approx. 14.61 million urban residents (2011)</td></tr>
+                                        <tr><td>Sex Ratio (Females per 1000 Males) (2011)</td><td>997</td><td>Report</td><td>Improved from 983 (2001), Higher than National Average (943 in 2011)</td></tr>
+                                        <tr><td>Overall Literacy Rate (2011)</td><td>67.35%</td><td>Report</td><td>Below National Average (72.98% in 2011)</td></tr>
+                                        <tr><td>Female Literacy Rate (2011)</td><td>59.96%</td><td>Report</td><td>Improved from 52.72% (2001)</td></tr>
+                                        <tr><td>Literacy Rate (NSO 2017-18)</td><td>66.4%</td><td>Report</td><td>Reported as lowest among states in that survey</td></tr>
+                                        <tr><td>Rural-Urban Literacy Gap (NSO 2017-18)</td><td>19.2%</td><td>Report</td><td>Rural literacy significantly lower</td></tr>
+                                        <tr><td>Average Household Size</td><td>Data Not Available in Snippets</td><td>Report (Telangana ref.)</td><td>Requires specific state data</td></tr>
+                                        <tr><td>Per Capita Income (Current Prices, 2024-25 AE)</td><td>₹2,68,653</td><td>Report</td><td>Higher than National Average</td></tr>
+                                        <tr><td>Avg. Rural MPCE (HCES 2023-24)</td><td>₹5,327</td><td>Report</td><td>Monthly Per Capita Consumption Expenditure</td></tr>
+                                        <tr><td>Avg. Urban MPCE (HCES 2023-24)</td><td>₹7,182</td><td>Report</td><td>Monthly Per Capita Consumption Expenditure</td></tr>
+                                    </tbody>
+                                </table>
+                                <p class="text-xs italic mt-1">Note: District-wise demographic breakdown requires Census 2011 district tables or specific Socio-Economic Survey data not fully extracted.</p>
+
+                                <h4 class="text-lg font-semibold mt-6">Table B.3: Andhra Pradesh - District-wise Vulnerability Indicators</h4>
+                                 <table>
+                                    <thead>
+                                        <tr>
+                                            <th>District Name</th>
+                                            <th>Key Vulnerability Indicators (Illustrative)</th>
+                                            <th>Source/Notes</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td colspan="3" class="text-center py-2"><em>[List all 26 District Names]</em></td></tr>
+                                        <tr>
+                                            <td><em>Each District</em></td>
+                                            <td>- % BPL Population (Requires specific data)<br>- Disaster Proneness (Coastal/Flood/Drought - Requires mapping)<br>- % Tribal Population (Requires Census/Tribal Welfare Dept data)<br>- Dependence on Agriculture/Fisheries (%)<br>- Literacy Rate (Lower than state avg?)</td>
+                                            <td>Data for these indicators at the district level needs to be sourced from State Planning Dept., Disaster Management Authority, Tribal Welfare Dept., Census, Socio-Economic Surveys, NABARD PLPs, etc. Subject to data availability.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Total AP</strong></td>
+                                            <td>High dependence on Agriculture (60%+ employment), Significant Coastal/Fisheries population, Lower overall literacy, Presence of Tribal areas.</td>
+                                            <td>State-level indicators suggest vulnerability, but district-level granularity is needed for prioritization.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                
+                                <h4 class="text-lg font-semibold mt-6">Table B.4: List of Potential NGO Partners in Andhra Pradesh (Focus: Rural Development/Financial Inclusion/SHGs/Related Sectors)</h4>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>S.No.</th>
+                                            <th>NGO Name</th>
+                                            <th>Registration City/District (if available)</th>
+                                            <th>Key Sectors Mentioned (Illustrative)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>1</td><td>ACHARYA NAGARJUNA BUDDHISM CULTURAL DEVELOPMENT SOCIETY</td><td>ANATHAPUR</td><td>Agriculture, Animal Husbandry, Art & Culture, Civic Issues, Drinking Water, Aged/Elderly, Environment, Health, HIV/AIDS, Human Rights, IT, Land Resources, Micro Finance (SHGs), Minority Issues, Rural Development</td></tr>
+                                        <tr><td>2</td><td>ACTION FOR SOCIAL DEVELOPMENT SOCIETY</td><td>PENUKONDA</td><td>Agriculture, Animal Husbandry, Art & Culture, Differently Abled, Drinking Water, Education, Health, HIV/AIDS, Human Rights, Labour & Employment, Legal Awareness, Minority Issues, Tribal Affairs, Women's Development</td></tr>
+                                        <tr><td>3</td><td>SIRISHA REHABILITATION CENTRE</td><td>Krishna</td><td>Vikaas, Disha Niramaya (Disability focus)</td></tr>
+                                        <tr><td>4</td><td>Kasinadhuni Durgamba Butchaiah Trust</td><td>Krishna</td><td>Disha, Vikaas (Disability focus)</td></tr>
+                                        <tr><td>5</td><td>Uma Educational and Technical Society</td><td>Godavari East</td><td>Education, Badhte Kadam, Gharaunda Niramaya (Disability focus)</td></tr>
+                                        <tr><td>6</td><td>Sreya Foundation</td><td>Vishakhapatnam</td><td>Samarth, Badhte Kadam, Vikaas, Disha (Disability focus)</td></tr>
+                                        <tr><td>7</td><td>Sri Dakshinya Bhava Samithi</td><td>Guntur</td><td>Gharaunda, Samarth, Vikaas, Badhte Kadam (Disability focus)</td></tr>
+                                        <tr><td>8</td><td>Vasantha Lakshmi Charitable Trust and Research Center</td><td>SPSR NELLORE</td><td>Badhte Kadam, Vikaas, Disha (Disability focus)</td></tr>
+                                        <tr><td>9</td><td>RURAL DEVELOPMENT TRUST</td><td>Anantapur</td><td>Niramaya (Disability focus), Rural Community Empowerment, Education, Healthcare</td></tr>
+                                        <tr><td>10</td><td>The Ability People</td><td>Vishakhapatnam</td><td>Niramaya (Disability focus)</td></tr>
+                                        <tr><td>11</td><td>TADEPALLIS SATYA SAI CHEYUTHA SOCIETY</td><td>Krishna</td><td>Disha, Vikaas, Badhte Kadam Niramaya (Disability focus)</td></tr>
+                                        <tr><td>12</td><td>Sunlight Educational Society</td><td>Srikakulam</td><td>Vikaas (Disability focus)</td></tr>
+                                        <tr><td>13</td><td>RRHEDSP</td><td>Prakasam</td><td>Education, Health, Housing, Water, Environment, Rural energy, Disaster management, Orphan Homes</td></tr>
+                                        <tr><td>14</td><td>Vasavya Mahila Mandali</td><td>Vijayawada</td><td>Women, Children, Youth Development (Established 1969)</td></tr>
+                                        <tr><td>15</td><td>Chaitanya Educational and Rural Development Society (CERDS)</td><td>Chilakaluripet</td><td>Skill Development (Women), Livelihood Support, Nutrition (HIV/AIDS)</td></tr>
+                                        <tr><td>16</td><td>Seruds India</td><td>Kurnool (Implied)</td><td>Adolescents, Youth, Farmers, Orphans, Street Children, Disabled, Women/SHGs, Children, Dalits, Old age, Tribals</td></tr>
+                                        <tr><td>17</td><td>Child Aid Foundation</td><td>Vijayawada</td><td>Children's Education/Welfare</td></tr>
+                                        <tr><td>18</td><td>ASSIST (Building Ideal Communities)</td><td>(Not specified)</td><td>(General Development)</td></tr>
+                                        <tr><td>19</td><td>Aarti for Girls</td><td>Kadapa</td><td>Women's Empowerment</td></tr>
+                                        <tr><td>20</td><td>Akshaya Patra Foundation</td><td>(Statewide presence)</td><td>Mid-day Meal Program, Child Nutrition</td></tr>
+                                        <tr><td>21</td><td>HelpAge India</td><td>(Statewide presence)</td><td>Elderly Welfare, Healthcare, Financial Support</td></tr>
+                                        <tr><td>22</td><td>Naandi Foundation</td><td>(Statewide presence)</td><td>Marginalized Communities, Education, Health, Livelihoods</td></tr>
+                                        <tr><td>23</td><td>Bala Vikasa</td><td>(Statewide presence)</td><td>Community Development, Water Conservation, Education, Women Empowerment</td></tr>
+                                        <tr><td>24</td><td>CARE India</td><td>(Statewide presence)</td><td>Poverty, Social Injustice, Health, Education, Disaster Relief</td></tr>
+                                        <tr><td>25</td><td>Smile Foundation</td><td>(Statewide presence)</td><td>Underprivileged Children, Education, Healthcare</td></tr>
+                                        <tr><td>26</td><td>World Vision India</td><td>(Statewide presence)</td><td>Child Welfare, Community Development</td></tr>
+                                        <tr><td>27</td><td>SEEDS India</td><td>(Statewide presence)</td><td>(General Development)</td></tr>
+                                    </tbody>
+                                </table>
+                                <p class="text-xs italic mt-1">Note: This list is indicative, based on available snippets. Further verification and assessment of alignment with SIP objectives would be required. Some NGOs listed focus primarily on disability or specific sectors but might have relevant community networks.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <button class="accordion-toggle">
+                            <span>Annexure C: GIS Map Placeholder</span>
+                            <span class="icon"></span>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="prose max-w-none py-2 text-stone-700">
+                                <p>This Annexure will contain the Geographic Information System (GIS) based visualization of the planned phased rollout of the State Insurance Plan across Gram Panchayats in Andhra Pradesh.</p>
+                                <p>The map will depict:</p>
+                                <ul class="list-disc pl-5">
+                                    <li>The division of the state's Gram Panchayats into 3-4 distinct phases/clusters.</li>
+                                    <li>The prioritization of these clusters based on the Composite Vulnerability and Opportunity Index (integrating factors like vulnerability, insurance gap, connectivity, SHG strength, etc., as detailed in Section 5.1 of the main report).</li>
+                                    <li>Color-coding or other visual indicators to clearly distinguish the GPs assigned to each phase of the rollout (e.g., Phase 1 GPs, Phase 2 GPs, etc.).</li>
+                                </ul>
+                                <div class="my-4 p-6 border border-dashed border-stone-400 rounded-md bg-stone-100 text-center">
+                                    <p class="text-lg font-semibold text-stone-600">Conceptual GIS-Based Visualization</p>
+                                    <p class="text-sm text-stone-500">A map illustrating the phased Gram Panchayat cluster rollout plan based on the prioritization index. This would be a dynamic or static map showing geographical distribution of phases across Andhra Pradesh.</p>
+                                </div>
+                                <p class="text-sm text-stone-500 italic">Note: The actual map generation requires geospatial data and analysis based on the finalized prioritization index.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <button class="accordion-toggle">
+                            <span>Annexure D: List of Acronyms</span>
+                            <span class="icon"></span>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="prose max-w-none py-2 text-stone-700">
+                                <ul class="list-disc pl-5 space-y-1 columns-2 sm:columns-3 md:columns-4">
+                                    <li>AE: Advance Estimates</li>
+                                    <li>AP: Andhra Pradesh</li>
+                                    <li>API: Application Programming Interface</li>
+                                    <li>APY: Atal Pension Yojana</li>
+                                    <li>BC: Business Correspondent</li>
+                                    <li>BPL: Below Poverty Line</li>
+                                    <li>BLBC: Block Level Bankers' Committee</li>
+                                    <li>CEO: Chief Executive Officer</li>
+                                    <li>CSC: Common Service Centre</li>
+                                    <li>CSR: Claim Settlement Ratio</li>
+                                    <li>DBT: Direct Benefit Transfer</li>
+                                    <li>DCC: District Consultative Committee</li>
+                                    <li>DFS: Department of Financial Services</li>
+                                    <li>DPO: District Panchayat Officer</li>
+                                    <li>DRDA: District Rural Development Agency</li>
+                                    <li>E-KYC: Electronic Know Your Customer</li>
+                                    <li>FIP: Financial Inclusion Plan</li>
+                                    <li>FLC: Financial Literacy Centre</li>
+                                    <li>FY: Financial Year</li>
+                                    <li>GDP: Gross Domestic Product</li>
+                                    <li>GICouncil: General Insurance Council</li>
+                                    <li>GIS: Geographic Information System</li>
+                                    <li>GP: Gram Panchayat</li>
+                                    <li>GSDP: Gross State Domestic Product</li>
+                                    <li>GVA: Gross Value Added</li>
+                                    <li>HCES: Household Consumption Expenditure Survey</li>
+                                    <li>HH: Household</li>
+                                    <li>HIV/AIDS: Human Immunodeficiency Virus / Acquired Immunodeficiency Syndrome</li>
+                                    <li>IDV: Insured Declared Value</li>
+                                    <li>IIB: Insurance Information Bureau</li>
+                                    <li>IMF: Insurance Marketing Firm</li>
+                                    <li>IRDAI: Insurance Regulatory and Development Authority of India</li>
+                                    <li>IT: Information Technology</li>
+                                    <li>IT&C: Information Technology and Communications</li>
+                                    <li>IVR: Interactive Voice Response</li>
+                                    <li>KPI: Key Performance Indicator</li>
+                                    <li>KCC: Kisan Credit Card</li>
+                                    <li>KYC: Know Your Customer</li>
+                                    <li>LDM: Lead District Manager</li>
+                                    <li>LGD: Local Government Directory</li>
+                                    <li>LIC: Life Insurance Corporation of India</li>
+                                    <li>LWE: Left Wing Extremism</li>
+                                    <li>M&E: Monitoring and Evaluation</li>
+                                    <li>MEPMA: Mission for Elimination of Poverty in Municipal Areas</li>
+                                    <li>MGNREGA: Mahatma Gandhi National Rural Employment Guarantee Act</li>
+                                    <li>MFI: Micro Finance Institution</li>
+                                    <li>MIS: Management Information System</li>
+                                    <li>MISP: Motor Insurance Service Provider</li>
+                                    <li>MoU: Memorandum of Understanding</li>
+                                    <li>MPCE: Monthly Per Capita Consumption Expenditure</li>
+                                    <li>MSME: Micro, Small, and Medium Enterprise</li>
+                                    <li>MTP: Motor Third Party</li>
+                                    <li>NABARD: National Bank for Agriculture and Rural Development</li>
+                                    <li>NAIS: National Agricultural Insurance Scheme</li>
+                                    <li>NAV: Net Asset Value</li>
+                                    <li>NBFC: Non-Banking Financial Company</li>
+                                    <li>NFHS: National Family Health Survey</li>
+                                    <li>NGO: Non-Governmental Organization</li>
+                                    <li>NIRDPR: National Institute of Rural Development & Panchayati Raj</li>
+                                    <li>NSO: National Statistical Office</li>
+                                    <li>OD: Own Damage</li>
+                                    <li>PA: Personal Accident</li>
+                                    <li>PACS: Primary Agricultural Cooperative Credit Society</li>
+                                    <li>PBR: People's Biodiversity Register</li>
+                                    <li>PDS: Public Distribution System</li>
+                                    <li>PLP: Potential Linked Credit Plan</li>
+                                    <li>PMFBY: Pradhan Mantri Fasal Bima Yojana</li>
+                                    <li>PMJJBY: Pradhan Mantri Jeevan Jyoti Bima Yojana</li>
+                                    <li>PMJDY: Pradhan Mantri Jan Dhan Yojana</li>
+                                    <li>PMSBY: Pradhan Mantri Suraksha Bima Yojana</li>
+                                    <li>POSP: Point of Sale Person</li>
+                                    <li>PRI: Panchayati Raj Institution</li>
+                                    <li>QR Code: Quick Response Code</li>
+                                    <li>RBI: Reserve Bank of India</li>
+                                    <li>RE: Revised Estimates</li>
+                                    <li>ROFR: Recognition of Forest Rights</li>
+                                    <li>RRB: Regional Rural Bank</li>
+                                    <li>RSETI: Rural Self Employment Training Institute</li>
+                                    <li>RUSO: Rural and Social Sector Obligations</li>
+                                    <li>RWBCIS: Restructured Weather Based Crop Insurance Scheme</li>
+                                    <li>SAHI: Standalone Health Insurer</li>
+                                    <li>SCV: Small Commercial Vehicle</li>
+                                    <li>SDP: State Domestic Product</li>
+                                    <li>SERP: Society for Elimination of Rural Poverty</li>
+                                    <li>SHG: Self-Help Group</li>
+                                    <li>SI: Sum Insured</li>
+                                    <li>SIP: State Insurance Plan</li>
+                                    <li>SLBC: State Level Bankers' Committee</li>
+                                    <li>SLCCCI: State Level Coordination Committee on Crop Insurance</li>
+                                    <li>SLIC: State Level Insurance Committee</li>
+                                    <li>SMS: Short Message Service</li>
+                                    <li>SOP: Standard Operating Procedure</li>
+                                    <li>SPV: Special Purpose Vehicle</li>
+                                    <li>SVPR: Sunna Vaddi Panta Runalu</li>
+                                    <li>TAT: Turnaround Time</li>
+                                    <li>TP: Third-Party (Liability)</li>
+                                    <li>TPA: Third Party Administrator</li>
+                                    <li>TRAI: Telecom Regulatory Authority of India</li>
+                                    <li>UIDAI: Unique Identification Authority of India</li>
+                                    <li>UIN: Unique Identification Number</li>
+                                    <li>UPI: Unified Payments Interface</li>
+                                    <li>UT: Union Territory</li>
+                                    <li>VLE: Village Level Entrepreneur</li>
+                                    <li>YSR: Yuvajana Sramika Rythu (Often used in AP Scheme names)</li>
+                                    <li>ZP: Zilla Parishad</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <button class="accordion-toggle">
+                            <span>Annexure E: References</span>
+                            <span class="icon"></span>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="prose max-w-none py-2 text-stone-700">
+                                <p>This annexure refers to the comprehensive list of sources cited throughout the "Strategic Implementation Blueprint: State Insurance Plan (SIP) for Rural Inclusion in Andhra Pradesh" document. The original report details citations using snippet IDs ranging from [1] to [180].</p>
+                                <p class="text-sm text-stone-500 italic">Note: The full bibliography with details for each snippet ID is an extensive list contained within the main source report document.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>

@@ -1,0 +1,1457 @@
+<main>
+  <div class="container mx-auto px-6 py-8">
+    <!-- Home/Dashboard Section -->
+    <section id="home" class="mb-16">
+      <h1 class="text-3xl font-bold text-teal-700 mb-4">
+        Strategic Blueprint for MSME Commercial Insurance
+      </h1>
+      <p class="mb-6 text-lg text-neutral-700">
+        An interactive exploration of India's MSME sector and strategies for
+        enhancing commercial insurance penetration. This application aims to
+        distill key insights from the comprehensive report, offering a
+        user-friendly way to understand the challenges, opportunities, and
+        actionable steps for insurers.
+      </p>
+
+      <div class="grid md:grid-cols-3 gap-6 mb-8">
+        <div class="stat-card p-6 rounded-lg shadow-lg text-center">
+          <h3 class="text-4xl font-bold text-teal-600">~30%</h3>
+          <p class="text-neutral-600 mt-2">Contribution to India's GDP</p>
+        </div>
+        <div class="stat-card p-6 rounded-lg shadow-lg text-center">
+          <h3 class="text-4xl font-bold text-teal-600">~40%</h3>
+          <p class="text-neutral-600 mt-2">Contribution to India's Exports</p>
+        </div>
+        <div class="stat-card p-6 rounded-lg shadow-lg text-center">
+          <h3 class="text-4xl font-bold text-teal-600">110M+</h3>
+          <p class="text-neutral-600 mt-2">Jobs Provided</p>
+        </div>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6 mb-8">
+        <div class="stat-card p-6 rounded-lg shadow-lg text-center">
+          <h3 class="text-4xl font-bold text-red-600">7.34 Cr</h3>
+          <p class="text-neutral-600 mt-2">
+            Total MSMEs in India (2023 Survey)
+          </p>
+        </div>
+        <div class="stat-card p-6 rounded-lg shadow-lg text-center">
+          <h3 class="text-4xl font-bold text-red-600">&lt;15%</h3>
+          <p class="text-neutral-600 mt-2">
+            MSMEs with Adequate Insurance (Critically Underinsured)
+          </p>
+        </div>
+      </div>
+      <div class="card">
+        <h2 class="text-xl font-semibold text-neutral-700 mb-2">
+          The Core Challenge: Bridging the Protection Gap
+        </h2>
+        <p class="text-neutral-600">
+          Despite their vital economic role, India's MSMEs are critically
+          underinsured. This report outlines a data-driven, cluster-based, and
+          consultative approach to develop tailored insurance products and
+          engagement strategies, fostering resilience and growth in this sector.
+        </p>
+      </div>
+    </section>
+
+    <!-- MSME Profile Section -->
+    <section id="msme-profile" class="mb-16">
+      <h2 class="section-title">Understanding India's MSME Landscape</h2>
+      <p class="mb-6 text-neutral-700">
+        A foundational understanding of the MSME sector, including its
+        classification, economic contributions, and geographical clusters, is
+        crucial for developing effective insurance strategies. This section
+        explores these key aspects.
+      </p>
+
+      <div class="card mb-8">
+        <h3 class="text-xl font-semibold text-neutral-700 mb-3">
+          MSME Classification Criteria (Effective April 1, 2025)
+        </h3>
+        <p class="text-sm text-neutral-600 mb-4">
+          MSMEs are categorized based on investment in plant &
+          machinery/equipment and annual turnover. The limits were revised
+          effective April 1, 2025.
+        </p>
+        <div class="overflow-x-auto">
+          <table class="min-w-full table">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Old Investment Limit (₹)</th>
+                <th>New Investment Limit (₹)</th>
+                <th>Old Turnover Limit (₹)</th>
+                <th>New Turnover Limit (₹)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="font-medium">Micro Enterprise</td>
+                <td>&lt; 1 Crore</td>
+                <td class="font-semibold text-teal-700">&lt; 2.5 Crore</td>
+                <td>&lt; 5 Crore</td>
+                <td class="font-semibold text-teal-700">&lt; 10 Crore</td>
+              </tr>
+              <tr>
+                <td class="font-medium">Small Enterprise</td>
+                <td>&lt; 10 Crore</td>
+                <td class="font-semibold text-teal-700">&lt; 25 Crore</td>
+                <td>&lt; 50 Crore</td>
+                <td class="font-semibold text-teal-700">&lt; 100 Crore</td>
+              </tr>
+              <tr>
+                <td class="font-medium">Medium Enterprise</td>
+                <td>&lt; 50 Crore</td>
+                <td class="font-semibold text-teal-700">&lt; 125 Crore</td>
+                <td>&lt; 250 Crore</td>
+                <td class="font-semibold text-teal-700">&lt; 500 Crore</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="mt-3 text-xs text-neutral-500">
+          *Source: Ministry of Micro, Small, and Medium Enterprises, Government
+          of India.
+        </p>
+      </div>
+
+      <div class="card mb-8">
+        <h3 class="text-xl font-semibold text-neutral-700 mb-3">
+          Data Sources & MSME Clusters
+        </h3>
+        <p class="text-neutral-600 mb-4">
+          The Udyam Registration portal is the primary source for MSME data,
+          enabling cluster identification. Key sectors with significant clusters
+          include automotive, textile, chemical, pharmaceutical, and food
+          processing.
+        </p>
+        <div class="overflow-x-auto">
+          <table class="min-w-full table">
+            <thead>
+              <tr>
+                <th>State/Region</th>
+                <th>Identified Clusters (Examples)</th>
+                <th>Dominant MSME Sectors (Examples)</th>
+              </tr>
+            </thead>
+            <tbody id="msme-cluster-table-body">
+              <tr>
+                <td>Haryana</td>
+                <td>Gurgaon, Rewari</td>
+                <td>Automotive, Chemical</td>
+              </tr>
+              <tr>
+                <td>Maharashtra</td>
+                <td>Pune</td>
+                <td>Automotive, Manufacturing</td>
+              </tr>
+              <tr>
+                <td>Gujarat</td>
+                <td>Ankleshwar, Vapi</td>
+                <td>Chemical, Pharmaceutical</td>
+              </tr>
+              <tr>
+                <td>Tamil Nadu</td>
+                <td>Tirupur, Coimbatore</td>
+                <td>Textile, Engineering</td>
+              </tr>
+              <tr>
+                <td>Uttar Pradesh</td>
+                <td>Moradabad, Firozabad</td>
+                <td>Handicrafts, Glassware</td>
+              </tr>
+              <tr>
+                <td>Punjab</td>
+                <td>Ludhiana</td>
+                <td>Hosiery, Light Engineering</td>
+              </tr>
+              <tr>
+                <td>Karnataka</td>
+                <td>Bengaluru</td>
+                <td>IT/ITeS, Biotechnology</td>
+              </tr>
+              <tr>
+                <td>Andhra Pradesh</td>
+                <td>Visakhapatnam</td>
+                <td>Pharmaceuticals, Food Processing</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="mt-3 text-xs text-neutral-500">
+          *Illustrative examples. Source: NITI Aayog, CMIE Prowess, PLFS data.
+        </p>
+      </div>
+    </section>
+
+    <!-- Insurance Gap Section -->
+    <section id="insurance-gap" class="mb-16">
+      <h2 class="section-title">The Commercial Insurance Gap</h2>
+      <p class="mb-6 text-neutral-700">
+        Despite their economic importance, MSMEs in India are significantly
+        underinsured. This section delves into the low penetration rates, the
+        reasons behind this gap, and the common risks MSMEs face.
+      </p>
+
+      <div class="grid md:grid-cols-2 gap-8 mb-8">
+        <div class="card">
+          <h3 class="text-xl font-semibold text-neutral-700 mb-2">
+            Alarmingly Low Penetration
+          </h3>
+          <p class="text-5xl font-bold text-red-500 mb-3">&lt;15%</p>
+          <p class="text-neutral-600 mt-2">
+            Of MSMEs have adequate insurance. Some estimates are as low as 3%.
+          </p>
+          <p class="text-neutral-600 mt-2">
+            This leaves millions vulnerable to financial shocks and highlights a
+            vast untapped market.
+          </p>
+        </div>
+        <div class="card">
+          <h3 class="text-xl font-semibold text-neutral-700 mb-3">
+            Common Business Risks
+          </h3>
+          <ul class="list-disc list-inside text-neutral-600 space-y-1">
+            <li>
+              <span class="font-medium">Property Damage:</span> From natural
+              disasters, fire, theft (45% reported).
+            </li>
+            <li>
+              <span class="font-medium">Business Interruption:</span> Halting
+              operations, revenue loss.
+            </li>
+            <li>
+              <span class="font-medium">Cybersecurity Risks:</span> Data
+              breaches, ransomware.
+            </li>
+            <li>
+              <span class="font-medium">Supply Chain Disruptions:</span>
+              Impacting production, delivery.
+            </li>
+            <li>
+              <span class="font-medium">Liability Claims:</span> Third-party
+              injury or property damage.
+            </li>
+            <li>
+              <span class="font-medium">Access to Finance:</span> Often linked
+              to insurance coverage.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 class="text-xl font-semibold text-neutral-700 mb-4">
+          Key Reasons for Underinsurance
+        </h3>
+        <div id="reasons-accordion" class="space-y-3">
+          <div class="accordion-item border border-amber-200 rounded-md">
+            <div
+              class="accordion-header bg-amber-100 p-4 flex justify-between items-center"
+            >
+              <h4 class="font-medium text-neutral-700">
+                Lack of Awareness & Understanding
+              </h4>
+              <span
+                class="text-teal-600 transform transition-transform duration-300"
+                >&#9660;</span
+              >
+            </div>
+            <div class="accordion-content p-4 bg-white">
+              <p class="text-neutral-600">
+                Many MSME owners don't fully grasp insurance benefits or
+                urgency. Policies seem complex with technical jargon.
+              </p>
+            </div>
+          </div>
+          <div class="accordion-item border border-amber-200 rounded-md">
+            <div
+              class="accordion-header bg-amber-100 p-4 flex justify-between items-center"
+            >
+              <h4 class="font-medium text-neutral-700">Perceived High Cost</h4>
+              <span
+                class="text-teal-600 transform transition-transform duration-300"
+                >&#9660;</span
+              >
+            </div>
+            <div class="accordion-content p-4 bg-white">
+              <p class="text-neutral-600">
+                MSMEs on thin margins (75%) prioritize short-term expenses,
+                viewing insurance as an "avoidable cost."
+              </p>
+            </div>
+          </div>
+          <div class="accordion-item border border-amber-200 rounded-md">
+            <div
+              class="accordion-header bg-amber-100 p-4 flex justify-between items-center"
+            >
+              <h4 class="font-medium text-neutral-700">
+                Product Complexity & Cumbersome Processes
+              </h4>
+              <span
+                class="text-teal-600 transform transition-transform duration-300"
+                >&#9660;</span
+              >
+            </div>
+            <div class="accordion-content p-4 bg-white">
+              <p class="text-neutral-600">
+                Traditional products are often ill-suited for MSMEs. Concerns
+                about documentation and lengthy claims processes deter adoption.
+              </p>
+            </div>
+          </div>
+          <div class="accordion-item border border-amber-200 rounded-md">
+            <div
+              class="accordion-header bg-amber-100 p-4 flex justify-between items-center"
+            >
+              <h4 class="font-medium text-neutral-700">
+                Trust & Reliability Concerns
+              </h4>
+              <span
+                class="text-teal-600 transform transition-transform duration-300"
+                >&#9660;</span
+              >
+            </div>
+            <div class="accordion-content p-4 bg-white">
+              <p class="text-neutral-600">
+                Skepticism about insurers settling claims fairly, sometimes
+                fueled by past negative experiences.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tailored Solutions Section -->
+    <section id="solutions" class="mb-16">
+      <h2 class="section-title">Tailoring Insurance Solutions for MSMEs</h2>
+      <p class="mb-6 text-neutral-700">
+        Effectively serving the MSME market requires understanding diverse
+        sectoral needs and offering customized, simplified products. This
+        section explores insurance requirements by sector and factors
+        influencing pricing. Here you can also delve into the full product
+        structures and simulate a purchase journey.
+      </p>
+
+      <div class="card mb-8">
+        <h3 class="text-xl font-semibold text-neutral-700 mb-4">
+          Insurance Needs by MSME Sector
+        </h3>
+        <p class="text-neutral-600 mb-4">
+          Select a sector to view its specific risks, recommended insurance
+          coverage, and detailed product structures:
+        </p>
+        <div class="mb-6 flex flex-wrap gap-2" id="sector-filter-buttons">
+          <button
+            data-sector="manufacturing"
+            class="sector-button tab-button bg-amber-200 hover:bg-teal-500 hover:text-white text-neutral-700 font-medium py-2 px-4 rounded-md"
+          >
+            Manufacturing
+          </button>
+          <button
+            data-sector="services"
+            class="sector-button tab-button bg-amber-200 hover:bg-teal-500 hover:text-white text-neutral-700 font-medium py-2 px-4 rounded-md"
+          >
+            Services
+          </button>
+          <button
+            data-sector="retail"
+            class="sector-button tab-button bg-amber-200 hover:bg-teal-500 hover:text-white text-neutral-700 font-medium py-2 px-4 rounded-md"
+          >
+            Retail/Trading
+          </button>
+          <button
+            data-sector="food"
+            class="sector-button tab-button bg-amber-200 hover:bg-teal-500 hover:text-white text-neutral-700 font-medium py-2 px-4 rounded-md"
+          >
+            Food Processing
+          </button>
+          <button
+            data-sector="textile"
+            class="sector-button tab-button bg-amber-200 hover:bg-teal-500 hover:text-white text-neutral-700 font-medium py-2 px-4 rounded-md"
+          >
+            Textile
+          </button>
+        </div>
+        <div
+          id="sector-details-content"
+          class="p-4 border border-amber-300 rounded-md bg-amber-50 min-h-[200px]"
+        >
+          <p class="text-neutral-500">Select a sector above to see details.</p>
+        </div>
+
+        <div
+          id="product-cards-container"
+          class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8"
+        >
+          <!-- Product cards will be dynamically inserted here -->
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 class="text-xl font-semibold text-neutral-700 mb-3">
+          Factors Influencing Commercial Insurance Pricing
+        </h3>
+        <ul class="list-disc list-inside text-neutral-600 space-y-2">
+          <li>
+            <strong>Type of Business/Industry Risk:</strong> Different
+            industries have varying inherent risk levels.
+          </li>
+          <li>
+            <strong>Size and Revenue of the Business:</strong> Larger businesses
+            with higher turnover generally face higher premiums.
+          </li>
+          <li>
+            <strong>Location:</strong> Geographical risks (natural disasters,
+            crime rates) impact premiums.
+          </li>
+          <li>
+            <strong>Claims History:</strong> A history of frequent or large
+            claims can increase premiums.
+          </li>
+          <li>
+            <strong>Coverage Limits and Deductibles:</strong> Higher limits mean
+            higher premiums; higher deductibles can lower them.
+          </li>
+        </ul>
+        <p class="mt-4 text-neutral-600">
+          Transparency in how these factors affect pricing is key to building
+          trust with MSMEs.
+        </p>
+      </div>
+    </section>
+
+    <!-- Product Detail Modal -->
+    <div id="product-detail-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-button" id="close-product-modal">&times;</span>
+        <h3
+          id="modal-product-title"
+          class="text-2xl font-bold text-teal-700 mb-4"
+        ></h3>
+        <div id="modal-product-details" class="space-y-4 text-neutral-700">
+          <div>
+            <h4 class="font-semibold text-neutral-800 text-lg mb-1">
+              Customer Information Sheet (Key Data Points)
+            </h4>
+            <ul
+              id="modal-customer-info"
+              class="list-disc list-inside text-neutral-600 space-y-0.5"
+            ></ul>
+          </div>
+          <div>
+            <h4 class="font-semibold text-neutral-800 text-lg mb-1">
+              Actuarial Note
+            </h4>
+            <p id="modal-actuarial-note" class="text-neutral-600"></p>
+          </div>
+          <div>
+            <h4 class="font-semibold text-neutral-800 text-lg mb-1">
+              Underwriting Philosophy
+            </h4>
+            <p id="modal-underwriting-philosophy" class="text-neutral-600"></p>
+          </div>
+          <div>
+            <h4 class="font-semibold text-neutral-800 text-lg mb-1">
+              Operating Model (Policy Servicing & Claims)
+            </h4>
+            <p id="modal-operating-model" class="text-neutral-600"></p>
+          </div>
+          <div>
+            <h4 class="font-semibold text-neutral-800 text-lg mb-1">
+              Pricing Methodology
+            </h4>
+            <p id="modal-pricing-methodology" class="text-neutral-600"></p>
+          </div>
+          <div>
+            <h4 class="font-semibold text-neutral-800 text-lg mb-1">
+              Benefits / Coverages / Features
+            </h4>
+            <ul
+              id="modal-benefits"
+              class="list-disc list-inside text-neutral-600 space-y-0.5"
+            ></ul>
+          </div>
+          <div>
+            <h4 class="font-semibold text-neutral-800 text-lg mb-1">
+              Exclusions
+            </h4>
+            <ul
+              id="modal-exclusions"
+              class="list-disc list-inside text-neutral-600 space-y-0.5"
+            ></ul>
+          </div>
+          <div>
+            <h4 class="font-semibold text-neutral-800 text-lg mb-1">
+              Optional Add-ons / Riders
+            </h4>
+            <ul
+              id="modal-addons"
+              class="list-disc list-inside text-neutral-600 space-y-0.5"
+            ></ul>
+          </div>
+          <div>
+            <h4 class="font-semibold text-neutral-800 text-lg mb-1">
+              Reinsurance Structure
+            </h4>
+            <p id="modal-reinsurance" class="text-neutral-600"></p>
+          </div>
+        </div>
+        <button
+          id="buy-product-button"
+          class="mt-6 bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-md shadow-md"
+        >
+          Buy Now
+        </button>
+      </div>
+    </div>
+
+    <!-- Buy Journey Modal -->
+    <div id="buy-journey-modal" class="modal">
+      <div class="modal-content buy-journey-modal-content">
+        <span class="close-button" id="close-buy-journey-modal">&times;</span>
+        <h3
+          id="buy-journey-title"
+          class="text-2xl font-bold text-teal-700 mb-4"
+        >
+          Purchase Journey: <span id="current-product-name"></span>
+        </h3>
+
+        <div
+          id="buy-journey-steps"
+          class="flex justify-between mb-6 text-sm font-medium text-neutral-500"
+        >
+          <div
+            class="flex flex-col items-center flex-1 step active"
+            data-step="1"
+          >
+            <div
+              class="w-8 h-8 rounded-full flex items-center justify-center bg-teal-600 text-white mb-1"
+            >
+              1
+            </div>
+            Business Info
+          </div>
+          <div class="flex flex-col items-center flex-1 step" data-step="2">
+            <div
+              class="w-8 h-8 rounded-full flex items-center justify-center bg-amber-200 text-neutral-700 mb-1"
+            >
+              2
+            </div>
+            Review Quote
+          </div>
+          <div class="flex flex-col items-center flex-1 step" data-step="3">
+            <div
+              class="w-8 h-8 rounded-full flex items-center justify-center bg-amber-200 text-neutral-700 mb-1"
+            >
+              3
+            </div>
+            Contact Details
+          </div>
+          <div class="flex flex-col items-center flex-1 step" data-step="4">
+            <div
+              class="w-8 h-8 rounded-full flex items-center justify-center bg-amber-200 text-neutral-700 mb-1"
+            >
+              4
+            </div>
+            Payment
+          </div>
+          <div class="flex flex-col items-center flex-1 step" data-step="5">
+            <div
+              class="w-8 h-8 rounded-full flex items-center justify-center bg-amber-200 text-neutral-700 mb-1"
+            >
+              5
+            </div>
+            Confirmation
+          </div>
+        </div>
+
+        <div id="buy-journey-content">
+          <!-- Step 1: Customer Info (Business Details for Quote) -->
+          <div
+            id="buy-step-1"
+            class="buy-step current-step p-4 border border-amber-200 rounded-md bg-amber-50"
+          >
+            <h4 class="text-xl font-semibold text-neutral-700 mb-3">
+              Step 1: Tell Us About Your Business
+            </h4>
+            <form id="customer-info-form-quote" class="space-y-4">
+              <h5
+                class="text-lg font-medium text-neutral-800 border-b pb-2 mb-3 border-amber-200"
+              >
+                Your Business Overview (Situation)
+              </h5>
+              <div>
+                <label
+                  for="businessName"
+                  class="block text-sm font-medium text-neutral-700"
+                  >Business Name</label
+                >
+                <input
+                  type="text"
+                  id="businessName"
+                  class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500"
+                  placeholder="e.g., Sharma Textiles"
+                  required
+                />
+              </div>
+              <div>
+                <label
+                  for="udyogAadhaar"
+                  class="block text-sm font-medium text-neutral-700"
+                  >Udyam Registration Number (Optional)</label
+                >
+                <input
+                  type="text"
+                  id="udyogAadhaar"
+                  class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500"
+                  placeholder="e.g., UDYAM-MH-01-0000001"
+                />
+              </div>
+              <div>
+                <label
+                  for="industry"
+                  class="block text-sm font-medium text-neutral-700"
+                  >Industry Sector</label
+                >
+                <input
+                  type="text"
+                  id="industry"
+                  class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 bg-neutral-100"
+                  readonly
+                />
+              </div>
+              <div>
+                <label
+                  for="turnover"
+                  class="block text-sm font-medium text-neutral-700"
+                  >Annual Turnover (₹)</label
+                >
+                <input
+                  type="number"
+                  id="turnover"
+                  class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500"
+                  placeholder="e.g., 5000000"
+                  required
+                />
+              </div>
+              <div>
+                <label
+                  for="location"
+                  class="block text-sm font-medium text-neutral-700"
+                  >Business Location (PIN Code)</label
+                >
+                <input
+                  type="text"
+                  id="location"
+                  class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500"
+                  placeholder="e.g., 400001"
+                  required
+                />
+              </div>
+              <div>
+                <label
+                  for="numEmployees"
+                  class="block text-sm font-medium text-neutral-700"
+                  >Number of Employees</label
+                >
+                <input
+                  type="number"
+                  id="numEmployees"
+                  class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500"
+                  placeholder="e.g., 15"
+                  required
+                />
+              </div>
+              <div>
+                <label
+                  for="buildingType"
+                  class="block text-sm font-medium text-neutral-700"
+                  >Main Building Construction Type</label
+                >
+                <select
+                  id="buildingType"
+                  class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500"
+                  required
+                >
+                  <option value="">Select Type</option>
+                  <option value="pucca">Pucca (Concrete/Brick)</option>
+                  <option value="semi-pucca">Semi-Pucca</option>
+                  <option value="kutcha">Kutcha (Temporary/Thatched)</option>
+                </select>
+              </div>
+              <div>
+                <label
+                  for="fireSafety"
+                  class="block text-sm font-medium text-neutral-700"
+                  >Existing Fire Safety Measures</label
+                >
+                <select
+                  id="fireSafety"
+                  class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500"
+                  required
+                >
+                  <option value="">Select Level</option>
+                  <option value="none">None</option>
+                  <option value="basic">
+                    Basic (e.g., Fire Extinguishers)
+                  </option>
+                  <option value="advanced">
+                    Advanced (e.g., Sprinklers, Alarms)
+                  </option>
+                </select>
+              </div>
+              <div>
+                <label
+                  for="claimHistory"
+                  class="block text-sm font-medium text-neutral-700"
+                  >Past 3 Years Claim History</label
+                >
+                <select
+                  id="claimHistory"
+                  class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500"
+                  required
+                >
+                  <option value="">Select Option</option>
+                  <option value="none">No Claims</option>
+                  <option value="one">1 Small Claim</option>
+                  <option value="multiple">Multiple / Large Claims</option>
+                </select>
+              </div>
+
+              <!-- Dynamic Product-Specific Fields will be inserted here -->
+              <div id="product-specific-fields" class="space-y-4"></div>
+
+              <!-- Problem Questions (Simplified as Key Concerns) -->
+              <h5
+                class="text-lg font-medium text-neutral-800 border-b pb-2 mb-3 border-amber-200 mt-6"
+              >
+                Your Key Business Concerns (Problem)
+              </h5>
+              <p class="text-sm text-neutral-600 mb-2">
+                Select all that apply to your business:
+              </p>
+              <div class="flex flex-wrap gap-x-4 gap-y-2">
+                <label class="flex items-center space-x-2 text-neutral-700">
+                  <input
+                    type="checkbox"
+                    name="concern"
+                    value="property_damage"
+                    class="rounded border-amber-300 text-teal-600 shadow-sm focus:border-teal-300 focus:ring focus:ring-teal-200 focus:ring-opacity-50"
+                  />
+                  <span>Property Damage (Fire, Theft, Natural Disaster)</span>
+                </label>
+                <label class="flex items-center space-x-2 text-neutral-700">
+                  <input
+                    type="checkbox"
+                    name="concern"
+                    value="business_interruption"
+                    class="rounded border-amber-300 text-teal-600 shadow-sm focus:border-teal-300 focus:ring focus:ring-teal-200 focus:ring-opacity-50"
+                  />
+                  <span>Business Interruption / Loss of Revenue</span>
+                </label>
+                <label class="flex items-center space-x-2 text-neutral-700">
+                  <input
+                    type="checkbox"
+                    name="concern"
+                    value="cyber_attacks"
+                    class="rounded border-amber-300 text-teal-600 shadow-sm focus:border-teal-300 focus:ring focus:ring-teal-200 focus:ring-opacity-50"
+                  />
+                  <span>Cyber Attacks / Data Breaches</span>
+                </label>
+                <label class="flex items-center space-x-2 text-neutral-700">
+                  <input
+                    type="checkbox"
+                    name="concern"
+                    value="legal_liability"
+                    class="rounded border-amber-300 text-teal-600 shadow-sm focus:border-teal-300 focus:ring focus:ring-teal-200 focus:ring-opacity-50"
+                  />
+                  <span>Legal Liabilities / Third-Party Claims</span>
+                </label>
+                <label class="flex items-center space-x-2 text-neutral-700">
+                  <input
+                    type="checkbox"
+                    name="concern"
+                    value="supply_chain"
+                    class="rounded border-amber-300 text-teal-600 shadow-sm focus:border-teal-300 focus:ring focus:ring-teal-200 focus:ring-opacity-50"
+                  />
+                  <span>Supply Chain Disruptions</span>
+                </label>
+                <label class="flex items-center space-x-2 text-neutral-700">
+                  <input
+                    type="checkbox"
+                    name="concern"
+                    value="employee_injury"
+                    class="rounded border-amber-300 text-teal-600 shadow-sm focus:border-teal-300 focus:ring focus:ring-teal-200 focus:ring-opacity-50"
+                  />
+                  <span>Employee Injury / Illness</span>
+                </label>
+              </div>
+
+              <!-- Implication Question -->
+              <h5
+                class="text-lg font-medium text-neutral-800 border-b pb-2 mb-3 border-amber-200 mt-6"
+              >
+                Understanding Impact (Implication)
+              </h5>
+              <div>
+                <label
+                  for="impactConcern"
+                  class="block text-sm font-medium text-neutral-700"
+                  >How concerned are you about the financial impact of these
+                  risks on your business?</label
+                >
+                <select
+                  id="impactConcern"
+                  class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500"
+                  required
+                >
+                  <option value="">Select Level</option>
+                  <option value="not_concerned">Not Concerned</option>
+                  <option value="moderately_concerned">
+                    Moderately Concerned
+                  </option>
+                  <option value="highly_concerned">Highly Concerned</option>
+                </select>
+              </div>
+
+              <!-- Need-Payoff Question -->
+              <h5
+                class="text-lg font-medium text-neutral-800 border-b pb-2 mb-3 border-amber-200 mt-6"
+              >
+                Value & Peace of Mind (Need-Payoff)
+              </h5>
+              <div>
+                <label
+                  for="safetyNetImportance"
+                  class="block text-sm font-medium text-neutral-700"
+                  >How important is it for your business to have a safety net
+                  for unexpected events?</label
+                >
+                <select
+                  id="safetyNetImportance"
+                  class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500"
+                  required
+                >
+                  <option value="">Select Importance</option>
+                  <option value="not_important">Not Important</option>
+                  <option value="somewhat_important">Somewhat Important</option>
+                  <option value="very_important">Very Important</option>
+                </select>
+              </div>
+
+              <button
+                type="submit"
+                class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-md shadow-md"
+              >
+                Get Quote
+              </button>
+            </form>
+          </div>
+
+          <!-- Step 2: Review Quote -->
+          <div
+            id="buy-step-2"
+            class="buy-step hidden p-4 border border-amber-200 rounded-md bg-amber-50"
+          >
+            <h4 class="text-xl font-semibold text-neutral-700 mb-3">
+              Step 2: Review Your Quote
+            </h4>
+            <div id="quote-details" class="space-y-2 text-neutral-600 mb-4">
+              <p><strong>Product:</strong> <span id="quote-product"></span></p>
+              <p class="text-2xl font-bold text-teal-600">
+                Annual Premium: ₹ <span id="quote-premium"></span>
+              </p>
+              <p><strong>Coverage Summary:</strong></p>
+              <ul id="quote-coverages" class="list-disc list-inside ml-4"></ul>
+              <p class="text-sm italic mt-2">
+                This is a mock quote for illustration purposes only. Actual
+                quotes may vary.
+              </p>
+            </div>
+
+            <!-- Discount Section -->
+            <div
+              id="discount-section"
+              class="mt-6 p-4 rounded-md bg-amber-100 border border-amber-300 hidden"
+            >
+              <h5 class="font-semibold text-neutral-700 mb-2">
+                Looking for a lower premium?
+              </h5>
+              <p class="text-sm text-neutral-600 mb-3">
+                You can adjust your coverage to potentially reduce your premium.
+                But be aware of what you might miss!
+              </p>
+              <div class="flex flex-wrap gap-2 mb-3">
+                <button
+                  data-discount-type="deductible"
+                  class="discount-option-button bg-white hover:bg-teal-500 hover:text-white text-neutral-700 font-medium py-2 px-4 rounded-md text-sm"
+                >
+                  Increase Deductible (Lower Premium)
+                </button>
+                <button
+                  data-discount-type="coverage"
+                  class="discount-option-button bg-white hover:bg-teal-500 hover:text-white text-neutral-700 font-medium py-2 px-4 rounded-md text-sm"
+                >
+                  Reduce Coverage Limits (Lower Premium)
+                </button>
+              </div>
+              <div
+                id="discount-output"
+                class="text-sm font-medium text-red-700 mt-2 hidden"
+              >
+                <p id="discount-message"></p>
+                <p id="what-you-miss"></p>
+              </div>
+              <button
+                id="apply-discount-button"
+                class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-md shadow-md mt-4 hidden"
+              >
+                Apply Discount & Get New Quote
+              </button>
+            </div>
+            <!-- End Discount Section -->
+
+            <div class="flex justify-between mt-6">
+              <button
+                id="prev-step-2"
+                class="bg-amber-300 hover:bg-amber-400 text-neutral-800 font-bold py-2 px-4 rounded-md shadow-md"
+              >
+                Back
+              </button>
+              <button
+                id="next-step-2"
+                class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-md shadow-md"
+              >
+                Proceed to Contact Details
+              </button>
+            </div>
+          </div>
+
+          <!-- Step 3: PII Collection -->
+          <div
+            id="buy-step-3"
+            class="buy-step hidden p-4 border border-amber-200 rounded-md bg-amber-50"
+          >
+            <h4 class="text-xl font-semibold text-neutral-700 mb-3">
+              Step 3: Provide Contact Details
+            </h4>
+            <form id="customer-info-form-contact" class="space-y-3">
+              <div>
+                <label
+                  for="contactPersonFinal"
+                  class="block text-sm font-medium text-neutral-700"
+                  >Contact Person Name</label
+                >
+                <input
+                  type="text"
+                  id="contactPersonFinal"
+                  class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500"
+                  required
+                />
+              </div>
+              <div>
+                <label
+                  for="contactEmailFinal"
+                  class="block text-sm font-medium text-neutral-700"
+                  >Email</label
+                >
+                <input
+                  type="email"
+                  id="contactEmailFinal"
+                  class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500"
+                  required
+                />
+              </div>
+              <div>
+                <label
+                  for="contactPhoneFinal"
+                  class="block text-sm font-medium text-neutral-700"
+                  >Phone Number</label
+                >
+                <input
+                  type="tel"
+                  id="contactPhoneFinal"
+                  class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2 focus:ring-teal-500 focus:border-teal-500"
+                  placeholder="e.g., 9876543210"
+                  required
+                />
+              </div>
+              <div class="flex justify-between">
+                <button
+                  type="button"
+                  id="prev-step-3"
+                  class="bg-amber-300 hover:bg-amber-400 text-neutral-800 font-bold py-2 px-4 rounded-md shadow-md"
+                >
+                  Back
+                </button>
+                <button
+                  type="submit"
+                  class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-md shadow-md"
+                >
+                  Proceed to Payment
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Step 4: Payment -->
+          <div
+            id="buy-step-4"
+            class="buy-step hidden p-4 border border-amber-200 rounded-md bg-amber-50"
+          >
+            <h4 class="text-xl font-semibold text-neutral-700 mb-3">
+              Step 4: Make Payment
+            </h4>
+            <div class="text-neutral-600 mb-4">
+              <p>
+                You are about to purchase
+                <strong id="payment-product"></strong> for an annual premium of
+                <strong class="text-teal-700"
+                  >₹ <span id="payment-premium"></span></strong
+                >.
+              </p>
+              <p class="mt-2">
+                This is a simulated payment gateway. No actual transaction will
+                occur.
+              </p>
+              <div class="mt-4 space-y-3">
+                <div>
+                  <label
+                    for="cardNumber"
+                    class="block text-sm font-medium text-neutral-700"
+                    >Card Number</label
+                  >
+                  <input
+                    type="text"
+                    id="cardNumber"
+                    class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2"
+                    placeholder="XXXX XXXX XXXX XXXX"
+                    maxlength="16"
+                  />
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <label
+                      for="expiryDate"
+                      class="block text-sm font-medium text-neutral-700"
+                      >Expiry (MM/YY)</label
+                    >
+                    <input
+                      type="text"
+                      id="expiryDate"
+                      class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2"
+                      placeholder="MM/YY"
+                      maxlength="5"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      for="cvv"
+                      class="block text-sm font-medium text-neutral-700"
+                      >CVV</label
+                    >
+                    <input
+                      type="text"
+                      id="cvv"
+                      class="mt-1 block w-full border border-amber-300 rounded-md shadow-sm p-2"
+                      placeholder="XXX"
+                      maxlength="3"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="flex justify-between">
+              <button
+                id="prev-step-4"
+                class="bg-amber-300 hover:bg-amber-400 text-neutral-800 font-bold py-2 px-4 rounded-md shadow-md"
+              >
+                Back
+              </button>
+              <button
+                id="next-step-4"
+                class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-md shadow-md"
+              >
+                Pay Now
+              </button>
+            </div>
+          </div>
+
+          <!-- Step 5: Confirmation -->
+          <div
+            id="buy-step-5"
+            class="buy-step hidden p-4 border border-amber-200 rounded-md bg-amber-50 text-center"
+          >
+            <h4 class="text-xl font-semibold text-neutral-700 mb-3">
+              Step 5: Purchase Confirmed! 🎉
+            </h4>
+            <div class="text-neutral-600 mb-4">
+              <p class="text-lg font-medium text-teal-600">
+                Congratulations, <span id="confirmation-name"></span>!
+              </p>
+              <p class="mt-2">
+                Your <strong id="confirmation-product"></strong> policy has been
+                successfully processed.
+              </p>
+              <p class="mt-1">
+                A confirmation email with your policy documents has been sent to
+                <strong id="confirmation-email"></strong>.
+              </p>
+              <p class="text-sm italic mt-4">
+                Thank you for choosing us to protect your business. We look
+                forward to serving you.
+              </p>
+            </div>
+            <button
+              id="close-buy-journey-final"
+              class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-md shadow-md"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Strategic Outreach Section -->
+    <section id="outreach" class="mb-16">
+      <h2 class="section-title">Strategic Outreach & Engagement</h2>
+      <p class="mb-6 text-neutral-700">
+        Reaching MSMEs effectively involves a consultative approach, leveraging
+        appropriate communication channels, and aligning with government
+        initiatives. This section outlines key strategies for a comprehensive
+        sales and marketing plan.
+      </p>
+
+      <div class="grid md:grid-cols-2 gap-8 mb-8">
+        <div class="card">
+          <h3 class="text-xl font-semibold text-neutral-700 mb-3">
+            Developing a Strong Value Proposition
+          </h3>
+          <ul class="list-disc list-inside text-neutral-600 space-y-1">
+            <li>Financial Security & Risk Mitigation</li>
+            <li>Business Continuity Assurance</li>
+            <li>Enhanced Credibility & Trust (Loan Eligibility)</li>
+            <li>Employee Protection & Morale</li>
+            <li>Peace of Mind for Owners</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3 class="text-xl font-semibold text-neutral-700 mb-3">
+            Overcoming Reluctance
+          </h3>
+          <ul class="list-disc list-inside text-neutral-600 space-y-1">
+            <li>Transparency & Education (Simplify Concepts)</li>
+            <li>Simplified Products & Processes</li>
+            <li>Affordability & Flexibility (Essential Coverage First)</li>
+            <li>Promote Group Schemes & Govt. Incentives</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card mb-8">
+        <h3 class="text-xl font-semibold text-neutral-700 mb-3">
+          Effective Communication Channels
+        </h3>
+        <div class="flex flex-wrap gap-4">
+          <span class="bg-teal-100 text-teal-700 px-3 py-1 rounded-full text-sm"
+            >📱 Digital Platforms (WhatsApp, Social Media)</span
+          >
+          <span class="bg-teal-100 text-teal-700 px-3 py-1 rounded-full text-sm"
+            >📧 Email Marketing</span
+          >
+          <span class="bg-teal-100 text-teal-700 px-3 py-1 rounded-full text-sm"
+            >🔍 Local SEO</span
+          >
+          <span class="bg-teal-100 text-teal-700 px-3 py-1 rounded-full text-sm"
+            >🤝 Industry Associations</span
+          >
+          <span class="bg-teal-100 text-teal-700 px-3 py-1 rounded-full text-sm"
+            >🗣️ On-site Consultations & Workshops</span
+          >
+        </div>
+      </div>
+
+      <div class="card mb-8">
+        <h3 class="text-xl font-semibold text-neutral-700 mb-3">
+          Elaborate Sales & Marketing Plan
+        </h3>
+        <h4 class="text-lg font-medium text-neutral-700 mb-2">
+          Phase 1: Data-Driven Prospecting & Engagement
+        </h4>
+        <ul class="list-disc list-inside text-neutral-600 space-y-1 mb-4">
+          <li>
+            <strong>Cluster Identification & Mapping:</strong> Utilize Udyam
+            Registration data (via API integration) to identify and map active
+            MSME clusters by state, district, and dominant sector (e.g.,
+            manufacturing hubs in Pune, textile clusters in Tirupur). This
+            informs geographical targeting.
+          </li>
+          <li>
+            <strong>Segmented Database Creation:</strong> Build a dynamic
+            database of MSMEs, enriching Udyam data with NIC codes and other
+            public information to enable granular segmentation (e.g., by
+            turnover, number of employees, specific sub-sector).
+          </li>
+          <li>
+            <strong>Targeted Digital Lead Generation:</strong>
+            <ul class="list-circle list-inside ml-4">
+              <li>
+                Run highly segmented digital ad campaigns (Google Ads, Meta Ads)
+                targeting MSME owners based on business type, location, and
+                inferred needs.
+              </li>
+              <li>
+                Develop compelling landing pages with lead magnets (e.g., "MSME
+                Risk Assessment Checklist," "Insurance Needs by Industry
+                Guide").
+              </li>
+              <li>
+                Implement Local SEO strategies to rank for "business insurance
+                near me" or "manufacturing insurance Mumbai."
+              </li>
+            </ul>
+          </li>
+          <li>
+            <strong>Direct Digital Outreach:</strong>
+            <ul class="list-circle list-inside ml-4">
+              <li>
+                Leverage WhatsApp for Business for direct, personalized
+                communication (e.g., sending simplified product brochures,
+                inviting to webinars, follow-ups).
+              </li>
+              <li>
+                Develop tailored email marketing sequences for different MSME
+                segments, offering educational content and inviting
+                consultations.
+              </li>
+            </ul>
+          </li>
+        </ul>
+
+        <h4 class="text-lg font-medium text-neutral-700 mb-2">
+          Phase 2: Consultative Sales & Trust Building
+        </h4>
+        <ul class="list-disc list-inside text-neutral-600 space-y-1 mb-4">
+          <li>
+            <strong>Risk Advisor Training:</strong> Train sales professionals to
+            be "risk advisors" rather than just "sellers." This involves deep
+            understanding of MSME operational nuances, industry-specific risks,
+            and a shift to a problem-solving approach.
+          </li>
+          <li>
+            <strong>Localized Workshops & Seminars:</strong> Conduct physical
+            workshops within identified MSME clusters (e.g., in industrial
+            estates, association meeting halls). Focus on educating owners about
+            specific risks (e.g., fire hazards in textile units, cyber threats
+            for IT services) and how insurance mitigates these.
+          </li>
+          <li>
+            <strong>Personalized Consultations:</strong> Offer free, on-site or
+            virtual risk assessments for interested MSMEs. This allows for a
+            deeper understanding of their unique needs and building rapport.
+          </li>
+          <li>
+            <strong>Product Simplification & Customization:</strong> Present
+            products in modular, easy-to-understand language. Demonstrate how
+            policies can be customized to fit specific budgets and coverage
+            requirements, starting with essential protections.
+          </li>
+          <li>
+            <strong>Transparency in Pricing & Claims:</strong> Explicitly
+            explain the factors influencing premiums. Provide clear, simple
+            guidance on the claims process. Publicize positive (anonymized)
+            claim settlement experiences to build trust.
+          </li>
+        </ul>
+
+        <h4 class="text-lg font-medium text-neutral-700 mb-2">
+          Phase 3: Partnerships & Ecosystem Integration
+        </h4>
+        <ul class="list-disc list-inside text-neutral-600 space-y-1 mb-4">
+          <li>
+            <strong>Collaboration with MSME Associations:</strong> Form
+            strategic alliances with national and regional MSME associations
+            (e.g., FICCI-CMSME, CII). Offer group insurance schemes through
+            these bodies at preferential rates. Co-host webinars or workshops.
+          </li>
+          <li>
+            <strong>Bank & NBFC Partnerships:</strong> Partner with banks and
+            Non-Banking Financial Companies (NBFCs) that lend to MSMEs.
+            Integrate insurance offerings into their loan application processes,
+            as insurance is often a prerequisite for credit.
+          </li>
+          <li>
+            <strong>Government Scheme Alignment:</strong> Actively promote and
+            develop products that align with Ministry of MSME initiatives (e.g.,
+            CBFTE for exporters, ZED for quality). Educate MSMEs on how to avail
+            government premium reimbursements (where applicable).
+          </li>
+          <li>
+            <strong>Digital Platform Integration:</strong> Explore API
+            integrations with popular MSME platforms (e.g., accounting software,
+            e-commerce platforms, Udyam Assist) to offer contextual insurance at
+            the point of need (e.g., marine cover on e-way bill generation).
+          </li>
+        </ul>
+
+        <h4 class="text-lg font-medium text-neutral-700 mb-2">
+          Phase 4: Post-Purchase Engagement & Retention
+        </h4>
+        <ul class="list-disc list-inside text-neutral-600 space-y-1">
+          <li>
+            <strong>Onboarding & Education:</strong> Provide clear, digital
+            onboarding kits. Offer simple guides on policy terms and how to file
+            a claim.
+          </li>
+          <li>
+            <strong>Proactive Communication:</strong> Send regular updates, risk
+            alerts relevant to their sector, and reminders for renewals via
+            preferred digital channels.
+          </li>
+          <li>
+            <strong>Simplified Claims Process:</strong> Ensure claims are
+            processed quickly and transparently, ideally with digital submission
+            and tracking capabilities. A positive claims experience is the
+            strongest retention tool.
+          </li>
+          <li>
+            <strong>Annual Policy Review:</strong> Conduct annual reviews with
+            MSMEs to adjust coverage based on business growth, new assets, or
+            changing risk profiles.
+          </li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3 class="text-xl font-semibold text-neutral-700 mb-3">
+          Leveraging Government Initiatives
+        </h3>
+        <p class="text-neutral-600 mb-4">
+          Aligning with Ministry of MSME schemes can amplify outreach. Key
+          initiatives include Udyam Registration, Credit Guarantee Scheme, and
+          state-level premium reimbursements.
+        </p>
+        <div class="overflow-x-auto">
+          <table class="min-w-full table">
+            <thead>
+              <tr>
+                <th>Scheme Name</th>
+                <th>Objective</th>
+                <th>Insurance Implication</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Udyam Registration</td>
+                <td>Formalization & MSME database</td>
+                <td>Verified client list</td>
+              </tr>
+              <tr>
+                <td>Credit Guarantee Scheme</td>
+                <td>Collateral-free loans</td>
+                <td>Insurance often needed for loans</td>
+              </tr>
+              <tr>
+                <td>CBFTE</td>
+                <td>Support new exporters</td>
+                <td>Reimbursement for export insurance</td>
+              </tr>
+              <tr>
+                <td>Kerala MSME Insurance Scheme</td>
+                <td>Premium reimbursement</td>
+                <td>Direct financial incentive</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="mt-3 text-xs text-neutral-500">
+          *Illustrative. Refer to official sources for full details.
+        </p>
+      </div>
+    </section>
+
+    <!-- Recommendations Section -->
+    <section id="recommendations" class="mb-16">
+      <h2 class="section-title">Key Recommendations</h2>
+      <p class="mb-6 text-neutral-700">
+        This section summarizes actionable recommendations for creating MSME
+        lists, product development, sales and marketing, partnerships, and
+        continuous monitoring to effectively penetrate the MSME insurance
+        market.
+      </p>
+      <div class="space-y-6">
+        <div class="card">
+          <h3 class="text-lg font-semibold text-teal-700">
+            1. Data & Segmentation:
+          </h3>
+          <ul class="list-disc list-inside text-neutral-600 mt-2 space-y-1">
+            <li>Leverage Udyam Registration Portal API for MSME lists.</li>
+            <li>Enhance data with NIC codes for finer segmentation.</li>
+            <li>Map MSME clusters geographically, prioritizing key sectors.</li>
+            <li>
+              Segment by new MSME classification criteria (eff. April 1, 2025).
+            </li>
+            <li>Develop a dynamic, updatable MSME database.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3 class="text-lg font-semibold text-teal-700">
+            2. Product Development & Customization:
+          </h3>
+          <ul class="list-disc list-inside text-neutral-600 mt-2 space-y-1">
+            <li>
+              Design modular, scalable products (essential coverage first).
+            </li>
+            <li>
+              Tailor sector-specific solutions (e.g., product liability for
+              food, cyber for services).
+            </li>
+            <li>Drastically simplify policy language and processes.</li>
+            <li>Emphasize risk-based pricing transparency.</li>
+            <li>Integrate coverage for emerging risks like cybersecurity.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3 class="text-lg font-semibold text-teal-700">
+            3. Sales, Marketing & Consultative Service:
+          </h3>
+          <ul class="list-disc list-inside text-neutral-600 mt-2 space-y-1">
+            <li>
+              Adopt a consultative sales model (risk advisors, not just
+              sellers).
+            </li>
+            <li>
+              Launch targeted education and awareness campaigns in clusters.
+            </li>
+            <li>
+              Utilize digital channels (WhatsApp, social media, local SEO).
+            </li>
+            <li>
+              Focus on trust-building via fair and speedy claim settlements.
+            </li>
+            <li>Explore group schemes and promote government incentives.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3 class="text-lg font-semibold text-teal-700">
+            4. Partnerships & Government Support:
+          </h3>
+          <ul class="list-disc list-inside text-neutral-600 mt-2 space-y-1">
+            <li>Collaborate with MSME associations and trade bodies.</li>
+            <li>Engage with financial institutions (banks, NBFCs).</li>
+            <li>
+              Align with government formalization efforts (Udyam Registration).
+            </li>
+            <li>
+              Participate in or develop products aligning with government
+              schemes.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>

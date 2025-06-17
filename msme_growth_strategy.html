@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Strategy: Building a ₹10 Crore Commercial Insurance Business</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals & Professional Blue -->
+    <!-- Application Structure Plan: A top-navigation driven SPA with four main sections: 1) 'Dashboard' for an executive summary of the goal, problem, and key metrics. 2) 'The Opportunity' to visually explain the market context and feasibility. 3) 'The Strategic Plan' using nested tabs for GTM, Training, and Performance Management to detail the execution. 4) 'Roadmap & Calculator' to provide a timeline and an interactive modeling tool. This structure is chosen to guide the user from the high-level 'Why' to the detailed 'How' and finally to the interactive 'What-if', which is a more intuitive and engaging flow than the linear report. -->
+    <!-- Visualization & Content Choices: 
+        - Feasibility Scenarios: Report Info -> GWP growth over 3 years. Goal -> Compare scenarios. Viz -> Interactive Bar Chart (Chart.js). Interaction -> Buttons to toggle between scenarios. Justification -> Visually compelling way to see the path to the target under different assumptions.
+        - Market Opportunity: Report Info -> MSME insurance gap. Goal -> Inform. Viz -> Donut Chart (Chart.js). Interaction -> Hover for details. Justification -> Instantly communicates the scale of the untapped market.
+        - GTM Product Selection: Report Info -> Scoring of Cyber, D&O, E&O. Goal -> Organize & Compare. Viz -> Styled HTML cards with progress bars. Interaction -> N/A (static display). Justification -> Clear, scannable comparison of strategic options.
+        - Implementation Roadmap: Report Info -> 3 Phases over 24 months. Goal -> Show Change/Process. Viz -> Interactive HTML/CSS timeline. Interaction -> Click tabs to reveal phase details. Justification -> Makes the long-term plan digestible and non-overwhelming.
+        - Business Calculator: Report Info -> Key business levers. Goal -> Explore relationships. Viz -> HTML sliders + dynamic Line Chart (Chart.js). Interaction -> Sliders update chart and text outputs in real-time. Justification -> Directly addresses user request, making the model tangible and empowering strategic planning.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #FDFBF7; color: #333; }
+        .nav-item { transition: all 0.2s ease-in-out; }
+        .nav-item.active { color: #2563EB; border-bottom: 2px solid #2563EB; font-weight: 600; }
+        .nav-item:not(.active):hover { color: #3B82F6; }
+        .tab-button { transition: all 0.2s ease-in-out; }
+        .tab-button.active { background-color: #3B82F6; color: white; }
+        .tab-button:not(.active) { background-color: #E5E7EB; color: #4B5563; }
+        .tab-button:not(.active):hover { background-color: #D1D5DB; }
+        .chart-container { position: relative; width: 100%; max-width: 800px; margin-left: auto; margin-right: auto; height: 350px; max-height: 45vh; }
+        .kpi-card { background: white; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); padding: 1.5rem; text-align: center; display: flex; flex-direction: column; justify-content: center; }
+        .calculator-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; background: #3B82F6; cursor: pointer; border-radius: 50%; }
+        .calculator-slider::-moz-range-thumb { width: 20px; height: 20px; background: #3B82F6; cursor: pointer; border-radius: 50%; }
+    </style>
+</head>
+<body class="bg-[#FDFBF7]">
+
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+
+        <!-- Header and Navigation -->
+        <header class="py-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="text-center md:text-left">
+                    <h1 class="text-3xl font-bold text-gray-800">Commercial Insurance Growth Strategy</h1>
+                    <p class="text-lg text-gray-600">An Interactive Blueprint for Achieving a ₹10 Crore Direct Business</p>
+                </div>
+                <nav id="mainNav" class="flex flex-wrap justify-center space-x-4 sm:space-x-6 lg:space-x-8 mt-4 md:mt-0 bg-white px-4 py-2 rounded-full shadow-sm">
+                    <button data-target="dashboard" class="nav-item p-2 text-sm sm:text-base font-medium text-gray-700 active">Dashboard</button>
+                    <button data-target="opportunity" class="nav-item p-2 text-sm sm:text-base font-medium text-gray-700">The Opportunity</button>
+                    <button data-target="plan" class="nav-item p-2 text-sm sm:text-base font-medium text-gray-700">The Strategic Plan</button>
+                    <button data-target="calculator" class="nav-item p-2 text-sm sm:text-base font-medium text-gray-700">Roadmap & Calculator</button>
+                </nav>
+            </div>
+        </header>
+
+        <main>
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="page-content py-8">
+                <div class="text-center mb-12">
+                     <h2 class="text-3xl font-bold text-gray-800">Executive Dashboard</h2>
+                     <p class="mt-2 text-lg text-gray-600 max-w-3xl mx-auto">This dashboard provides a high-level overview of the strategic goal, the core problem, the proposed solution, and the key performance indicators that will drive our success. It's the "at-a-glance" summary of our path to ₹10 Crore.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                    <div class="kpi-card">
+                        <span class="text-4xl font-bold text-blue-600">₹10 Cr</span>
+                        <p class="mt-2 text-gray-600 font-medium">Annual GWP Target</p>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="text-4xl font-bold text-blue-600">10</span>
+                        <p class="mt-2 text-gray-600 font-medium">Initial Team Size</p>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="text-4xl font-bold text-blue-600">36</span>
+                        <p class="mt-2 text-gray-600 font-medium">Months to Target</p>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="text-4xl font-bold text-blue-600">₹1 Cr</span>
+                        <p class="mt-2 text-gray-600 font-medium">Productivity/Person</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 items-center">
+                    <div class="lg:col-span-3 bg-white p-6 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">The Strategic Pivot: From High Cost to High Value</h3>
+                        <div class="space-y-4 text-gray-700">
+                           <p><strong>The Core Problem:</strong> Our current broker-led channel suffers from high commission outages (up to 16.5%), which significantly erodes profitability. A ₹1.8 Cr premium via a broker can yield less net profit than a ₹1 Cr direct sale.</p>
+                           <p><strong>The Strategic Solution:</strong> We will build a "pure commercial" direct sales channel. This pivot shifts costs from high variable commissions to manageable fixed salaries and performance incentives, fundamentally improving profitability per policy.</p>
+                           <p><strong>Key Benefits:</strong></p>
+                           <ul class="list-disc list-inside space-y-2 pl-4">
+                               <li><strong class="font-semibold text-green-700">Enhanced Profitability:</strong> Drastically reduce channel costs and retain more premium.</li>
+                               <li><strong class="font-semibold text-green-700">Direct Customer Ownership:</strong> Build long-term relationships, enabling cross-selling and improving retention.</li>
+                               <li><strong class="font-semibold text-green-700">Brand Control:</strong> Communicate our value proposition directly, differentiating on expertise, not just price.</li>
+                           </ul>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-2">
+                        <div class="chart-container h-[300px] max-h-[300px]">
+                            <canvas id="profitabilityChart"></canvas>
+                        </div>
+                         <p class="text-center text-sm text-gray-500 mt-2">Illustrative Profitability: Direct vs. Broker Channel</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- The Opportunity Section -->
+            <section id="opportunity" class="page-content hidden py-8">
+                 <div class="text-center mb-12">
+                     <h2 class="text-3xl font-bold text-gray-800">The Market Opportunity</h2>
+                     <p class="mt-2 text-lg text-gray-600 max-w-3xl mx-auto">This section explores the "why" behind our strategic pivot. It visualizes the significant under-penetration in the Indian insurance market, particularly within the MSME segment, and models the feasibility of our ₹10 Crore goal through data-driven scenarios.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12 items-stretch">
+                    <div class="bg-white p-6 rounded-lg shadow-lg flex flex-col justify-between">
+                         <div>
+                            <h3 class="text-2xl font-bold text-gray-800 mb-4">India's "Protection Gap": A Blue Ocean</h3>
+                            <p class="text-gray-700 mb-6">India's insurance market is growing but remains vastly underpenetrated compared to global averages. The most significant opportunity lies within the MSME sector, the backbone of our economy, which is critically underserved. This is not just a gap; it's our target market.</p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                             <div class="text-center p-4 bg-blue-50 rounded-lg">
+                                <p class="text-sm text-blue-800 font-semibold">India's Penetration</p>
+                                <p class="text-3xl font-bold text-blue-600">3.7%</p>
+                            </div>
+                            <div class="text-center p-4 bg-gray-200 rounded-lg">
+                                <p class="text-sm text-gray-800 font-semibold">Global Average</p>
+                                <p class="text-3xl font-bold text-gray-600">~7.0%</p>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">The Underserved MSME Engine</h3>
+                         <div class="chart-container h-[250px] max-h-[250px]">
+                            <canvas id="msmeChart"></canvas>
+                        </div>
+                        <p class="text-center text-sm text-gray-500 mt-2">Less than 15% of India's 63 Million+ MSMEs are adequately insured, creating a massive, untapped market.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2 text-center">Feasibility Scenarios: Path to ₹10 Crore</h3>
+                    <p class="text-gray-600 mb-6 text-center max-w-3xl mx-auto">Based on a best-in-class productivity target of ₹1 Crore per salesperson per year, the goal is achievable. This model projects the team's Gross Written Premium (GWP) growth over a 3-year ramp-up period under two different scenarios.</p>
+                    <div class="text-center mb-6">
+                        <button id="scenarioA-btn" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-l-lg">Scenario A: Existing Team (10)</button>
+                        <button id="scenarioB-btn" class="bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-r-lg">Scenario B: Expanded Team (15)</button>
+                    </div>
+                    <div class="chart-container h-[350px] max-h-[45vh]">
+                        <canvas id="feasibilityChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- The Strategic Plan Section -->
+            <section id="plan" class="page-content hidden py-8">
+                <div class="text-center mb-12">
+                     <h2 class="text-3xl font-bold text-gray-800">The Strategic Plan</h2>
+                     <p class="mt-2 text-lg text-gray-600 max-w-3xl mx-auto">This section details the "how" of our strategy. It breaks down our execution plan into three core pillars: a focused Go-to-Market (GTM) strategy, a world-class team development program, and a robust performance management framework to ensure sustainable growth.</p>
+                </div>
+
+                 <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <div class="mb-6 border-b border-gray-200">
+                        <div id="plan-tabs" class="flex flex-wrap -mb-px">
+                            <button data-target="gtm-content" class="plan-tab-button inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-blue-600 hover:border-blue-300 font-semibold active">Go-to-Market Strategy</button>
+                            <button data-target="training-content" class="plan-tab-button inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-blue-600 hover:border-blue-300 font-semibold">Team Development</button>
+                            <button data-target="performance-content" class="plan-tab-button inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-blue-600 hover:border-blue-300 font-semibold">Performance Management</button>
+                        </div>
+                    </div>
+                    
+                    <div id="plan-content-container">
+                        <!-- GTM Content -->
+                        <div id="gtm-content" class="plan-content">
+                             <h3 class="text-2xl font-bold text-gray-800 mb-4">GTM: The "Land and Expand" Approach</h3>
+                             <p class="text-gray-700 mb-6">We will penetrate the MSME market using a "spearhead" product to establish a foothold, then expand the client relationship to become a comprehensive risk advisor. The ideal spearhead product must be highly relevant and demonstrate clear value.</p>
+                             <div class="grid md:grid-cols-3 gap-6">
+                                 <div class="p-4 border border-green-500 bg-green-50 rounded-lg shadow-md ring-2 ring-green-500">
+                                     <h4 class="font-bold text-lg text-green-800">RECOMMENDED: Cyber Liability</h4>
+                                     <p class="text-sm text-green-700 mb-2">High Growth (27-30%), Strong Regulatory Driver (DPDP Act), and Excellent cross-sell potential.</p>
+                                     <div class="w-full bg-gray-200 rounded-full h-2.5"><div class="bg-green-600 h-2.5 rounded-full" style="width: 100%"></div></div>
+                                     <p class="text-right text-xs font-semibold mt-1">Score: 5/5</p>
+                                 </div>
+                                 <div class="p-4 border border-gray-300 bg-white rounded-lg">
+                                     <h4 class="font-bold text-lg text-gray-800">D&O Liability</h4>
+                                     <p class="text-sm text-gray-600 mb-2">High Growth (25-35%), vital for funded SMEs seeking to attract talent and investment.</p>
+                                      <div class="w-full bg-gray-200 rounded-full h-2.5"><div class="bg-blue-600 h-2.5 rounded-full" style="width: 80%"></div></div>
+                                     <p class="text-right text-xs font-semibold mt-1">Score: 4/5</p>
+                                 </div>
+                                 <div class="p-4 border border-gray-300 bg-white rounded-lg">
+                                     <h4 class="font-bold text-lg text-gray-800">E&O / Professional Indemnity</h4>
+                                     <p class="text-sm text-gray-600 mb-2">Essential for India's large and growing professional services sector (IT, consultants).</p>
+                                     <div class="w-full bg-gray-200 rounded-full h-2.5"><div class="bg-blue-600 h-2.5 rounded-full" style="width: 70%"></div></div>
+                                     <p class="text-right text-xs font-semibold mt-1">Score: 3.5/5</p>
+                                 </div>
+                             </div>
+                        </div>
+
+                        <!-- Training Content -->
+                        <div id="training-content" class="plan-content hidden">
+                             <h3 class="text-2xl font-bold text-gray-800 mb-4">Team Development: Architecting Elite Risk Advisors</h3>
+                             <p class="text-gray-700 mb-6">Success requires a fundamental skill transformation. We will implement an intensive, 5-day integrated training program focused on two interdependent pillars: <strong class="text-blue-700">Consultative Selling</strong> (the 'how') and <strong class="text-blue-700">Financial Acumen</strong> (the 'what').</p>
+                            <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                                <div class="p-4 bg-gray-100 rounded-lg text-center">
+                                    <p class="font-bold">Day 1</p><p class="text-sm">Consulting Foundations</p>
+                                </div>
+                                <div class="p-4 bg-gray-100 rounded-lg text-center">
+                                    <p class="font-bold">Day 2</p><p class="text-sm">Risk Diagnosis</p>
+                                </div>
+                                <div class="p-4 bg-gray-100 rounded-lg text-center">
+                                    <p class="font-bold">Day 3</p><p class="text-sm">Solution Mapping & Value</p>
+                                </div>
+                                <div class="p-4 bg-blue-100 rounded-lg text-center">
+                                    <p class="font-bold text-blue-800">Day 4</p><p class="text-sm text-blue-700">Reading Financials (P&L, BS)</p>
+                                </div>
+                                 <div class="p-4 bg-blue-100 rounded-lg text-center">
+                                    <p class="font-bold text-blue-800">Day 5</p><p class="text-sm text-blue-700">Financial Impact of Risk</p>
+                                </div>
+                            </div>
+                            <p class="text-center mt-4 text-gray-600">Followed by a 90-day reinforcement and coaching program to embed skills.</p>
+                        </div>
+                        
+                        <!-- Performance Content -->
+                        <div id="performance-content" class="plan-content hidden">
+                            <h3 class="text-2xl font-bold text-gray-800 mb-4">Performance Management: The Balanced Scorecard</h3>
+                            <p class="text-gray-700 mb-6">We will move beyond measuring only sales volume. A Balanced Scorecard will drive the right behaviors by tracking KPIs across four perspectives, ensuring alignment with our strategic goal of profitable, sustainable growth.</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                                    <h4 class="font-bold text-yellow-800">Financial</h4>
+                                    <ul class="list-disc list-inside text-sm text-yellow-700 mt-2"><li>GWP per Rep</li><li>Profitability per Policy</li><li>Avg. Premium / Client</li></ul>
+                                </div>
+                                <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                    <h4 class="font-bold text-green-800">Customer</h4>
+                                    <ul class="list-disc list-inside text-sm text-green-700 mt-2"><li>Client Retention Rate</li><li>CSAT / NPS</li><li>Qualified Referrals</li></ul>
+                                </div>
+                                <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                                    <h4 class="font-bold text-blue-800">Internal Process</h4>
+                                    <ul class="list-disc list-inside text-sm text-blue-700 mt-2"><li>Sales Cycle Length</li><li>Quote-to-Bind Ratio</li><li>CRM Data Quality</li></ul>
+                                </div>
+                                <div class="p-4 bg-purple-50 border border-purple-200 rounded-lg">
+                                    <h4 class="font-bold text-purple-800">Learning & Growth</h4>
+                                    <ul class="list-disc list-inside text-sm text-purple-700 mt-2"><li>Training Completion</li><li>Financial Acumen Score</li><li>Coaching Frequency</li></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- Roadmap & Calculator Section -->
+            <section id="calculator" class="page-content hidden py-8">
+                <div class="text-center mb-12">
+                     <h2 class="text-3xl font-bold text-gray-800">Implementation Roadmap & Business Calculator</h2>
+                     <p class="mt-2 text-lg text-gray-600 max-w-3xl mx-auto">This section provides a tangible plan and a powerful tool. The roadmap outlines our phased 24-month journey, while the interactive calculator allows you to model various scenarios and understand the levers that drive our success.</p>
+                </div>
+                
+                <!-- Roadmap -->
+                 <div class="bg-white p-6 rounded-lg shadow-lg mb-12">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4 text-center">24-Month Implementation Roadmap</h3>
+                    <div class="relative">
+                        <div class="absolute left-1/2 w-0.5 h-full bg-gray-300 hidden md:block"></div>
+                        <div class="space-y-8">
+                             <!-- Phase 1 -->
+                            <div class="md:flex items-center w-full">
+                                <div class="md:w-1/2 md:pr-8">
+                                    <div class="p-4 bg-blue-100 rounded-lg border-l-4 border-blue-500">
+                                        <h4 class="font-bold text-blue-800">Phase 1: Foundation & Training</h4>
+                                        <p class="text-sm font-semibold text-blue-600">Months 1-3</p>
+                                        <ul class="text-sm list-disc list-inside mt-2 text-blue-700"><li>Finalize Balanced Scorecard & incentives</li><li>Deploy CRM & train team</li><li>Conduct intensive 5-day workshop</li></ul>
+                                    </div>
+                                </div>
+                                <div class="hidden md:block md:w-12 h-12 bg-blue-500 rounded-full flex-shrink-0 flex items-center justify-center text-white font-bold z-10">1</div>
+                            </div>
+                             <!-- Phase 2 -->
+                             <div class="md:flex flex-row-reverse items-center w-full">
+                                <div class="md:w-1/2 md:pl-8">
+                                     <div class="p-4 bg-green-100 rounded-lg border-r-4 md:border-r-0 md:border-l-4 border-green-500">
+                                        <h4 class="font-bold text-green-800">Phase 2: Pilot & Refinement</h4>
+                                        <p class="text-sm font-semibold text-green-600">Months 4-12</p>
+                                        <ul class="text-sm list-disc list-inside mt-2 text-green-700"><li>Pilot team targets specific MSME sub-sector</li><li>Iteratively refine sales process & messaging</li><li>Develop data-validated sales playbook</li></ul>
+                                    </div>
+                                </div>
+                                 <div class="hidden md:block md:w-12 h-12 bg-green-500 rounded-full flex-shrink-0 flex items-center justify-center text-white font-bold z-10">2</div>
+                            </div>
+                             <!-- Phase 3 -->
+                            <div class="md:flex items-center w-full">
+                                <div class="md:w-1/2 md:pr-8">
+                                    <div class="p-4 bg-purple-100 rounded-lg border-l-4 border-purple-500">
+                                        <h4 class="font-bold text-purple-800">Phase 3: Scaling & Optimization</h4>
+                                        <p class="text-sm font-semibold text-purple-600">Months 13-24</p>
+                                        <ul class="text-sm list-disc list-inside mt-2 text-purple-700"><li>Roll out playbook-driven model to entire team</li><li>Launch structured cross-sell initiatives (D&O, E&O)</li><li>Continuously monitor BSC data for optimization</li></ul>
+                                    </div>
+                                </div>
+                                 <div class="hidden md:block md:w-12 h-12 bg-purple-500 rounded-full flex-shrink-0 flex items-center justify-center text-white font-bold z-10">3</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calculator -->
+                <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 bg-white p-6 rounded-lg shadow-lg">
+                    <div class="lg:col-span-2">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">Business Projection Calculator</h3>
+                        <p class="text-gray-600 mb-6">Adjust the sliders to model different scenarios and see how key business levers impact our ability to reach the ₹10 Crore target.</p>
+                        <div class="space-y-6">
+                            <div>
+                                <label for="salespeople" class="font-medium text-gray-700">Number of Salespeople: <span id="salespeople-val" class="font-bold text-blue-600">10</span></label>
+                                <input id="salespeople" type="range" min="5" max="20" value="10" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer calculator-slider">
+                            </div>
+                            <div>
+                                <label for="productivity" class="font-medium text-gray-700">Annual Productivity/Rep: <span id="productivity-val" class="font-bold text-blue-600">₹70 Lakhs</span></label>
+                                <input id="productivity" type="range" min="2500000" max="15000000" value="7000000" step="500000" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer calculator-slider">
+                            </div>
+                            <div>
+                                <label for="premium" class="font-medium text-gray-700">Average Policy Premium: <span id="premium-val" class="font-bold text-blue-600">₹75,000</span></label>
+                                <input id="premium" type="range" min="25000" max="200000" value="75000" step="5000" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer calculator-slider">
+                            </div>
+                            <div>
+                                <label for="conversion" class="font-medium text-gray-700">Quote-to-Bind Ratio: <span id="conversion-val" class="font-bold text-blue-600">25%</span></label>
+                                <input id="conversion" type="range" min="10" max="50" value="25" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer calculator-slider">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-3 flex flex-col">
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div class="kpi-card p-4">
+                                <span id="policies-needed" class="text-3xl font-bold text-gray-800">93</span>
+                                <p class="mt-1 text-sm text-gray-500">Policies/Rep/Year</p>
+                            </div>
+                             <div class="kpi-card p-4">
+                                <span id="quotes-needed" class="text-3xl font-bold text-gray-800">372</span>
+                                <p class="mt-1 text-sm text-gray-500">Quotes/Rep/Year</p>
+                            </div>
+                        </div>
+                        <div class="flex-grow chart-container h-[300px] max-h-[40vh]">
+                            <canvas id="projectionChart"></canvas>
+                        </div>
+                         <p id="target-met-text" class="text-center font-semibold text-lg mt-2 text-green-600"></p>
+                    </div>
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const navButtons = document.querySelectorAll('.nav-item');
+    const pages = document.querySelectorAll('.page-content');
+    const planTabButtons = document.querySelectorAll('.plan-tab-button');
+    const planContents = document.querySelectorAll('.plan-content');
+
+    const formatCurrency = (value) => {
+        if (value >= 10000000) {
+            return `₹${(value / 10000000).toFixed(2)} Crore`;
+        }
+        return `₹${(value / 100000).toFixed(1)} Lakhs`;
+    };
+    
+    const formatNumber = (value) => {
+       return new Intl.NumberFormat('en-IN').format(value);
+    }
+
+    // Main navigation logic
+    navButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const targetId = button.dataset.target;
+
+            navButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            pages.forEach(page => {
+                if (page.id === targetId) {
+                    page.classList.remove('hidden');
+                } else {
+                    page.classList.add('hidden');
+                }
+            });
+        });
+    });
+
+    // Plan section tab navigation
+    planTabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+             const targetId = button.dataset.target;
+
+            planTabButtons.forEach(btn => btn.classList.remove('active', 'text-blue-600', 'border-blue-600'));
+            button.classList.add('active', 'text-blue-600', 'border-blue-600');
+
+            planContents.forEach(content => {
+                if (content.id === targetId) {
+                    content.classList.remove('hidden');
+                } else {
+                    content.classList.add('hidden');
+                }
+            });
+        });
+    });
+    // Set initial active state for plan tabs
+    document.querySelector('.plan-tab-button[data-target="gtm-content"]').classList.add('active', 'text-blue-600', 'border-blue-600');
+
+
+    // --- CHARTS ---
+
+    // 1. Dashboard Profitability Chart
+    const profitabilityCtx = document.getElementById('profitabilityChart').getContext('2d');
+    new Chart(profitabilityCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Net Retained Premium (Direct)', 'Cost of Sales (Direct)', 'Net Retained Premium (Broker)', 'Commission (Broker)'],
+            datasets: [{
+                data: [80, 20],
+                backgroundColor: ['#2563EB', '#93C5FD'],
+                label: 'Direct Channel'
+            }, {
+                data: [83.5, 16.5],
+                backgroundColor: ['#4B5563', '#D1D5DB'],
+                label: 'Broker Channel'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom' },
+                title: { display: true, text: 'Profitability Comparison' }
+            }
+        }
+    });
+
+    // 2. Opportunity MSME Chart
+    const msmeCtx = document.getElementById('msmeChart').getContext('2d');
+    new Chart(msmeCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Underinsured / Uninsured MSMEs', 'Adequately Insured MSMEs'],
+            datasets: [{
+                data: [85, 15],
+                backgroundColor: ['#FCA5A5', '#10B981'],
+                borderColor: '#FFFFFF',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '60%',
+            plugins: {
+                legend: { display: false },
+                title: { display: false }
+            }
+        }
+    });
+    
+    // 3. Feasibility Scenarios Chart
+    const feasibilityCtx = document.getElementById('feasibilityChart').getContext('2d');
+    const scenarioData = {
+        labels: ['Year 1', 'Year 2', 'Year 3'],
+        scenarioA: {
+            data: [3, 7, 10],
+            backgroundColor: 'rgba(59, 130, 246, 0.7)',
+            borderColor: 'rgba(59, 130, 246, 1)',
+            label: 'GWP (in Cr) - Scenario A (10 Reps)'
+        },
+        scenarioB: {
+            data: [3, 10.5, 15],
+            backgroundColor: 'rgba(75, 85, 99, 0.7)',
+            borderColor: 'rgba(75, 85, 99, 1)',
+            label: 'GWP (in Cr) - Scenario B (15 Reps)'
+        }
+    };
+
+    const feasibilityChart = new Chart(feasibilityCtx, {
+        type: 'bar',
+        data: {
+            labels: scenarioData.labels,
+            datasets: [scenarioData.scenarioA]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: { display: true, text: 'Total GWP (in ₹ Crore)' }
+                }
+            },
+            plugins: {
+                legend: { position: 'top' }
+            }
+        }
+    });
+    
+    const scenarioABtn = document.getElementById('scenarioA-btn');
+    const scenarioBBtn = document.getElementById('scenarioB-btn');
+    scenarioABtn.addEventListener('click', () => {
+        feasibilityChart.data.datasets = [scenarioData.scenarioA];
+        feasibilityChart.update();
+        scenarioABtn.classList.replace('bg-gray-300','bg-blue-600');
+        scenarioABtn.classList.replace('text-gray-700','text-white');
+        scenarioBBtn.classList.replace('bg-blue-600','bg-gray-300');
+        scenarioBBtn.classList.replace('text-white','text-gray-700');
+    });
+    scenarioBBtn.addEventListener('click', () => {
+        feasibilityChart.data.datasets = [scenarioData.scenarioB];
+        feasibilityChart.update();
+        scenarioBBtn.classList.replace('bg-gray-300','bg-blue-600');
+        scenarioBBtn.classList.replace('text-gray-700','text-white');
+        scenarioABtn.classList.replace('bg-blue-600','bg-gray-300');
+        scenarioABtn.classList.replace('text-white','text-gray-700');
+    });
+
+    // 4. Calculator & Projection Chart
+    const calculatorInputs = {
+        salespeople: document.getElementById('salespeople'),
+        productivity: document.getElementById('productivity'),
+        premium: document.getElementById('premium'),
+        conversion: document.getElementById('conversion'),
+    };
+
+    const calculatorValues = {
+        salespeople: document.getElementById('salespeople-val'),
+        productivity: document.getElementById('productivity-val'),
+        premium: document.getElementById('premium-val'),
+        conversion: document.getElementById('conversion-val'),
+    };
+    
+    const calculatorOutputs = {
+        policies: document.getElementById('policies-needed'),
+        quotes: document.getElementById('quotes-needed'),
+        targetMet: document.getElementById('target-met-text'),
+    };
+
+    const projectionCtx = document.getElementById('projectionChart').getContext('2d');
+    const projectionChart = new Chart(projectionCtx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Projected GWP (in ₹ Crore)',
+                data: [],
+                borderColor: '#10B981',
+                backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                fill: true,
+                tension: 0.4
+            },
+            {
+                label: 'Target GWP (₹10 Cr)',
+                data: [],
+                borderColor: '#EF4444',
+                borderDash: [5, 5],
+                fill: false,
+                pointRadius: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: { display: true, text: 'Total GWP (in ₹ Crore)' }
+                },
+                x: {
+                    title: { display: true, text: 'Months' }
+                }
+            },
+            plugins: {
+                title: { display: true, text: 'Path to ₹10 Crore Target' }
+            }
+        }
+    });
+
+    function updateCalculator() {
+        const numSalespeople = parseInt(calculatorInputs.salespeople.value);
+        const productivityPerRep = parseInt(calculatorInputs.productivity.value);
+        const avgPremium = parseInt(calculatorInputs.premium.value);
+        const conversionRatio = parseInt(calculatorInputs.conversion.value) / 100;
+        
+        calculatorValues.salespeople.textContent = numSalespeople;
+        calculatorValues.productivity.textContent = formatCurrency(productivityPerRep);
+        calculatorValues.premium.textContent = `₹${formatNumber(avgPremium)}`;
+        calculatorValues.conversion.textContent = `${conversionRatio * 100}%`;
+
+        const policiesPerRep = productivityPerRep > 0 ? Math.round(productivityPerRep / avgPremium) : 0;
+        const quotesPerRep = conversionRatio > 0 ? Math.round(policiesPerRep / conversionRatio) : 0;
+
+        calculatorOutputs.policies.textContent = formatNumber(policiesPerRep);
+        calculatorOutputs.quotes.textContent = formatNumber(quotesPerRep);
+
+        const totalGWP = numSalespeople * productivityPerRep;
+        const targetGWP = 100000000;
+        const monthsToTarget = totalGWP > 0 ? Math.ceil(targetGWP / (totalGWP / 12)) : Infinity;
+        
+        if (monthsToTarget <= 60 && isFinite(monthsToTarget)) {
+             calculatorOutputs.targetMet.textContent = `Target will be met in ~${monthsToTarget} months.`;
+             calculatorOutputs.targetMet.className = 'text-center font-semibold text-lg mt-2 text-green-600';
+        } else {
+             calculatorOutputs.targetMet.textContent = 'Target may not be met within 5 years.';
+             calculatorOutputs.targetMet.className = 'text-center font-semibold text-lg mt-2 text-red-600';
+        }
+        
+        updateProjectionChart(numSalespeople, productivityPerRep);
+    }
+    
+    function updateProjectionChart(salespeople, productivity) {
+        const totalAnnualGWP = salespeople * productivity;
+        const monthlyGWP = totalAnnualGWP / 12;
+        const target = 100000000;
+        
+        const labels = [];
+        const projectedData = [];
+        const targetData = [];
+        
+        for (let i = 0; i <= 36; i+=3) {
+            labels.push(i);
+            projectedData.push(((monthlyGWP * i))/10000000); // in Cr
+            targetData.push(target/10000000); // in Cr
+        }
+
+        projectionChart.data.labels = labels;
+        projectionChart.data.datasets[0].data = projectedData;
+        projectionChart.data.datasets[1].data = targetData;
+        projectionChart.update();
+    }
+
+
+    Object.values(calculatorInputs).forEach(input => {
+        input.addEventListener('input', updateCalculator);
+    });
+
+    updateCalculator();
+});
+</script>
+</body>
+</html>

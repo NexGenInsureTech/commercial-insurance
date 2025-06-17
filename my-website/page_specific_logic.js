@@ -529,38 +529,31 @@ function initializeMsmeStrategyPage() {
   const applyDiscountButton = document.getElementById("apply-discount-button");
 
   // FIX: Refined showBuyStep function
+
   function showBuyStep(stepNumber) {
-    // Hide all step content divs and reset their class
-    buySteps.forEach((stepDiv) => {
+    buySteps.forEach((stepDiv, index) => {
       stepDiv.classList.add("hidden");
       stepDiv.classList.remove("current-step");
+      buyJourneyStepsContainer.children[index]
+        .querySelector("div")
+        .classList.remove("bg-teal-600", "text-white");
+      buyJourneyStepsContainer.children[index]
+        .querySelector("div")
+        .classList.add("bg-amber-200", "text-neutral-700");
     });
 
-    // Reset all step indicator circles to inactive visual state
-    if (buyJourneyStepsContainer) {
-      const stepIndicators =
-        buyJourneyStepsContainer.querySelectorAll(".step > div");
-      stepIndicators.forEach((indicator) => {
-        indicator.classList.remove("bg-teal-600", "text-white");
-        indicator.classList.add("bg-amber-200", "text-neutral-700");
-      });
-    }
-
-    // Show the content div for the target step
     const targetStepDiv = document.getElementById(`buy-step-${stepNumber}`);
     if (targetStepDiv) {
       targetStepDiv.classList.remove("hidden");
       targetStepDiv.classList.add("current-step");
+      buyJourneyStepsContainer.children[stepNumber - 1]
+        .querySelector("div")
+        .classList.remove("bg-amber-200", "text-neutral-700");
+      buyJourneyStepsContainer.children[stepNumber - 1]
+        .querySelector("div")
+        .classList.add("bg-teal-600", "text-white");
     }
-
-    // Set the indicator circle for the target step to active visual state
-    const targetIndicator = buyJourneyStepsContainer.querySelector(
-      `.step[data-step="${stepNumber}"] > div`
-    );
-    if (targetIndicator) {
-      targetIndicator.classList.remove("bg-amber-200", "text-neutral-700");
-      targetIndicator.classList.add("bg-teal-600", "text-white");
-    }
+    currentBuyStep = stepNumber;
   }
 
   if (buyProductButton) {

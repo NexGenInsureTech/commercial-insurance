@@ -59,13 +59,13 @@
 </head>
 <body class="text-slate-700 antialiased">
     <!-- Chosen Palette: Warm Neutrality (Background: slate-50, Text: slate-700, Accent: teal-600) -->
-    <!-- Application Structure Plan: A single-page application with a thematic flow. It starts with a Hero section to state the problem's scale, followed by 'The Protection Gap' to visualize the core issue. 'Building Your Shield' interactively details insurance products. 'The Growth Enabler' shows the strategic value of insurance for credit and talent. 'Your Action Plan' provides a practical risk management framework. Finally, 'Expert's Corner' offers key takeaways. This structure guides the user from awareness to actionable strategy, making the report's content more digestible and empowering than a linear format. -->
+    <!-- Application Structure Plan: A single-page application with a thematic flow. It starts with a Hero section to state the problem's scale, followed by 'The Protection Gap' to visualize the core issue. 'Building Your Shield' interactively details insurance products. 'The Growth Enabler' shows the strategic value of insurance. 'Your Action Plan' provides a practical risk management framework. A new 'Keynote Blueprint' section offers structured talking points for event preparation. Finally, 'Expert's Corner' offers key takeaways. This structure guides the user from awareness to actionable strategy. -->
     <!-- Visualization & Content Choices: 
         - Protection Gap -> Goal: Inform/Impact -> Viz: Donut Chart -> Interaction: Hover -> Justification: Starkly visualizes the 97% underinsurance problem -> Library: Chart.js.
-        - Adoption Challenges -> Goal: Compare -> Viz: Bar Chart -> Interaction: Hover/Tooltip -> Justification: Effectively compares the severity of barriers like cost and trust between India and other developing economies -> Library: Chart.js.
-        - Insurance Products -> Goal: Organize/Inform -> Viz: Interactive Cards -> Interaction: Click to expand -> Justification: Breaks down complex product info into clean, manageable chunks, encouraging exploration -> Method: HTML/CSS/JS.
-        - Virtuous Cycle -> Goal: Explain Relationship -> Viz: Animated Diagram -> Interaction: Scroll-triggered animation -> Justification: Visually narrates how insurance boosts creditworthiness and growth, which is more memorable than text -> Method: HTML/CSS/JS.
-        - Risk Framework -> Goal: Guide -> Viz: Accordion -> Interaction: Click to expand -> Justification: Presents the 4-step process cleanly, allowing users to focus on one stage at a time -> Method: HTML/CSS/JS. -->
+        - Adoption Challenges -> Goal: Compare -> Viz: Bar Chart -> Interaction: Hover/Tooltip -> Justification: Effectively compares the severity of barriers like cost and trust -> Library: Chart.js.
+        - Insurance Products -> Goal: Organize/Inform -> Viz: Interactive Cards -> Interaction: Click to expand -> Justification: Breaks down complex product info into clean chunks -> Method: HTML/CSS/JS.
+        - Virtuous Cycle -> Goal: Explain Relationship -> Viz: Animated Diagram -> Interaction: Scroll-triggered animation -> Justification: Visually narrates how insurance boosts creditworthiness -> Method: HTML/CSS/JS.
+        - Keynote/Risk/FAQ -> Goal: Guide/Organize -> Viz: Accordion -> Interaction: Click to expand -> Justification: Presents structured points cleanly, allowing users to focus on one topic at a time -> Method: HTML/CSS/JS. -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
 
     <header id="header" class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
@@ -77,6 +77,7 @@
                     <a href="#shield" class="nav-link text-slate-600 hover:text-teal-600 transition-colors">The Shield</a>
                     <a href="#enabler" class="nav-link text-slate-600 hover:text-teal-600 transition-colors">The Enabler</a>
                     <a href="#plan" class="nav-link text-slate-600 hover:text-teal-600 transition-colors">Action Plan</a>
+                    <a href="#keynote" class="nav-link text-slate-600 hover:text-teal-600 transition-colors">Keynote Blueprint</a>
                     <a href="#expert" class="nav-link text-slate-600 hover:text-teal-600 transition-colors">Expert's Corner</a>
                 </nav>
             </div>
@@ -213,14 +214,25 @@
                 </div>
             </div>
         </section>
+
+        <section id="keynote" class="py-16 md:py-24">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-slate-900">Your Keynote Blueprint: Strategic Talking Points</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-slate-600">A structured narrative to help you articulate the vision for a next-generation risk architecture for India's MSMEs.</p>
+                </div>
+                <div id="keynote-accordion" class="max-w-3xl mx-auto bg-white rounded-lg shadow-md p-4 md:p-6">
+                </div>
+            </div>
+        </section>
         
-        <section id="expert" class="py-16 md:py-24">
+        <section id="expert" class="bg-white py-16 md:py-24">
             <div class="container mx-auto px-4">
                 <div class="text-center mb-12">
                     <h2 class="text-3xl font-bold text-slate-900">Expert's Corner: Key Questions Answered</h2>
                     <p class="mt-4 max-w-2xl mx-auto text-slate-600">Here are concise answers to common questions, drawing parallels between insurance inclusion and MSME growth strategy.</p>
                 </div>
-                <div id="faq-accordion" class="max-w-3xl mx-auto bg-white rounded-lg shadow-md p-4 md:p-6">
+                <div id="faq-accordion" class="max-w-3xl mx-auto bg-slate-50 rounded-lg shadow-inner p-4 md:p-6">
                 </div>
             </div>
         </section>
@@ -310,6 +322,34 @@
                     content: 'Risk management is not a one-time project. Your business and the world around it are constantly changing. Schedule regular reviews (e.g., quarterly) of your risk plan to ensure it remains relevant, effective, and aligned with your growth.'
                 }
             ];
+
+            const keynotePoints = [
+                {
+                    title: "1. The Opening: Frame the Economic Paradox",
+                    content: "Start with the scale: MSMEs are the engine of our economy—30% of GDP, 110M+ jobs. Yet, they are the most vulnerable. The core paradox is that 97% of this vital sector is underinsured, creating a systemic risk to our entire economy. This isn't just a business problem; it's a national resilience problem."
+                },
+                {
+                    title: "2. The Core Insight: The Psychological Barrier",
+                    content: "The biggest hurdle isn't just product or price; it's perception. For 75% of MSME owners, insurance is a 'cost to be minimized,' not a 'strategic asset.' Our first job is to shift this mindset. We must reframe insurance from a story about fear and loss to a story about ambition and growth."
+                },
+                {
+                    title: "3. The Vision: A Next-Gen Risk Architecture",
+                    content: `Our vision for a new risk architecture is built on three pillars of innovation:<br>
+                        <ul class="space-y-2 mt-3 list-disc pl-5">
+                            <li><strong>Product Innovation:</strong> Simple, modular, and affordable. Think beyond complex policies to sachet-sized covers, monthly premium payments, and digital-first packages like the 'Bharat' series, but with added layers of customization.</li>
+                            <li><strong>Distribution Innovation:</strong> Go where the MSMEs are. This means embedding insurance into the digital ecosystems they already use—partnering with banks, fintech lenders, accounting software, and e-commerce platforms. We must make insurance as easy to buy as any other service.</li>
+                            <li><strong>Claims Innovation:</strong> Trust is the ultimate currency. We must build fast, transparent, and tech-driven claims processes. A claim settled quickly and fairly is the single most powerful marketing tool we have.</li>
+                        </ul>`
+                },
+                {
+                    title: "4. The 'Why': Insurance as a Growth Engine",
+                    content: "Beyond risk transfer, insurance is a proactive enabler of growth in two key ways: <br> <ul class='space-y-2 mt-3 list-disc pl-5'><li><strong>It's a Credit Enabler:</strong> A Keyman policy isn't just protection; it's a key that unlocks the door to credit. It de-risks the business for lenders, improving its CIBIL rank and creating a virtuous cycle of capital access and growth.</li><li><strong>It's a Talent Magnet:</strong> In the war for talent, MSMEs can't always compete on salary. A robust group health and life insurance package is a powerful differentiator that helps attract, retain, and motivate their most valuable asset—their people.</li></ul>"
+                },
+                {
+                    title: "5. The Closing: The Insurance Inclusion Parallel",
+                    content: "As someone heading both the SME Channel and Insurance Inclusion, I see a powerful parallel. The mission is the same: empowering the underserved with financial tools to build a secure future. Whether it's a small village household or a small enterprise, the philosophy is identical. We must make financial protection accessible, affordable, and easy to understand. The viability of this model rests on leveraging technology and partnerships to achieve scale. By solving the insurance puzzle for MSMEs, we are not just building bigger businesses; we are building a more inclusive and resilient India."
+                }
+            ];
             
             const faqData = [
                 {
@@ -329,6 +369,30 @@
                     answer: 'They must be customized for the MSME context. This means offering affordability and flexibility (like monthly premiums), providing holistic digital health platforms (teleconsultations, wellness), and ensuring a low-admin experience for the business owner. Aggregating demand through industry clusters can also unlock better rates.'
                 }
             ];
+
+            function createAccordion(containerId, data, isRiskFramework = false) {
+                 const container = document.getElementById(containerId);
+                 if (!container) return;
+                 data.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'border-b border-slate-200 last:border-b-0';
+                    div.innerHTML = `
+                        <button class="accordion-button w-full flex justify-between items-center text-left py-4">
+                            <span class="font-medium text-slate-700">${isRiskFramework ? item.step + ': ' + item.title : item.title}</span>
+                            <span class="accordion-icon text-xl text-teal-500 transform transition-transform duration-300">+</span>
+                        </button>
+                        <div class="accordion-content pb-4 pr-4">
+                            <div class="text-slate-600">${item.content}</div>
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+            }
+
+            createAccordion('keynote-accordion', keynotePoints);
+            createAccordion('faq-accordion', faqData.map(item => ({title: item.question, content: item.answer})));
+            createAccordion('risk-accordion', riskFramework, true);
+
 
             const productGrid = document.getElementById('product-grid');
             insuranceProducts.forEach(product => {
@@ -353,52 +417,12 @@
                 });
             });
 
-            const riskAccordionContainer = document.getElementById('risk-accordion');
-            riskFramework.forEach((item, index) => {
-                const div = document.createElement('div');
-                div.className = 'border-b border-slate-200';
-                div.innerHTML = `
-                    <button class="accordion-button w-full flex justify-between items-center text-left py-4 px-2">
-                        <span class="text-lg font-semibold text-slate-800">${item.step}: ${item.title}</span>
-                        <span class="accordion-icon text-2xl text-teal-500 transform transition-transform duration-300">+</span>
-                    </button>
-                    <div class="accordion-content px-2 pb-4">
-                        <p class="text-slate-600">${item.content}</p>
-                    </div>
-                `;
-                riskAccordionContainer.appendChild(div);
-            });
-
-            const faqAccordionContainer = document.getElementById('faq-accordion');
-            faqData.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'border-b border-slate-200 last:border-b-0';
-                div.innerHTML = `
-                    <button class="accordion-button w-full flex justify-between items-center text-left py-4">
-                        <span class="font-medium text-slate-700">${item.question}</span>
-                        <span class="accordion-icon text-xl text-teal-500 transform transition-transform duration-300">+</span>
-                    </button>
-                    <div class="accordion-content pb-4">
-                        <p class="text-slate-600">${item.answer}</p>
-                    </div>
-                `;
-                faqAccordionContainer.appendChild(div);
-            });
 
             document.querySelectorAll('.accordion-button').forEach(button => {
                 button.addEventListener('click', () => {
                     const content = button.nextElementSibling;
                     const icon = button.querySelector('.accordion-icon');
                     const isOpen = content.classList.contains('open');
-
-                    // Optional: Close other open accordions within the same container
-                    // button.closest('.max-w-3xl').querySelectorAll('.accordion-content.open').forEach(openContent => {
-                    //     if(openContent !== content) {
-                    //         openContent.classList.remove('open');
-                    //         openContent.previousElementSibling.querySelector('.accordion-icon').textContent = '+';
-                    //         openContent.previousElementSibling.querySelector('.accordion-icon').classList.remove('rotate-45');
-                    //     }
-                    // });
                     
                     content.classList.toggle('open');
                     if (isOpen) {
@@ -493,7 +517,7 @@
                 }
             });
             
-            const sections = document.querySelectorAll('section');
+            const sections = document.querySelectorAll('main section');
             const navLinks = document.querySelectorAll('nav a');
             
             window.addEventListener('scroll', () => {
@@ -507,7 +531,7 @@
 
                 navLinks.forEach(link => {
                     link.classList.remove('active');
-                    if (link.getAttribute('href').includes(current)) {
+                    if (link.getAttribute('href').substring(1) === current) {
                         link.classList.add('active');
                     }
                 });

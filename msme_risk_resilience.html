@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Report: Leveraging Insurance for MSME Growth</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .nav-link.active {
+            font-weight: 600;
+            color: #0d9488; /* teal-600 */
+        }
+        .fade-in {
+            animation: fadeIn 0.8s ease-in-out forwards;
+            opacity: 0;
+        }
+        .fade-in-delay-1 { animation-delay: 0.2s; }
+        .fade-in-delay-2 { animation-delay: 0.4s; }
+        .fade-in-delay-3 { animation-delay: 0.6s; }
+        .fade-in-delay-4 { animation-delay: 0.8s; }
+        .fade-in-delay-5 { animation-delay: 1.0s; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
+        }
+        .accordion-content.open {
+            max-height: 1000px; /* Large enough to not clip content */
+            transition: max-height 1s ease-in-out;
+        }
+    </style>
+</head>
+<body class="text-slate-700 antialiased">
+    <!-- Chosen Palette: Warm Neutrality (Background: slate-50, Text: slate-700, Accent: teal-600) -->
+    <!-- Application Structure Plan: A single-page application with a thematic flow. It starts with a Hero section to state the problem's scale, followed by 'The Protection Gap' to visualize the core issue. 'Building Your Shield' interactively details insurance products. 'The Growth Enabler' shows the strategic value of insurance for credit and talent. 'Your Action Plan' provides a practical risk management framework. Finally, 'Expert's Corner' offers key takeaways. This structure guides the user from awareness to actionable strategy, making the report's content more digestible and empowering than a linear format. -->
+    <!-- Visualization & Content Choices: 
+        - Protection Gap -> Goal: Inform/Impact -> Viz: Donut Chart -> Interaction: Hover -> Justification: Starkly visualizes the 97% underinsurance problem -> Library: Chart.js.
+        - Adoption Challenges -> Goal: Compare -> Viz: Bar Chart -> Interaction: Hover/Tooltip -> Justification: Effectively compares the severity of barriers like cost and trust between India and other developing economies -> Library: Chart.js.
+        - Insurance Products -> Goal: Organize/Inform -> Viz: Interactive Cards -> Interaction: Click to expand -> Justification: Breaks down complex product info into clean, manageable chunks, encouraging exploration -> Method: HTML/CSS/JS.
+        - Virtuous Cycle -> Goal: Explain Relationship -> Viz: Animated Diagram -> Interaction: Scroll-triggered animation -> Justification: Visually narrates how insurance boosts creditworthiness and growth, which is more memorable than text -> Method: HTML/CSS/JS.
+        - Risk Framework -> Goal: Guide -> Viz: Accordion -> Interaction: Click to expand -> Justification: Presents the 4-step process cleanly, allowing users to focus on one stage at a time -> Method: HTML/CSS/JS. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <header id="header" class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <h1 class="text-xl font-bold text-slate-800">MSME Risk & Resilience</h1>
+                <nav class="hidden md:flex space-x-6 text-sm font-medium">
+                    <a href="#gap" class="nav-link text-slate-600 hover:text-teal-600 transition-colors">The Gap</a>
+                    <a href="#shield" class="nav-link text-slate-600 hover:text-teal-600 transition-colors">The Shield</a>
+                    <a href="#enabler" class="nav-link text-slate-600 hover:text-teal-600 transition-colors">The Enabler</a>
+                    <a href="#plan" class="nav-link text-slate-600 hover:text-teal-600 transition-colors">Action Plan</a>
+                    <a href="#expert" class="nav-link text-slate-600 hover:text-teal-600 transition-colors">Expert's Corner</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section id="hero" class="bg-white py-16 md:py-24">
+            <div class="container mx-auto px-4 text-center">
+                <p class="text-base font-semibold text-teal-600 uppercase tracking-wider">The MSME Insurance Imperative</p>
+                <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900 mt-2">From Reactive Safeguard to Proactive Growth Engine</h2>
+                <p class="mt-6 max-w-3xl mx-auto text-lg text-slate-600">
+                    MSMEs are the backbone of the Indian economy, contributing 30% to GDP and employing over 110 million people. Yet, a staggering protection gap leaves them vulnerable. This interactive report explores how to transform insurance from a perceived cost into a strategic asset for resilience and growth.
+                </p>
+            </div>
+        </section>
+
+        <section id="gap" class="py-16 md:py-24">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-slate-900">The Glaring Protection Gap</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-slate-600">Despite their critical economic role, the vast majority of MSMEs operate without a financial safety net, making them acutely vulnerable to shocks. This is not just an Indian issue, but a global challenge in developing economies.</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-lg font-semibold text-slate-800 mb-4 text-center">India's Underinsurance Crisis</h3>
+                        <div class="chart-container">
+                            <canvas id="protectionGapChart"></canvas>
+                        </div>
+                        <p class="text-center mt-4 text-sm text-slate-500">Only a tiny fraction of India's 63 million MSMEs have adequate insurance, exposing the economy to systemic risk.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-lg font-semibold text-slate-800 mb-4 text-center">Barriers to Adoption: India vs. Global Peers</h3>
+                         <div class="chart-container">
+                            <canvas id="challengesChart"></canvas>
+                        </div>
+                        <p class="text-center mt-4 text-sm text-slate-500">MSMEs in India and other developing nations face similar hurdles, with cost perception and complexity being primary deterrents.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="shield" class="bg-white py-16 md:py-24">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-slate-900">Building Your Shield: Essential Insurance Products</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-slate-600">Understanding the right types of insurance is the first step towards building a resilient enterprise. Explore the core products designed to protect your business and your people.</p>
+                </div>
+                <div id="product-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                </div>
+            </div>
+        </section>
+
+        <section id="enabler" class="py-16 md:py-24">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-slate-900">The Growth Enabler: Insurance Beyond Protection</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-slate-600">Strategic insurance use does more than prevent disaster; it actively fuels growth by enhancing financial stability and making your business more competitive.</p>
+                </div>
+                <div class="grid lg:grid-cols-2 gap-12 items-start">
+                    <div class="bg-white p-8 rounded-lg shadow-md">
+                        <h3 class="text-2xl font-bold text-slate-800 mb-4">Unlocking Credit: The Virtuous Cycle</h3>
+                        <p class="text-slate-600 mb-6">Lenders view well-insured businesses as less risky. Keyman insurance, in particular, directly mitigates 'key person risk,' often a requirement for business loans. This creates a powerful cycle where insurance unlocks capital for growth.</p>
+                        <div id="virtuous-cycle" class="space-y-2">
+                            <div class="flex items-center fade-in">
+                                <span class="flex-shrink-0 bg-teal-100 text-teal-700 h-10 w-10 rounded-full flex items-center justify-center font-bold">1</span>
+                                <p class="ml-4 font-semibold">MSME buys Keyman Insurance</p>
+                            </div>
+                            <div class="h-8 w-px bg-slate-300 ml-5 fade-in fade-in-delay-1"></div>
+                             <div class="flex items-center fade-in fade-in-delay-1">
+                                <span class="flex-shrink-0 bg-teal-100 text-teal-700 h-10 w-10 rounded-full flex items-center justify-center font-bold">2</span>
+                                <p class="ml-4 font-semibold">Reduced risk for lenders</p>
+                            </div>
+                            <div class="h-8 w-px bg-slate-300 ml-5 fade-in fade-in-delay-2"></div>
+                            <div class="flex items-center fade-in fade-in-delay-2">
+                                <span class="flex-shrink-0 bg-teal-100 text-teal-700 h-10 w-10 rounded-full flex items-center justify-center font-bold">3</span>
+                                <p class="ml-4 font-semibold">Unlocks access to business loans</p>
+                            </div>
+                            <div class="h-8 w-px bg-slate-300 ml-5 fade-in fade-in-delay-3"></div>
+                            <div class="flex items-center fade-in fade-in-delay-3">
+                                <span class="flex-shrink-0 bg-teal-100 text-teal-700 h-10 w-10 rounded-full flex items-center justify-center font-bold">4</span>
+                                <p class="ml-4 font-semibold">Fuels business growth & stability</p>
+                            </div>
+                            <div class="h-8 w-px bg-slate-300 ml-5 fade-in fade-in-delay-4"></div>
+                            <div class="flex items-center fade-in fade-in-delay-4">
+                                <span class="flex-shrink-0 bg-teal-100 text-teal-700 h-10 w-10 rounded-full flex items-center justify-center font-bold">5</span>
+                                <p class="ml-4 font-semibold">Improves Credit Score (e.g., CIBIL Rank)</p>
+                            </div>
+                            <div class="h-8 w-px bg-slate-300 ml-5 fade-in fade-in-delay-5"></div>
+                             <div class="flex items-center fade-in fade-in-delay-5">
+                                <span class="flex-shrink-0 bg-teal-500 text-white h-10 w-10 rounded-full flex items-center justify-center font-bold">&#8635;</span>
+                                <p class="ml-4 font-bold text-teal-600">Access to better & cheaper credit</p>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="bg-white p-8 rounded-lg shadow-md">
+                        <h3 class="text-2xl font-bold text-slate-800 mb-4">Winning Talent: The Workforce Shield</h3>
+                        <p class="text-slate-600 mb-6">In a competitive market, MSMEs struggle to match the salaries of large corporations. A strong group insurance package becomes a key differentiator, helping to attract, retain, and motivate your most valuable asset: your people.</p>
+                        <ul class="space-y-4">
+                            <li class="flex items-start">
+                                <span class="text-teal-500 mt-1">&#10003;</span>
+                                <div class="ml-3">
+                                    <h4 class="font-semibold">Group Health Insurance</h4>
+                                    <p class="text-sm text-slate-500">The most valued benefit, showing a commitment to employee well-being.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-teal-500 mt-1">&#10003;</span>
+                                <div class="ml-3">
+                                    <h4 class="font-semibold">Group Life & Accident Cover</h4>
+                                    <p class="text-sm text-slate-500">Provides a crucial financial safety net for employees' families, fostering loyalty.</p>
+                                </div>
+                            </li>
+                             <li class="flex items-start">
+                                <span class="text-teal-500 mt-1">&#10003;</span>
+                                <div class="ml-3">
+                                    <h4 class="font-semibold">Digital-First Solutions</h4>
+                                    <p class="text-sm text-slate-500">Modern Insurtechs offer platforms with teleconsultations and wellness benefits, increasing perceived value and reducing admin burden.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="plan" class="bg-white py-16 md:py-24">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-slate-900">Your Action Plan: A 4-Step Risk Management Framework</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-slate-600">Insurance is one part of a larger strategy. Follow this simple, proactive framework to identify, analyze, and manage the unique risks your business faces.</p>
+                </div>
+                <div id="risk-accordion" class="max-w-3xl mx-auto">
+                </div>
+            </div>
+        </section>
+        
+        <section id="expert" class="py-16 md:py-24">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-slate-900">Expert's Corner: Key Questions Answered</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-slate-600">Here are concise answers to common questions, drawing parallels between insurance inclusion and MSME growth strategy.</p>
+                </div>
+                <div id="faq-accordion" class="max-w-3xl mx-auto bg-white rounded-lg shadow-md p-4 md:p-6">
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-slate-800 text-slate-300 py-8">
+        <div class="container mx-auto px-4 text-center text-sm">
+            <p>&copy; 2025 MSME Risk & Resilience Interactive Report. All rights reserved.</p>
+            <p class="mt-2">This report is for informational purposes and provides a strategic overview of the MSME insurance landscape.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const insuranceProducts = [
+                {
+                    category: 'Core Business Protection',
+                    title: 'Property Insurance',
+                    icon: '🏢',
+                    description: 'Safeguards your physical assets like your office, factory, machinery, and stock from perils like fire, flood, and theft. This is the foundation of business resilience.',
+                    example: 'IRDAI’s standardized Bharat Sookshma (up to ₹5 Cr) and Laghu Udyam Suraksha (up to ₹50 Cr) policies are excellent examples for Indian MSMEs.'
+                },
+                {
+                    category: 'Core Business Protection',
+                    title: 'Business Interruption',
+                    icon: '⏱️',
+                    description: 'The key to survival after a disaster. While property insurance replaces assets, BI insurance replaces lost income, covering ongoing expenses like salaries and rent during a temporary shutdown.',
+                    example: 'Often bundled with property policies, this ensures a temporary setback does not become a permanent closure.'
+                },
+                {
+                    category: 'Core Business Protection',
+                    title: 'Liability Insurance',
+                    icon: '⚖️',
+                    description: 'Protects your business from financially crippling third-party claims. This includes Public Liability (e.g., a customer injury) and Professional Indemnity (for service errors).',
+                    example: 'Essential for any business that interacts with the public or provides professional advice.'
+                },
+                {
+                    category: 'Specialized & Modern Risks',
+                    title: 'Cyber Insurance',
+                    icon: '💻',
+                    description: 'As essential as fire insurance in the digital age. It covers financial losses from data breaches, ransomware attacks, and other cyber threats that can devastate a business.',
+                    example: 'A rapidly growing segment, reflecting the universal rise of digital risks for businesses of all sizes.'
+                },
+                {
+                    category: 'Specialized & Modern Risks',
+                    title: 'Trade Credit Insurance',
+                    icon: '🧾',
+                    description: 'Protects you against the risk of your customers not paying their invoices due to insolvency or default. It stabilizes your cash flow and gives you the confidence to grow.',
+                    example: 'Recent IRDAI rule changes now allow this for TReDS platforms, improving liquidity for MSMEs.'
+                },
+                {
+                    category: 'Human Asset Protection',
+                    title: 'Keyman Insurance',
+                    icon: '👤',
+                    description: 'A life insurance policy taken by the business on a crucial employee. The payout ensures business continuity by providing funds to manage transition, repay debt, or recruit a replacement.',
+                    example: 'A critical tool for de-risking the business and a key enabler of creditworthiness for lenders.'
+                }
+            ];
+
+            const riskFramework = [
+                { 
+                    step: 'Step 1: Identify',
+                    title: 'Conduct a Risk Inventory',
+                    content: 'Brainstorm all potential threats to your business. Think broadly across categories: Financial (cash flow), Operational (supply chain, equipment), Compliance (laws, regulations), and Reputational (brand image). Involve your team to get a 360-degree view.'
+                },
+                { 
+                    step: 'Step 2: Analyze',
+                    title: 'Prioritize Using a Risk Matrix',
+                    content: 'Evaluate each identified risk based on two simple factors: its likelihood of occurring and its potential impact if it does. This helps you focus your resources on the threats that matter most—those with high likelihood and high impact.'
+                },
+                {
+                    step: 'Step 3: Mitigate',
+                    title: 'Choose Your Strategy (The 4 T\'s)',
+                    content: `
+                        <ul class="space-y-3 pl-5 list-disc text-slate-600">
+                            <li><strong>Tolerate:</strong> Accept low-impact, low-likelihood risks.</li>
+                            <li><strong>Treat:</strong> Implement controls to reduce the likelihood or impact of moderate risks (e.g., safety training, regular maintenance).</li>
+                            <li><strong>Terminate:</strong> Eliminate high-severity risks by changing a business process entirely.</li>
+                            <li><strong>Transfer:</strong> For high-impact risks you can't control (fire, major lawsuit), transfer the financial consequence to an insurer. This is the core role of insurance.</li>
+                        </ul>
+                    `
+                },
+                {
+                    step: 'Step 4: Monitor',
+                    title: 'Review and Adapt Continuously',
+                    content: 'Risk management is not a one-time project. Your business and the world around it are constantly changing. Schedule regular reviews (e.g., quarterly) of your risk plan to ensure it remains relevant, effective, and aligned with your growth.'
+                }
+            ];
+            
+            const faqData = [
+                {
+                    question: 'What one piece of advice would you give an MSME entrepreneur about insurance?',
+                    answer: 'Stop viewing insurance as a mandatory cost to be minimized, and start wielding it as a strategic asset to unlock growth. A well-insured business is not just a protected business; it is a more resilient, more creditworthy, and more competitive business. True insurance inclusion means including insurance in your core growth strategy.'
+                },
+                {
+                    question: 'How can insurers, regulators, and partners address the challenges MSMEs face?',
+                    answer: 'It requires a multi-stakeholder action plan. Insurers must innovate with simple, affordable, tech-driven products. Regulators need to create an enabling ecosystem that balances standardization with innovation. Development partners and MSME associations must collaborate on awareness campaigns and build new distribution channels.'
+                },
+                {
+                    question: 'Are bundled financial products (e.g., loan + insurance) a viable approach?',
+                    answer: 'Yes, they are highly viable if executed responsibly. The model must shift from "forced selling" to "integrated buying." This requires total transparency on costs, ensuring the customer has the choice to opt-out, and using technology to create a seamless, empowering digital experience.'
+                },
+                {
+                    question: 'How can group insurance schemes be tailored for MSMEs?',
+                    answer: 'They must be customized for the MSME context. This means offering affordability and flexibility (like monthly premiums), providing holistic digital health platforms (teleconsultations, wellness), and ensuring a low-admin experience for the business owner. Aggregating demand through industry clusters can also unlock better rates.'
+                }
+            ];
+
+            const productGrid = document.getElementById('product-grid');
+            insuranceProducts.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'bg-slate-50 p-6 rounded-lg border border-slate-200 cursor-pointer hover:shadow-lg hover:border-teal-500 transition-all duration-300';
+                card.innerHTML = `
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <p class="text-sm font-semibold text-teal-600">${product.category}</p>
+                            <h4 class="text-xl font-bold text-slate-800 mt-1">${product.title}</h4>
+                        </div>
+                        <div class="text-4xl">${product.icon}</div>
+                    </div>
+                    <div class="accordion-content mt-4">
+                        <p class="text-slate-600">${product.description}</p>
+                        <p class="mt-3 text-sm bg-teal-50 text-teal-800 p-2 rounded-md"><strong>Example:</strong> ${product.example}</p>
+                    </div>
+                `;
+                productGrid.appendChild(card);
+                card.addEventListener('click', () => {
+                    card.querySelector('.accordion-content').classList.toggle('open');
+                });
+            });
+
+            const riskAccordionContainer = document.getElementById('risk-accordion');
+            riskFramework.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'border-b border-slate-200';
+                div.innerHTML = `
+                    <button class="accordion-button w-full flex justify-between items-center text-left py-4 px-2">
+                        <span class="text-lg font-semibold text-slate-800">${item.step}: ${item.title}</span>
+                        <span class="accordion-icon text-2xl text-teal-500 transform transition-transform duration-300">+</span>
+                    </button>
+                    <div class="accordion-content px-2 pb-4">
+                        <p class="text-slate-600">${item.content}</p>
+                    </div>
+                `;
+                riskAccordionContainer.appendChild(div);
+            });
+
+            const faqAccordionContainer = document.getElementById('faq-accordion');
+            faqData.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'border-b border-slate-200 last:border-b-0';
+                div.innerHTML = `
+                    <button class="accordion-button w-full flex justify-between items-center text-left py-4">
+                        <span class="font-medium text-slate-700">${item.question}</span>
+                        <span class="accordion-icon text-xl text-teal-500 transform transition-transform duration-300">+</span>
+                    </button>
+                    <div class="accordion-content pb-4">
+                        <p class="text-slate-600">${item.answer}</p>
+                    </div>
+                `;
+                faqAccordionContainer.appendChild(div);
+            });
+
+            document.querySelectorAll('.accordion-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    const content = button.nextElementSibling;
+                    const icon = button.querySelector('.accordion-icon');
+                    const isOpen = content.classList.contains('open');
+
+                    // Optional: Close other open accordions within the same container
+                    // button.closest('.max-w-3xl').querySelectorAll('.accordion-content.open').forEach(openContent => {
+                    //     if(openContent !== content) {
+                    //         openContent.classList.remove('open');
+                    //         openContent.previousElementSibling.querySelector('.accordion-icon').textContent = '+';
+                    //         openContent.previousElementSibling.querySelector('.accordion-icon').classList.remove('rotate-45');
+                    //     }
+                    // });
+                    
+                    content.classList.toggle('open');
+                    if (isOpen) {
+                        icon.textContent = '+';
+                        icon.classList.remove('rotate-45');
+                    } else {
+                        icon.textContent = '+';
+                        icon.classList.add('rotate-45');
+                    }
+                });
+            });
+
+            const protectionGapCtx = document.getElementById('protectionGapChart').getContext('2d');
+            new Chart(protectionGapCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Underinsured/Uninsured', 'Adequately Insured'],
+                    datasets: [{
+                        data: [97, 3],
+                        backgroundColor: ['#f0f9ff', '#0d9488'], // sky-100, teal-600
+                        borderColor: ['#e0f2fe', '#0f766e'], // sky-200, teal-700
+                        borderWidth: 2,
+                        hoverOffset: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: { label: (context) => `${context.label}: ${context.raw}%` }
+                        },
+                        title: {
+                            display: false,
+                            text: 'MSME Insurance Penetration in India'
+                        }
+                    },
+                    cutout: '60%'
+                }
+            });
+
+            const challengesCtx = document.getElementById('challengesChart').getContext('2d');
+            new Chart(challengesCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Cost Perception', 'Product Complexity', 'Lack of Trust', 'Low Awareness', 'Accessibility'],
+                    datasets: [
+                        {
+                            label: 'India',
+                            data: [85, 78, 75, 90, 65],
+                            backgroundColor: '#64748b', // slate-500
+                            borderColor: '#475569', // slate-600
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Global Dev. Economies',
+                            data: [88, 75, 70, 85, 70],
+                            backgroundColor: '#ccfbf1', // teal-100
+                            borderColor: '#99f6e4', // teal-200
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                             callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += `${context.parsed.y}% impact`;
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { callback: (value) => value + '%' },
+                            title: { display: true, text: 'Severity of Barrier' }
+                        }
+                    }
+                }
+            });
+            
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('nav a');
+            
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 70) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+
+            const cycle = document.getElementById('virtuous-cycle');
+            const cycleObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.querySelectorAll('.fade-in').forEach(el => el.style.opacity = '1');
+                        cycleObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            if (cycle) {
+                cycleObserver.observe(cycle);
+            }
+
+        });
+    </script>
+</body>
+</html>

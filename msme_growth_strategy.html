@@ -14,7 +14,7 @@
     <!-- Visualization & Content Choices: 
         - Feasibility Scenarios: Report Info -> GWP growth. Goal -> Compare scenarios. Viz -> Interactive Bar Chart (Chart.js).
         - Training & Playbook: Report Info -> Detailed user query. Goal -> Organize and explain tactical training steps and sales plays. Viz -> Styled HTML cards with clear headings, lists, and icons to create a scannable, actionable guide for the sales team.
-        - Business Calculator: Report Info -> Key business levers. Goal -> Explore relationships. Viz -> HTML sliders + dynamic Line Chart (Chart.js).
+        - Business Calculator: Report Info -> Key business levers. Goal -> Explore relationships. Viz -> HTML sliders + dynamic Line Chart (Chart.js). Logic updated to make productivity a calculated output, ensuring all inputs affect the projection graph.
     -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
@@ -316,18 +316,19 @@
                 <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 bg-white p-6 rounded-lg shadow-lg">
                     <div class="lg:col-span-2">
                         <h3 class="text-2xl font-bold text-gray-800 mb-4">Business Projection Calculator</h3>
-                        <p class="text-gray-600 mb-6">Adjust the sliders to model different scenarios and see how key business levers impact our ability to reach the ₹50 Crore target.</p>
+                        <p class="text-gray-600 mb-6">Adjust the sliders to model different scenarios and see how key business levers impact the GWP projection.</p>
                         <div class="space-y-6">
                             <div><label for="salespeople" class="font-medium text-gray-700">Target Number of Salespeople: <span id="salespeople-val" class="font-bold text-blue-600">35</span></label><input id="salespeople" type="range" min="10" max="100" value="35" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer calculator-slider"></div>
-                            <div><label for="productivity" class="font-medium text-gray-700">Mature Annual Productivity/Rep: <span id="productivity-val" class="font-bold text-blue-600">₹1.5 Crore</span></label><input id="productivity" type="range" min="15000000" max="100000000" value="15000000" step="500000" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer calculator-slider"></div>
+                            <div><label for="policiesSold" class="font-medium text-gray-700">Policies Sold per Mature Rep/Year: <span id="policiesSold-val" class="font-bold text-blue-600">100</span></label><input id="policiesSold" type="range" min="10" max="250" value="100" step="5" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer calculator-slider"></div>
                             <div><label for="premium" class="font-medium text-gray-700">Average Policy Premium: <span id="premium-val" class="font-bold text-blue-600">₹1,50,000</span></label><input id="premium" type="range" min="50000" max="1000000" value="150000" step="10000" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer calculator-slider"></div>
+                            <div class="bg-blue-50 p-3 rounded-lg text-center"><label class="font-medium text-gray-700">Resulting Mature Annual Productivity/Rep:</label><p id="productivity-val" class="font-bold text-2xl text-blue-700 mt-1">₹1.5 Crore</p></div>
                             <div><label for="conversion" class="font-medium text-gray-700">Quote-to-Bind Ratio: <span id="conversion-val" class="font-bold text-blue-600">25%</span></label><input id="conversion" type="range" min="10" max="50" value="25" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer calculator-slider"></div>
                         </div>
                     </div>
                     <div class="lg:col-span-3 flex flex-col">
                         <div class="grid grid-cols-2 gap-4 mb-4">
-                            <div class="kpi-card p-4"><span id="policies-needed" class="text-3xl font-bold text-gray-800">100</span><p class="mt-1 text-sm text-gray-500">Policies/Mature Rep/Year</p></div>
-                             <div class="kpi-card p-4"><span id="quotes-needed" class="text-3xl font-bold text-gray-800">400</span><p class="mt-1 text-sm text-gray-500">Quotes/Mature Rep/Year</p></div>
+                           <div class="kpi-card p-4"><span id="total-gwp" class="text-3xl font-bold text-gray-800">₹52.5 Cr</span><p class="mt-1 text-sm text-gray-500">Total GWP at Maturity</p></div>
+                           <div class="kpi-card p-4"><span id="quotes-needed" class="text-3xl font-bold text-gray-800">400</span><p class="mt-1 text-sm text-gray-500">Quotes/Mature Rep/Year</p></div>
                         </div>
                         <div class="flex-grow chart-container h-[300px] max-h-[40vh]"><canvas id="projectionChart"></canvas></div>
                          <p id="target-met-text" class="text-center font-semibold text-lg mt-2 text-green-600"></p>
@@ -378,13 +379,10 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
     });
-    // Set initial active state for plan tabs
     document.querySelector('.plan-tab-button[data-target="playbook-content"]').classList.add('active');
 
 
     // --- CHARTS ---
-
-    // 1. Dashboard Profitability Chart
     const profitabilityCtx = document.getElementById('profitabilityChart').getContext('2d');
     new Chart(profitabilityCtx, {
         type: 'doughnut',
@@ -395,7 +393,6 @@ document.addEventListener('DOMContentLoaded', function () {
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Profitability Comparison' } } }
     });
 
-    // 2. Opportunity MSME Chart
     const msmeCtx = document.getElementById('msmeChart').getContext('2d');
     new Chart(msmeCtx, {
         type: 'doughnut',
@@ -406,7 +403,6 @@ document.addEventListener('DOMContentLoaded', function () {
         options: { responsive: true, maintainAspectRatio: false, cutout: '60%', plugins: { legend: { display: false }, title: { display: false } } }
     });
     
-    // 3. Feasibility Scenarios Chart
     const feasibilityCtx = document.getElementById('feasibilityChart').getContext('2d');
     const scenarioData = {
         labels: ['Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5'],
@@ -441,23 +437,24 @@ document.addEventListener('DOMContentLoaded', function () {
         scenarioABtn.classList.replace('bg-blue-600','bg-gray-300'); scenarioABtn.classList.replace('text-white','text-gray-700');
     });
 
-    // 4. Calculator & Projection Chart
+    // --- UPDATED CALCULATOR LOGIC ---
     const calculatorInputs = {
         salespeople: document.getElementById('salespeople'),
-        productivity: document.getElementById('productivity'),
+        policiesSold: document.getElementById('policiesSold'),
         premium: document.getElementById('premium'),
         conversion: document.getElementById('conversion'),
     };
 
     const calculatorValues = {
         salespeople: document.getElementById('salespeople-val'),
+        policiesSold: document.getElementById('policiesSold-val'),
         productivity: document.getElementById('productivity-val'),
         premium: document.getElementById('premium-val'),
         conversion: document.getElementById('conversion-val'),
     };
     
     const calculatorOutputs = {
-        policies: document.getElementById('policies-needed'),
+        totalGWP: document.getElementById('total-gwp'),
         quotes: document.getElementById('quotes-needed'),
         targetMet: document.getElementById('target-met-text'),
     };
@@ -478,33 +475,35 @@ document.addEventListener('DOMContentLoaded', function () {
                 y: { beginAtZero: true, title: { display: true, text: 'Total GWP (in ₹ Crore)' } },
                 x: { title: { display: true, text: 'Years' } }
             },
-            plugins: { title: { display: true, text: 'Path to ₹50 Crore Target' } }
+            plugins: { title: { display: true, text: 'Path to Target' } }
         }
     });
 
     function updateCalculator() {
         const numSalespeople = parseInt(calculatorInputs.salespeople.value);
-        const productivityPerRep = parseInt(calculatorInputs.productivity.value);
+        const policiesSoldPerRep = parseInt(calculatorInputs.policiesSold.value);
         const avgPremium = parseInt(calculatorInputs.premium.value);
         const conversionRatio = parseInt(calculatorInputs.conversion.value) / 100;
-        
+
+        const productivityPerRep = policiesSoldPerRep * avgPremium;
+        const totalMatureGWP = numSalespeople * productivityPerRep;
+        const quotesPerRep = conversionRatio > 0 ? Math.round(policiesSoldPerRep / conversionRatio) : 0;
+
         calculatorValues.salespeople.textContent = numSalespeople;
-        calculatorValues.productivity.textContent = formatCurrency(productivityPerRep);
+        calculatorValues.policiesSold.textContent = policiesSoldPerRep;
         calculatorValues.premium.textContent = `₹${formatNumber(avgPremium)}`;
         calculatorValues.conversion.textContent = `${conversionRatio * 100}%`;
-
-        const policiesPerRep = productivityPerRep > 0 ? Math.round(productivityPerRep / avgPremium) : 0;
-        const quotesPerRep = conversionRatio > 0 ? Math.round(policiesPerRep / conversionRatio) : 0;
-
-        calculatorOutputs.policies.textContent = formatNumber(policiesPerRep);
-        calculatorOutputs.quotes.textContent = formatNumber(quotesPerRep);
         
+        calculatorValues.productivity.textContent = formatCurrency(productivityPerRep);
+        calculatorOutputs.totalGWP.textContent = formatCurrency(totalMatureGWP);
+        calculatorOutputs.quotes.textContent = formatNumber(quotesPerRep);
+
         updateProjectionChart(numSalespeople, productivityPerRep);
     }
     
     function updateProjectionChart(salespeople, productivity) {
         const targetGWP = 500000000;
-        const rampUp = { y1: 0.5, y2: 1.0, y3_plus: productivity / 10000000 };
+        const rampUp = { y1_gwp_fraction: 0.33, y2_gwp_fraction: 0.67 };
         const yearlyHires = Math.ceil(salespeople / 5);
 
         let labels = [];
@@ -527,10 +526,10 @@ document.addEventListener('DOMContentLoaded', function () {
             let annualGWP = 0;
             repCohorts.forEach(cohort => {
                 const age = year - cohort.startYear;
-                let productivityMultiplier = rampUp.y3_plus;
-                if (age === 0) productivityMultiplier = rampUp.y1;
-                if (age === 1) productivityMultiplier = rampUp.y2;
-                annualGWP += cohort.count * productivityMultiplier * 10000000;
+                let effectiveProductivity = productivity;
+                if (age === 0) effectiveProductivity = productivity * rampUp.y1_gwp_fraction;
+                if (age === 1) effectiveProductivity = productivity * rampUp.y2_gwp_fraction;
+                annualGWP += cohort.count * effectiveProductivity;
             });
 
             const gwpInCrore = annualGWP / 10000000;
@@ -543,10 +542,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         
         if (targetMetYear !== -1) {
-             calculatorOutputs.targetMet.textContent = `Target will be met in ~Year ${targetMetYear}.`;
+             calculatorOutputs.targetMet.textContent = `Target could be met in ~Year ${targetMetYear}.`;
              calculatorOutputs.targetMet.className = 'text-center font-semibold text-lg mt-2 text-green-600';
         } else {
-             calculatorOutputs.targetMet.textContent = 'Target may not be met within 7 years.';
+             calculatorOutputs.targetMet.textContent = 'Target may not be met within 7 years with these inputs.';
              calculatorOutputs.targetMet.className = 'text-center font-semibold text-lg mt-2 text-red-600';
         }
 
@@ -555,7 +554,6 @@ document.addEventListener('DOMContentLoaded', function () {
         projectionChart.data.datasets[1].data = targetData;
         projectionChart.update();
     }
-
 
     Object.values(calculatorInputs).forEach(input => {
         input.addEventListener('input', updateCalculator);

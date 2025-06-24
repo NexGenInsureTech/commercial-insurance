@@ -10,11 +10,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Chosen Palette: Warm Neutrals & Professional Blue -->
-    <!-- Application Structure Plan: A top-navigation driven SPA with four main sections: 1) 'Dashboard' 2) 'The Opportunity' 3) 'The Strategic Plan' with nested tabs for Blueprint, GTM, Team Development, Performance Management, and now 'Training & Playbook'. 4) 'Roadmap & Calculator'. This structure consolidates all execution-focused content under one logical area. -->
+    <!-- Application Structure Plan: Added a "Blitzscaling Plan" tab for the hyper-aggressive 12-month scenario. This isolates the high-risk strategy from the more sustainable multi-year plans, providing clear strategic options. -->
     <!-- Visualization & Content Choices: 
-        - Feasibility Scenarios: Report Info -> GWP growth. Goal -> Compare scenarios. Viz -> Interactive Bar Chart (Chart.js).
-        - Training & Playbook: Report Info -> Detailed user query. Goal -> Organize and explain tactical training steps and sales plays. Viz -> Styled HTML cards with clear headings, lists, and icons to create a scannable, actionable guide for the sales team.
-        - Business Calculator: Report Info -> Key business levers. Goal -> Explore relationships. Viz -> HTML sliders + dynamic Line Chart (Chart.js). Logic updated to make productivity a calculated output, ensuring all inputs affect the projection graph.
+        - Calculator Logic Fix: Re-engineered the calculator so that granular activities (quotes, premium, conversion) drive the productivity and GWP projection, making all sliders impactful.
+        - Blitzscaling Plan: Used styled HTML cards and a timeline to present the aggressive 12-month strategy, focusing on clarity and actionability for a high-stakes scenario.
     -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
@@ -54,7 +53,6 @@
         <main>
             <!-- Dashboard Section -->
             <section id="dashboard" class="page-content py-8">
-                <!-- Dashboard content remains the same -->
                  <div class="text-center mb-12">
                      <h2 class="text-3xl font-bold text-gray-800">Executive Dashboard</h2>
                      <p class="mt-2 text-lg text-gray-600 max-w-3xl mx-auto">This dashboard provides a high-level overview of the strategic goal, the core problem, the proposed solution, and the key performance indicators that will drive our success. It's the "at-a-glance" summary of our path to ₹50 Crore.</p>
@@ -88,7 +86,6 @@
 
             <!-- The Opportunity Section -->
             <section id="opportunity" class="page-content hidden py-8">
-                <!-- Opportunity content remains the same -->
                 <div class="text-center mb-12">
                      <h2 class="text-3xl font-bold text-gray-800">The Market Opportunity</h2>
                      <p class="mt-2 text-lg text-gray-600 max-w-3xl mx-auto">This section explores the "why" behind our strategic pivot. It visualizes the significant under-penetration in the Indian insurance market, particularly within the MSME segment, which provides the foundation for our large-scale growth ambition.</p>
@@ -131,7 +128,8 @@
                  <div class="bg-white p-6 rounded-lg shadow-lg">
                     <div class="mb-6 border-b border-gray-200">
                         <div id="plan-tabs" class="flex flex-wrap -mb-px text-sm font-medium text-center text-gray-500">
-                            <button data-target="playbook-content" class="plan-tab-button inline-block p-4 border-b-2 rounded-t-lg active">Training & Playbook</button>
+                            <button data-target="blitz-content" class="plan-tab-button inline-block p-4 border-b-2 rounded-t-lg active">Blitzscaling Plan (12 Months)</button>
+                            <button data-target="playbook-content" class="plan-tab-button inline-block p-4 border-b-2 rounded-t-lg">Training & Playbook</button>
                             <button data-target="blueprint-content" class="plan-tab-button inline-block p-4 border-b-2 rounded-t-lg">Execution Blueprint</button>
                             <button data-target="gtm-content" class="plan-tab-button inline-block p-4 border-b-2 rounded-t-lg">Go-to-Market Strategy</button>
                             <button data-target="training-content" class="plan-tab-button inline-block p-4 border-b-2 rounded-t-lg">Team Development</button>
@@ -140,8 +138,80 @@
                     </div>
                     
                     <div id="plan-content-container">
+                        <!-- NEW Blitzscaling Plan Content -->
+                        <div id="blitz-content" class="plan-content">
+                             <h3 class="text-2xl font-bold text-red-700 mb-2">The Blitzscaling Plan: ₹50 Crore in 12 Months</h3>
+                             <p class="text-gray-600 mb-6">This is a high-risk, high-reward strategy that deviates significantly from the sustainable growth model. It requires massive upfront investment, flawless execution, and a focus on acquiring business rather than building from scratch.</p>
+
+                             <div class="space-y-8">
+                                <div class="playbook-card border-l-4 border-red-500">
+                                    <h4 class="font-bold text-lg text-red-800">The Core Challenge</h4>
+                                    <p class="text-gray-700">A 12-month timeline is too short to build a sales engine from the ground up. The only viable path is to **acquire a book of business** by hiring senior commercial insurance salespeople who can bring existing client relationships with them. The strategy shifts from organic growth to talent acquisition.</p>
+                                </div>
+
+                                <div>
+                                    <h4 class="text-xl font-bold text-gray-800 mb-4">The 12-Month Battle Plan</h4>
+                                     <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                                        <div class="playbook-card">
+                                            <h5 class="font-bold text-lg text-gray-800">Manpower & Hiring</h5>
+                                            <ul class="list-disc list-inside text-sm space-y-1 mt-2">
+                                                <li>Hire **15-20 senior reps** with proven books of business.</li>
+                                                <li>Recruit 3 experienced Team Leaders to manage pods.</li>
+                                                <li>Entire team must be hired and onboarded in **Months 1-2**.</li>
+                                            </ul>
+                                        </div>
+                                        <div class="playbook-card">
+                                            <h5 class="font-bold text-lg text-gray-800">Remuneration</h5>
+                                            <ul class="list-disc list-inside text-sm space-y-1 mt-2">
+                                                <li>Offer **highly competitive base salaries + significant sign-on bonuses**.</li>
+                                                <li>First-year guarantees based on the size and quality of the transferred book.</li>
+                                                <li>Aggressive GWP-based commission structure.</li>
+                                            </ul>
+                                        </div>
+                                         <div class="playbook-card">
+                                            <h5 class="font-bold text-lg text-gray-800">GTM & Targeting</h5>
+                                            <ul class="list-disc list-inside text-sm space-y-1 mt-2">
+                                                <li>Target **mid-market and lower corporate clients** (₹5L+ premium).</li>
+                                                <li>Focus on reps' existing industry specializations (e.g., Manufacturing, Logistics).</li>
+                                                <li>Expand geographic focus to Delhi NCR & Pune.</li>
+                                            </ul>
+                                        </div>
+                                        <div class="playbook-card">
+                                            <h5 class="font-bold text-lg text-gray-800">Monitoring</h5>
+                                            <ul class="list-disc list-inside text-sm space-y-1 mt-2">
+                                                <li>**Weekly GWP Review** is the primary meeting.</li>
+                                                <li>Focus solely on pipeline conversion and client transition.</li>
+                                                <li>Leadership provides support to remove roadblocks, not long-term coaching.</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                     <h4 class="text-xl font-bold text-gray-800 mb-4">Execution Timeline</h4>
+                                     <div class="relative pl-6">
+                                        <div class="absolute left-0 top-0 h-full w-0.5 bg-gray-300"></div>
+                                        <div class="relative mb-6">
+                                            <div class="absolute -left-[37px] top-1 w-6 h-6 rounded-full bg-red-500 ring-4 ring-white"></div>
+                                            <h5 class="font-bold">Months 1-2: Talent Acquisition</h5>
+                                            <p class="text-sm text-gray-600">All hiring must be completed. Intense onboarding focused on product specifics and CRM use.</p>
+                                        </div>
+                                        <div class="relative mb-6">
+                                             <div class="absolute -left-[37px] top-1 w-6 h-6 rounded-full bg-red-500 ring-4 ring-white"></div>
+                                            <h5 class="font-bold">Months 3-6: Book of Business Transition</h5>
+                                            <p class="text-sm text-gray-600">Primary focus is on transitioning the reps' existing clients. Target: achieve ₹20 Crore (40%) of the GWP goal here.</p>
+                                        </div>
+                                         <div class="relative">
+                                             <div class="absolute -left-[37px] top-1 w-6 h-6 rounded-full bg-red-500 ring-4 ring-white"></div>
+                                            <h5 class="font-bold">Months 7-12: Aggressive New Business Growth</h5>
+                                            <p class="text-sm text-gray-600">With the transferred book as a base, the team sprints to acquire new clients to close the remaining gap. Target: achieve ₹30 Crore (60%) in this phase.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Training & Playbook Content -->
-                        <div id="playbook-content" class="plan-content">
+                        <div id="playbook-content" class="plan-content hidden">
                             <h3 class="text-2xl font-bold text-gray-800 mb-2">Training & Sales Playbook</h3>
                             <p class="text-gray-600 mb-6">A practical guide to prepare the team for the challenges ahead, covering the critical first year and core product sales motions.</p>
                             
@@ -316,19 +386,24 @@
                 <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 bg-white p-6 rounded-lg shadow-lg">
                     <div class="lg:col-span-2">
                         <h3 class="text-2xl font-bold text-gray-800 mb-4">Business Projection Calculator</h3>
-                        <p class="text-gray-600 mb-6">Adjust the sliders to model different scenarios and see how key business levers impact the GWP projection.</p>
+                        <p class="text-gray-600 mb-6">Adjust the sliders to model different scenarios and see how key business levers impact our ability to reach the ₹50 Crore target.</p>
                         <div class="space-y-6">
                             <div><label for="salespeople" class="font-medium text-gray-700">Target Number of Salespeople: <span id="salespeople-val" class="font-bold text-blue-600">35</span></label><input id="salespeople" type="range" min="10" max="100" value="35" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer calculator-slider"></div>
-                            <div><label for="policiesSold" class="font-medium text-gray-700">Policies Sold per Mature Rep/Year: <span id="policiesSold-val" class="font-bold text-blue-600">100</span></label><input id="policiesSold" type="range" min="10" max="15000" value="100" step="5" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer calculator-slider"></div>
-                            <div><label for="premium" class="font-medium text-gray-700">Average Policy Premium: <span id="premium-val" class="font-bold text-blue-600">₹1,50,000</span></label><input id="premium" type="range" min="5000" max="2000000" value="150000" step="10000" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer calculator-slider"></div>
-                            <div class="bg-blue-50 p-3 rounded-lg text-center"><label class="font-medium text-gray-700">Resulting Mature Annual Productivity/Rep:</label><p id="productivity-val" class="font-bold text-2xl text-blue-700 mt-1">₹1.5 Crore</p></div>
+                            <div><label for="quotes" class="font-medium text-gray-700">Quotes Generated/Rep/Year: <span id="quotes-val" class="font-bold text-blue-600">400</span></label><input id="quotes" type="range" min="50" max="10000" value="400" step="10" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer calculator-slider"></div>
+                            <div><label for="premium" class="font-medium text-gray-700">Average Policy Premium: <span id="premium-val" class="font-bold text-blue-600">₹1,50,000</span></label><input id="premium" type="range" min="5000" max="1000000" value="150000" step="5000" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer calculator-slider"></div>
                             <div><label for="conversion" class="font-medium text-gray-700">Quote-to-Bind Ratio: <span id="conversion-val" class="font-bold text-blue-600">25%</span></label><input id="conversion" type="range" min="10" max="50" value="25" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer calculator-slider"></div>
                         </div>
                     </div>
                     <div class="lg:col-span-3 flex flex-col">
                         <div class="grid grid-cols-2 gap-4 mb-4">
-                           <div class="kpi-card p-4"><span id="total-gwp" class="text-3xl font-bold text-gray-800">₹52.5 Cr</span><p class="mt-1 text-sm text-gray-500">Total GWP at Maturity</p></div>
-                           <div class="kpi-card p-4"><span id="quotes-needed" class="text-3xl font-bold text-gray-800">400</span><p class="mt-1 text-sm text-gray-500">Quotes/Mature Rep/Year</p></div>
+                            <div class="kpi-card p-4">
+                                <span id="policies-needed" class="text-3xl font-bold text-gray-800">100</span>
+                                <p class="mt-1 text-sm text-gray-500">Policies/Mature Rep/Year</p>
+                            </div>
+                             <div class="kpi-card p-4">
+                                <span id="productivity-val-output" class="text-3xl font-bold text-gray-800">₹1.50 Crore</span>
+                                <p class="mt-1 text-sm text-gray-500">Calculated Productivity/Rep</p>
+                            </div>
                         </div>
                         <div class="flex-grow chart-container h-[300px] max-h-[40vh]"><canvas id="projectionChart"></canvas></div>
                          <p id="target-met-text" class="text-center font-semibold text-lg mt-2 text-green-600"></p>
@@ -379,7 +454,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
     });
-    document.querySelector('.plan-tab-button[data-target="playbook-content"]').classList.add('active');
+    document.querySelector('.plan-tab-button[data-target="blitz-content"]').classList.add('active');
 
 
     // --- CHARTS ---
@@ -413,11 +488,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const feasibilityChart = new Chart(feasibilityCtx, {
         type: 'bar',
         data: { labels: scenarioData.labels, datasets: [scenarioData.scenarioA] },
-        options: {
-            responsive: true, maintainAspectRatio: false,
-            scales: { y: { beginAtZero: true, title: { display: true, text: 'Total GWP (in ₹ Crore)' } } },
-            plugins: { legend: { position: 'top' } }
-        }
+        options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, title: { display: true, text: 'Total GWP (in ₹ Crore)' } } }, plugins: { legend: { position: 'top' } } }
     });
     
     const scenarioABtn = document.getElementById('scenarioA-btn');
@@ -437,73 +508,58 @@ document.addEventListener('DOMContentLoaded', function () {
         scenarioABtn.classList.replace('bg-blue-600','bg-gray-300'); scenarioABtn.classList.replace('text-white','text-gray-700');
     });
 
-    // --- UPDATED CALCULATOR LOGIC ---
+    // 4. Calculator & Projection Chart
     const calculatorInputs = {
         salespeople: document.getElementById('salespeople'),
-        policiesSold: document.getElementById('policiesSold'),
+        quotes: document.getElementById('quotes'),
         premium: document.getElementById('premium'),
         conversion: document.getElementById('conversion'),
     };
 
     const calculatorValues = {
         salespeople: document.getElementById('salespeople-val'),
-        policiesSold: document.getElementById('policiesSold-val'),
-        productivity: document.getElementById('productivity-val'),
+        quotes: document.getElementById('quotes-val'),
         premium: document.getElementById('premium-val'),
         conversion: document.getElementById('conversion-val'),
     };
     
     const calculatorOutputs = {
-        totalGWP: document.getElementById('total-gwp'),
-        quotes: document.getElementById('quotes-needed'),
+        policies: document.getElementById('policies-needed'),
+        productivity: document.getElementById('productivity-val-output'),
         targetMet: document.getElementById('target-met-text'),
     };
 
     const projectionCtx = document.getElementById('projectionChart').getContext('2d');
     const projectionChart = new Chart(projectionCtx, {
         type: 'line',
-        data: {
-            labels: [],
-            datasets: [
-                { label: 'Projected GWP (in ₹ Crore)', data: [], borderColor: '#10B981', backgroundColor: 'rgba(16, 185, 129, 0.1)', fill: true, tension: 0.4 },
-                { label: 'Target GWP (₹50 Cr)', data: [], borderColor: '#EF4444', borderDash: [5, 5], fill: false, pointRadius: 0 }
-            ]
-        },
-        options: {
-            responsive: true, maintainAspectRatio: false,
-            scales: {
-                y: { beginAtZero: true, title: { display: true, text: 'Total GWP (in ₹ Crore)' } },
-                x: { title: { display: true, text: 'Years' } }
-            },
-            plugins: { title: { display: true, text: 'Path to Target' } }
-        }
+        data: { labels: [], datasets: [ { label: 'Projected GWP (in ₹ Crore)', data: [], borderColor: '#10B981', backgroundColor: 'rgba(16, 185, 129, 0.1)', fill: true, tension: 0.4 }, { label: 'Target GWP (₹50 Cr)', data: [], borderColor: '#EF4444', borderDash: [5, 5], fill: false, pointRadius: 0 } ] },
+        options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, title: { display: true, text: 'Total GWP (in ₹ Crore)' } }, x: { title: { display: true, text: 'Years' } } }, plugins: { title: { display: true, text: 'Path to ₹50 Crore Target' } } }
     });
 
     function updateCalculator() {
         const numSalespeople = parseInt(calculatorInputs.salespeople.value);
-        const policiesSoldPerRep = parseInt(calculatorInputs.policiesSold.value);
+        const quotesPerRep = parseInt(calculatorInputs.quotes.value);
         const avgPremium = parseInt(calculatorInputs.premium.value);
         const conversionRatio = parseInt(calculatorInputs.conversion.value) / 100;
-
-        const productivityPerRep = policiesSoldPerRep * avgPremium;
-        const totalMatureGWP = numSalespeople * productivityPerRep;
-        const quotesPerRep = conversionRatio > 0 ? Math.round(policiesSoldPerRep / conversionRatio) : 0;
-
+        
         calculatorValues.salespeople.textContent = numSalespeople;
-        calculatorValues.policiesSold.textContent = policiesSoldPerRep;
+        calculatorValues.quotes.textContent = formatNumber(quotesPerRep);
         calculatorValues.premium.textContent = `₹${formatNumber(avgPremium)}`;
         calculatorValues.conversion.textContent = `${conversionRatio * 100}%`;
-        
-        calculatorValues.productivity.textContent = formatCurrency(productivityPerRep);
-        calculatorOutputs.totalGWP.textContent = formatCurrency(totalMatureGWP);
-        calculatorOutputs.quotes.textContent = formatNumber(quotesPerRep);
 
+        const policiesPerRep = quotesPerRep * conversionRatio;
+        const productivityPerRep = policiesPerRep * avgPremium;
+
+        calculatorOutputs.policies.textContent = formatNumber(Math.round(policiesPerRep));
+        calculatorOutputs.productivity.textContent = formatCurrency(productivityPerRep);
+        
         updateProjectionChart(numSalespeople, productivityPerRep);
     }
     
     function updateProjectionChart(salespeople, productivity) {
         const targetGWP = 500000000;
-        const rampUp = { y1_gwp_fraction: 0.33, y2_gwp_fraction: 0.67 };
+        const rampUp = { y1: 0.33, y2: 0.66, y3_plus: productivity };
+
         const yearlyHires = Math.ceil(salespeople / 5);
 
         let labels = [];
@@ -526,10 +582,12 @@ document.addEventListener('DOMContentLoaded', function () {
             let annualGWP = 0;
             repCohorts.forEach(cohort => {
                 const age = year - cohort.startYear;
-                let effectiveProductivity = productivity;
-                if (age === 0) effectiveProductivity = productivity * rampUp.y1_gwp_fraction;
-                if (age === 1) effectiveProductivity = productivity * rampUp.y2_gwp_fraction;
-                annualGWP += cohort.count * effectiveProductivity;
+                let productivityMultiplier;
+                if (age === 0) productivityMultiplier = rampUp.y1;
+                else if (age === 1) productivityMultiplier = rampUp.y2;
+                else productivityMultiplier = 1;
+                
+                annualGWP += cohort.count * (rampUp.y3_plus * productivityMultiplier);
             });
 
             const gwpInCrore = annualGWP / 10000000;
@@ -542,10 +600,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         
         if (targetMetYear !== -1) {
-             calculatorOutputs.targetMet.textContent = `Target could be met in ~Year ${targetMetYear}.`;
+             calculatorOutputs.targetMet.textContent = `Target will be met in ~Year ${targetMetYear}.`;
              calculatorOutputs.targetMet.className = 'text-center font-semibold text-lg mt-2 text-green-600';
         } else {
-             calculatorOutputs.targetMet.textContent = 'Target may not be met within 7 years with these inputs.';
+             calculatorOutputs.targetMet.textContent = 'Target may not be met within 7 years.';
              calculatorOutputs.targetMet.className = 'text-center font-semibold text-lg mt-2 text-red-600';
         }
 
@@ -554,6 +612,7 @@ document.addEventListener('DOMContentLoaded', function () {
         projectionChart.data.datasets[1].data = targetData;
         projectionChart.update();
     }
+
 
     Object.values(calculatorInputs).forEach(input => {
         input.addEventListener('input', updateCalculator);

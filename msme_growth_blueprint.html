@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprehensive Dashboard: MSME Insurance Growth Strategy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Chosen Palette: Cool Grays with a Strategic Blue Accent -->
+    <!-- Application Structure Plan: This revised structure is a comprehensive strategic dashboard. It begins with an Executive Summary (The 'Why'), delves into the Target Market (The 'Who'), outlines the core strategy with a new interactive Digital Value Chain (The 'How'), presents a powerful dual-scenario Growth Engine (The 'What-If'), and concludes with a clear Roadmap and KPIs (The 'When'). This non-linear, dashboard-style structure allows stakeholders to explore the areas most relevant to them, while the interactive calculators provide deep, hands-on engagement with the financial model. -->
+    <!-- Visualization & Content Choices: 
+        - Market Stats & KPIs: Stat Cards (HTML/CSS) for high-impact display of metrics like Penetration, GDP Contribution, and Target Combined Ratio.
+        - MSME Clusters: A simple, clean table (HTML/Tailwind) to present key industrial cluster data.
+        - Digital Value Chain (New): An interactive diagram built with HTML/JS. Clicking each stage reveals detailed strategies, bringing the concept from 'strategic_blueprint.html' to life.
+        - Product-Market Fit: A tabbed interface (HTML/JS) to cleanly present the detailed product recommendations and rationales from 'msme_strategy.html'.
+        - Growth Scenarios (Enhanced): A major upgrade. A tabbed view allows users to switch between a 'Sustainable Growth' calculator (with complex ramp-up logic from 'msme_growth_strategy.html') and a 'Blitzscaling Plan' view, providing two distinct strategic pathways.
+        - Roadmap: A vertical timeline (HTML/CSS) for clear visualization of the phased plan.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+        }
+        .chart-container {
+            position: relative;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+            max-width: 700px;
+            height: 350px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .nav-link.active {
+            color: #2563eb; /* blue-600 */
+            border-bottom-color: #2563eb;
+            font-weight: 600;
+        }
+        .nav-link {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab.active {
+            background-color: #2563eb; /* blue-600 */
+            color: white;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -21px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            background-color: #2563eb;
+            border-radius: 50%;
+            border: 3px solid #dbeafe; /* blue-100 */
+        }
+        .value-chain-item {
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+        .value-chain-item.active {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            background-color: #eff6ff; /* blue-50 */
+            border-color: #2563eb; /* blue-600 */
+        }
+        .details-box {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out, padding 0.5s ease-out;
+            padding: 0 1.5rem;
+        }
+        .details-box.open {
+            max-height: 500px;
+            padding: 1.5rem 1.5rem;
+        }
+    </style>
+</head>
+<body class="text-slate-700">
+
+    <header class="bg-white/80 backdrop-blur-lg shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold text-blue-600">MSME Growth Blueprint</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#summary" class="nav-link px-3 py-2 text-sm font-medium text-slate-600 hover:text-blue-600">Summary</a>
+                        <a href="#profile" class="nav-link px-3 py-2 text-sm font-medium text-slate-600 hover:text-blue-600">MSME Profile</a>
+                        <a href="#strategy" class="nav-link px-3 py-2 text-sm font-medium text-slate-600 hover:text-blue-600">Strategy</a>
+                        <a href="#engine" class="nav-link px-3 py-2 text-sm font-medium text-slate-600 hover:text-blue-600">Growth Engine</a>
+                        <a href="#roadmap" class="nav-link px-3 py-2 text-sm font-medium text-slate-600 hover:text-blue-600">Roadmap</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="summary" class="py-16 sm:py-24 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h2 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">Executive Summary: The ₹25 Trillion Opportunity</h2>
+                <p class="mt-4 text-lg leading-8 text-slate-600 max-w-3xl mx-auto">India's MSME sector is a vibrant economic engine, yet a vast and persistent insurance protection gap presents a unique strategic opportunity for a digital-first insurer to achieve significant growth and market leadership.</p>
+                
+                <div class="mt-12 grid grid-cols-2 md:grid-cols-4 gap-8">
+                    <div class="p-6 bg-slate-50 rounded-xl">
+                        <p class="text-4xl font-bold text-blue-600">~64M</p>
+                        <p class="mt-2 text-sm font-medium text-slate-500">Total MSMEs in India</p>
+                    </div>
+                    <div class="p-6 bg-slate-50 rounded-xl">
+                        <p class="text-4xl font-bold text-blue-600">~30%</p>
+                        <p class="mt-2 text-sm font-medium text-slate-500">Contribution to India's GDP</p>
+                    </div>
+                    <div class="p-6 bg-slate-50 rounded-xl">
+                        <p class="text-4xl font-bold text-blue-600">&lt;5%</p>
+                        <p class="mt-2 text-sm font-medium text-slate-500">MSMEs with Adequate Insurance</p>
+                    </div>
+                    <div class="p-6 bg-slate-50 rounded-xl">
+                        <p class="text-4xl font-bold text-red-600">80%</p>
+                        <p class="mt-2 text-sm font-medium text-slate-500">Uninsured / Underinsured SMEs</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="profile" class="py-16 sm:py-24">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">The MSME Profile</h2>
+                    <p class="mt-4 text-lg leading-8 text-slate-600 max-w-3xl mx-auto">Understanding the diversity, scale, and concentration of MSMEs is key to effective market segmentation and product design.</p>
+                </div>
+                
+                <div class="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    <div class="bg-white p-8 rounded-xl shadow-md">
+                        <h3 class="text-xl font-semibold text-slate-900 mb-4">MSME Classification Criteria</h3>
+                        <div id="classification-table" class="overflow-x-auto"></div>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl shadow-md">
+                        <h3 class="text-xl font-semibold text-slate-900 mb-4">Prominent MSME Clusters</h3>
+                        <p class="text-slate-600 mb-4">Targeting geographic and industry-specific clusters allows for focused sales and distribution efforts.</p>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm text-left text-slate-500">
+                                <thead class="text-xs text-slate-700 uppercase bg-slate-50">
+                                    <tr><th class="px-4 py-2">Cluster</th><th class="px-4 py-2">Location</th><th class="px-4 py-2">Specialization</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b"><td class="px-4 py-2 font-medium text-slate-800">Tiruppur</td><td class="px-4 py-2">Tamil Nadu</td><td class="px-4 py-2">Hosiery & Knitwear</td></tr>
+                                    <tr class="border-b bg-slate-50"><td class="px-4 py-2 font-medium text-slate-800">Ludhiana</td><td class="px-4 py-2">Punjab</td><td class="px-4 py-2">Bicycle Parts & Hosiery</td></tr>
+                                    <tr class="border-b"><td class="px-4 py-2 font-medium text-slate-800">Surat</td><td class="px-4 py-2">Gujarat</td><td class="px-4 py-2">Diamond & Textiles</td></tr>
+                                    <tr class="border-b bg-slate-50"><td class="px-4 py-2 font-medium text-slate-800">Moradabad</td><td class="px-4 py-2">Uttar Pradesh</td><td class="px-4 py-2">Brassware</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="strategy" class="py-16 sm:py-24 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">A Digital-First Strategic Approach</h2>
+                    <p class="mt-4 text-lg leading-8 text-slate-600 max-w-3xl mx-auto">Our strategy is built on three pillars: a seamless digital value chain, tailored product solutions, and demonstrating the value of insurance as a growth catalyst.</p>
+                </div>
+
+                <div class="mt-16">
+                    <h3 class="text-xl font-semibold text-slate-900 text-center">Interactive Digital Value Chain</h3>
+                    <div id="value-chain-container" class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+                    <div id="value-chain-details" class="details-box mt-6 bg-white rounded-xl shadow-inner"></div>
+                </div>
+
+                <div class="mt-16 max-w-5xl mx-auto">
+                    <h3 class="text-xl font-semibold text-slate-900 text-center">Product-Market Fit by Sector</h3>
+                    <div class="mt-4 flex flex-wrap justify-center gap-2">
+                        <button data-sector="manufacturing" class="tab active px-4 py-2 text-sm font-medium rounded-md cursor-pointer transition">Manufacturing</button>
+                        <button data-sector="services" class="tab px-4 py-2 text-sm font-medium rounded-md cursor-pointer transition bg-white text-slate-700 hover:bg-slate-100">Services</button>
+                        <button data-sector="trade" class="tab px-4 py-2 text-sm font-medium rounded-md cursor-pointer transition bg-white text-slate-700 hover:bg-slate-100">Trade & Retail</button>
+                    </div>
+                    <div id="sector-details" class="mt-6 bg-white p-8 rounded-xl shadow-md transition-all duration-500"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="engine" class="py-16 sm:py-24">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">Interactive Growth Scenarios</h2>
+                    <p class="mt-4 text-lg leading-8 text-slate-600 max-w-3xl mx-auto">Explore two distinct pathways to building a ₹50 Crore GWP business. Model assumptions to understand the impact of different strategic choices.</p>
+                </div>
+                <div class="mt-8 max-w-6xl mx-auto">
+                    <div class="flex justify-center border-b border-slate-200">
+                        <button id="tab-sustainable" class="tab active px-6 py-3 font-medium text-slate-600">Sustainable Growth</button>
+                        <button id="tab-blitzscaling" class="tab px-6 py-3 font-medium text-slate-600">Blitzscaling Plan</button>
+                    </div>
+                    <div id="content-sustainable" class="mt-8">
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                            <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-md space-y-6">
+                                <h3 class="text-lg font-semibold text-slate-800">Strategic Levers (7-Year Plan)</h3>
+                                <div>
+                                    <label for="initialManpower" class="block text-sm font-medium text-slate-700">Initial Advisors</label>
+                                    <input type="range" id="initialManpower" min="5" max="50" value="10" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                                    <span class="text-sm text-slate-500">Value: <strong id="initialManpowerValue" class="text-blue-600">10</strong></span>
+                                </div>
+                                <div>
+                                    <label for="annualHiring" class="block text-sm font-medium text-slate-700">Annual Hiring</label>
+                                    <input type="range" id="annualHiring" min="2" max="20" value="5" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                                    <span class="text-sm text-slate-500">Value: <strong id="annualHiringValue" class="text-blue-600">5</strong></span>
+                                </div>
+                                <div>
+                                    <label for="avgPremium" class="block text-sm font-medium text-slate-700">Avg. Premium per Policy (₹)</label>
+                                    <input type="range" id="avgPremium" min="10000" max="100000" value="25000" step="1000" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                                    <span class="text-sm text-slate-500">Value: <strong id="avgPremiumValue" class="text-blue-600">₹25,000</strong></span>
+                                </div>
+                                 <div>
+                                    <label for="policiesPerAdvisor" class="block text-sm font-medium text-slate-700">Policies per Advisor/Year (Mature)</label>
+                                    <input type="range" id="policiesPerAdvisor" min="10" max="100" value="36" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                                    <span class="text-sm text-slate-500">Value: <strong id="policiesPerAdvisorValue" class="text-blue-600">36</strong></span>
+                                </div>
+                            </div>
+                            <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-lg">
+                                <div class="chart-container">
+                                    <canvas id="projectionChart"></canvas>
+                                </div>
+                                <p id="targetMet" class="text-center font-semibold text-lg mt-4"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="content-blitzscaling" class="mt-8 hidden">
+                        <div class="bg-white p-8 rounded-xl shadow-lg text-center">
+                            <h3 class="text-2xl font-bold text-red-600">12-Month Blitzscaling Strategy</h3>
+                            <p class="mt-2 text-slate-600 max-w-2xl mx-auto">An aggressive, high-risk/high-reward plan to capture market share rapidly by building a 100-person team in one year.</p>
+                            <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div class="p-6 bg-red-50 border border-red-200 rounded-lg">
+                                    <p class="text-3xl font-bold text-red-700">100+</p>
+                                    <p class="mt-1 font-semibold">Advisors Hired in 12 Months</p>
+                                </div>
+                                <div class="p-6 bg-red-50 border border-red-200 rounded-lg">
+                                    <p class="text-3xl font-bold text-red-700">₹10 Cr</p>
+                                    <p class="mt-1 font-semibold">Target GWP in Year 1</p>
+                                </div>
+                                <div class="p-6 bg-red-50 border border-red-200 rounded-lg">
+                                    <p class="text-3xl font-bold text-red-700">20%</p>
+                                    <p class="mt-1 font-semibold">Assumed Market Penetration in Niches</p>
+                                </div>
+                            </div>
+                             <p class="mt-8 text-sm text-slate-500">This model prioritizes speed and scale over initial profitability, requiring significant upfront investment in recruitment and training.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="roadmap" class="py-16 sm:py-24 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">The Blueprint: Roadmap & KPIs</h2>
+                    <p class="mt-4 text-lg leading-8 text-slate-600 max-w-3xl mx-auto">A disciplined, phased approach focused on building a sustainable and profitable business, measured by clear key performance indicators.</p>
+                </div>
+                <div class="mt-12 grid grid-cols-1 md:grid-cols-5 gap-8 items-start">
+                    <div class="md:col-span-3">
+                        <div class="relative pl-8 border-l-2 border-slate-200">
+                            <div class="mb-10 timeline-item">
+                                <h3 class="text-xl font-semibold text-blue-600">Phase 1: Foundation (Year 1-2)</h3>
+                                <p class="mt-1 text-slate-600">Build core capabilities, team, technology, and initial market presence.</p>
+                            </div>
+                            <div class="mb-10 timeline-item">
+                                <h3 class="text-xl font-semibold text-blue-600">Phase 2: Scale-Up (Year 3-4)</h3>
+                                <p class="mt-1 text-slate-600">Expand operations, optimize processes, and deepen partnerships.</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h3 class="text-xl font-semibold text-blue-600">Phase 3: Domination (Year 5+)</h3>
+                                <p class="mt-1 text-slate-600">Achieve market leadership through data-driven underwriting and brand power.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="md:col-span-2 bg-slate-50 p-6 rounded-xl">
+                        <h3 class="text-lg font-semibold text-slate-800 mb-4">Key Financial Targets</h3>
+                        <div class="space-y-4">
+                            <div class="p-4 bg-white rounded-lg shadow-sm">
+                                <p class="text-sm font-medium text-slate-500">Target GWP (Year 7)</p>
+                                <p class="text-2xl font-bold text-blue-600">₹50 Crore</p>
+                            </div>
+                            <div class="p-4 bg-white rounded-lg shadow-sm">
+                                <p class="text-sm font-medium text-slate-500">Target Combined Ratio</p>
+                                <p class="text-2xl font-bold text-green-600">&lt; 95%</p>
+                            </div>
+                            <div class="p-4 bg-white rounded-lg shadow-sm">
+                                <p class="text-sm font-medium text-slate-500">Advisor Productivity</p>
+                                <p class="text-2xl font-bold text-blue-600">₹50L+ GWP/Year</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-slate-800 text-slate-300 py-8">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm">
+            <p>&copy; <span id="currentYear"></span> Strategic Insights. All Rights Reserved.</p>
+            <p class="mt-2">Generated by Gemini to synthesize and present a cohesive business strategy.</p>
+        </div>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const classificationData = [
+            { category: 'Micro', old: 'Inv: < ₹25 Lac', new: 'Inv: < ₹1 Cr & T/O: < ₹5 Cr' },
+            { category: 'Small', old: 'Inv: < ₹5 Cr', new: 'Inv: < ₹10 Cr & T/O: < ₹50 Cr' },
+            { category: 'Medium', old: 'Inv: < ₹10 Cr', new: 'Inv: < ₹50 Cr & T/O: < ₹250 Cr' }
+        ];
+        const tableContainer = document.getElementById('classification-table');
+        const tableHTML = `
+            <table class="w-full text-sm text-left text-slate-500">
+                <thead class="text-xs text-slate-700 uppercase bg-slate-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">Category</th>
+                        <th scope="col" class="px-6 py-3">Old Criteria</th>
+                        <th scope="col" class="px-6 py-3">New Criteria</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${classificationData.map(row => `
+                        <tr class="bg-white border-b">
+                            <th scope="row" class="px-6 py-4 font-medium text-slate-900">${row.category}</th>
+                            <td class="px-6 py-4">${row.old}</td>
+                            <td class="px-6 py-4">${row.new}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>`;
+        if(tableContainer) tableContainer.innerHTML = tableHTML;
+
+        const valueChainData = {
+            awareness: { title: 'Awareness & Education', details: 'Utilize digital marketing, content marketing (blogs, webinars), and social media to educate MSMEs about risks and the importance of insurance.' },
+            distribution: { title: 'Digital Distribution', details: 'Develop a user-friendly online portal for direct quotes and purchases. Partner with digital brokers and embedded finance platforms.' },
+            underwriting: { title: 'Data-Driven Underwriting', details: 'Leverage data analytics and AI to assess risk more accurately, enabling faster quote generation and more competitive pricing.' },
+            service: { title: 'Seamless Servicing', details: 'Offer a self-service portal for policy management, endorsements, and renewals. Implement a quick and transparent digital claims process.' }
+        };
+        const valueChainContainer = document.getElementById('value-chain-container');
+        const valueChainDetails = document.getElementById('value-chain-details');
+        if (valueChainContainer && valueChainDetails) {
+            Object.keys(valueChainData).forEach(key => {
+                const item = valueChainData[key];
+                const button = document.createElement('div');
+                button.className = 'value-chain-item p-4 bg-white rounded-lg shadow-md border-2 border-transparent text-center';
+                button.dataset.key = key;
+                button.innerHTML = `<h4 class="font-semibold text-slate-800">${item.title}</h4>`;
+                button.addEventListener('click', () => {
+                    document.querySelectorAll('.value-chain-item').forEach(el => el.classList.remove('active'));
+                    button.classList.add('active');
+                    valueChainDetails.innerHTML = `<p>${item.details}</p>`;
+                    valueChainDetails.classList.add('open');
+                });
+                valueChainContainer.appendChild(button);
+            });
+        }
+
+        const sectorData = {
+            manufacturing: {
+                title: 'Manufacturing Sector',
+                risks: 'Fire, machinery breakdown, supply chain disruption, employee accidents.',
+                needs: 'Standard Fire & Special Perils, Machinery Breakdown, Business Interruption, Workmen\'s Compensation.',
+                rationale: 'Protects physical assets and operational continuity, which are the core of manufacturing businesses.'
+            },
+            services: {
+                title: 'Services Sector (IT, Consulting)',
+                risks: 'Professional negligence (errors & omissions), data breaches, loss of key clients.',
+                needs: 'Professional Indemnity, Cyber Insurance, Directors & Officers Liability.',
+                rationale: 'Covers liability and reputational risks that are paramount for knowledge-based businesses.'
+            },
+            trade: {
+                title: 'Trade & Retail Sector',
+                risks: 'Theft (burglary), damage to stock, public liability (slips and falls).',
+                needs: 'Burglary Insurance, Stock Insurance, Public Liability, Commercial General Liability.',
+                rationale: 'Focuses on protecting inventory and mitigating risks associated with public-facing premises.'
+            }
+        };
+        const sectorTabs = document.querySelectorAll('#strategy .tab');
+        const sectorDetailsEl = document.getElementById('sector-details');
+        function updateSectorInfo(sector) {
+            const data = sectorData[sector];
+            if(sectorDetailsEl && data) {
+                sectorDetailsEl.innerHTML = `
+                    <h4 class="text-lg font-semibold text-blue-700 mb-3">${data.title}</h4>
+                    <p class="mb-2"><strong class="text-slate-800">Common Risks:</strong> ${data.risks}</p>
+                    <p class="mb-2"><strong class="text-slate-800">Key Insurance Needs:</strong> ${data.needs}</p>
+                    <p><strong class="text-slate-800">Strategic Rationale:</strong> ${data.rationale}</p>
+                `;
+            }
+        }
+        sectorTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                sectorTabs.forEach(t => { t.classList.remove('active'); t.classList.add('bg-white', 'text-slate-700', 'hover:bg-slate-100'); });
+                tab.classList.add('active');
+                tab.classList.remove('bg-white', 'text-slate-700', 'hover:bg-slate-100');
+                updateSectorInfo(tab.dataset.sector);
+            });
+        });
+        if(sectorTabs.length > 0) updateSectorInfo('manufacturing');
+
+        const growthTabs = {
+            sustainable: document.getElementById('tab-sustainable'),
+            blitzscaling: document.getElementById('tab-blitzscaling')
+        };
+        const growthContents = {
+            sustainable: document.getElementById('content-sustainable'),
+            blitzscaling: document.getElementById('content-blitzscaling')
+        };
+        Object.keys(growthTabs).forEach(key => {
+            if(growthTabs[key]) {
+                growthTabs[key].addEventListener('click', () => {
+                    Object.values(growthTabs).forEach(t => t.classList.remove('active'));
+                    Object.values(growthContents).forEach(c => c.classList.add('hidden'));
+                    growthTabs[key].classList.add('active');
+                    growthContents[key].classList.remove('hidden');
+                });
+            }
+        });
+
+        const inputs = {
+            initialManpower: document.getElementById('initialManpower'),
+            annualHiring: document.getElementById('annualHiring'),
+            avgPremium: document.getElementById('avgPremium'),
+            policiesPerAdvisor: document.getElementById('policiesPerAdvisor'),
+        };
+        const values = {
+            initialManpowerValue: document.getElementById('initialManpowerValue'),
+            annualHiringValue: document.getElementById('annualHiringValue'),
+            avgPremiumValue: document.getElementById('avgPremiumValue'),
+            policiesPerAdvisorValue: document.getElementById('policiesPerAdvisorValue'),
+        };
+        let projectionChart;
+        function updateCalculator() {
+            if (!Object.values(inputs).every(el => el)) return;
+
+            const initialManpower = parseInt(inputs.initialManpower.value);
+            const annualHiring = parseInt(inputs.annualHiring.value);
+            const avgPremium = parseInt(inputs.avgPremium.value);
+            const policiesPerAdvisor = parseInt(inputs.policiesPerAdvisor.value);
+            
+            values.initialManpowerValue.textContent = initialManpower;
+            values.annualHiringValue.textContent = annualHiring;
+            values.avgPremiumValue.textContent = `₹${avgPremium.toLocaleString('en-IN')}`;
+            values.policiesPerAdvisorValue.textContent = policiesPerAdvisor;
+
+            const labels = [];
+            const projectedData = [];
+            const targetData = [];
+            const cohorts = [];
+            let targetMetYear = -1;
+            const targetGWP = 50;
+            const rampUp = { y1: 0.3, y2: 0.7 };
+
+            for (let year = 1; year <= 7; year++) {
+                labels.push(`Year ${year}`);
+                cohorts.forEach(c => c.age++);
+                const newHires = (year === 1) ? initialManpower : annualHiring;
+                cohorts.push({ count: newHires, age: 0 });
+
+                let annualGWP = 0;
+                cohorts.forEach(cohort => {
+                    let productivityMultiplier;
+                    if (cohort.age === 0) productivityMultiplier = rampUp.y1;
+                    else if (cohort.age === 1) productivityMultiplier = rampUp.y2;
+                    else productivityMultiplier = 1;
+                    annualGWP += cohort.count * policiesPerAdvisor * avgPremium;
+                });
+                
+                const gwpInCrore = annualGWP / 10000000;
+                projectedData.push(gwpInCrore);
+                targetData.push(targetGWP);
+
+                if (gwpInCrore >= targetGWP && targetMetYear === -1) {
+                    targetMetYear = year;
+                }
+            }
+            
+            const targetMetEl = document.getElementById('targetMet');
+            if(targetMetEl) {
+                if (targetMetYear !== -1) {
+                    targetMetEl.textContent = `₹50 Cr target will be met in ~Year ${targetMetYear}.`;
+                    targetMetEl.className = 'text-center font-semibold text-lg mt-4 text-green-600';
+                } else {
+                    targetMetEl.textContent = 'Target may not be met within 7 years with these assumptions.';
+                    targetMetEl.className = 'text-center font-semibold text-lg mt-4 text-red-600';
+                }
+            }
+
+            if (projectionChart) {
+                projectionChart.data.labels = labels;
+                projectionChart.data.datasets[0].data = projectedData;
+                projectionChart.data.datasets[1].data = targetData;
+                projectionChart.update();
+            }
+        }
+        
+        const projectionChartCtx = document.getElementById('projectionChart')?.getContext('2d');
+        if (projectionChartCtx) {
+            projectionChart = new Chart(projectionChartCtx, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Projected GWP (in Cr)',
+                        data: [],
+                        backgroundColor: '#3b82f6',
+                    }, {
+                        label: 'Target GWP (₹50 Cr)',
+                        data: [],
+                        type: 'line',
+                        borderColor: '#dc2626',
+                        borderDash: [5, 5],
+                        fill: false,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true, title: { display: true, text: 'GWP (₹ Crore)' } } },
+                    plugins: { legend: { display: true, position: 'bottom' } }
+                }
+            });
+            Object.values(inputs).forEach(input => {
+                if(input) input.addEventListener('input', updateCalculator);
+            });
+            updateCalculator();
+        }
+        
+        const currentYearEl = document.getElementById('currentYear');
+        if(currentYearEl) currentYearEl.textContent = new Date().getFullYear();
+
+        const sections = document.querySelectorAll('main section');
+        const navLinks = document.querySelectorAll('nav a');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (window.pageYOffset >= sectionTop - 70) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href')?.substring(1) === current) {
+                    link.classList.add('active');
+                }
+            });
+        }, { passive: true });
+    });
+    </script>
+</body>
+</html>

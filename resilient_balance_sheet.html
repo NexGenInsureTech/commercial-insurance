@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Resilient Balance Sheet: An Interactive Risk Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Professional Neutrals -->
+    <!-- Application Structure Plan: A single-page dashboard design with a sticky top navigation for seamless scrolling between sections. The core of the app is an interactive "Industry Deep Dive" where selecting an industry dynamically updates the content to show specific risks and insurance solutions. This task-oriented flow is more engaging than a linear report, allowing users (executives, risk managers) to quickly access the information most relevant to them. The structure is: 1. Hero/Intro, 2. Interactive Risk Concepts (using cards and a chart), 3. Main Interactive Industry Deep Dive, 4. Consolidated Matrix, 5. Board-Level Takeaways. This prioritizes exploration and usability over the report's original sequence. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Balance Sheet Equation -> Goal: Inform -> Viz: Styled HTML/CSS diagram -> Interaction: Static -> Justification: Simple, foundational concept.
+        - Report Info: Risk Taxonomy -> Goal: Inform/Organize -> Viz: Interactive Cards -> Interaction: Click-to-reveal details -> Justification: Breaks down complex info into digestible chunks.
+        - Report Info: Industry-Specific Risks -> Goal: Compare/Explore -> Viz: Dynamic Content Panels -> Interaction: Click industry button to update view -> Justification: The core interactive element, allowing users to compare sectors easily.
+        - Report Info: Insurance Protection Matrix -> Goal: Organize/Reference -> Viz: Interactive Cards/Grid -> Interaction: Static -> Justification: More visually engaging and structured than a simple table for categorized data.
+        - Report Info: Board Takeaways -> Goal: Inform/Summarize -> Viz: Styled Lists/Cards -> Interaction: Static -> Justification: Clear, scannable format for high-level conclusions.
+        - Library: Chart.js for a simple donut chart to visually represent asset composition, adding a graphical element to the conceptual section.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F9FA;
+            color: #212529;
+        }
+        .nav-link {
+            transition: color 0.3s ease, border-bottom-color 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #005A9C;
+            border-bottom-color: #005A9C;
+        }
+        .industry-btn {
+            transition: all 0.3s ease;
+        }
+        .industry-btn.active {
+            background-color: #005A9C;
+            color: #FFFFFF;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        .card {
+            background-color: #FFFFFF;
+            border: 1px solid #E9ECEF;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .chart-container {
+            position: relative; 
+            width: 100%; 
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <span class="font-bold text-xl text-gray-800">Resilient Balance Sheet</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#introduction" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700">Introduction</a>
+                        <a href="#industries" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700">Industry Deep Dive</a>
+                        <a href="#matrix" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700">Protection Matrix</a>
+                        <a href="#takeaways" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700">Board Takeaways</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <select id="mobile-nav" class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <option value="#introduction">Introduction</option>
+                        <option value="#industries">Industry Deep Dive</option>
+                        <option value="#matrix">Protection Matrix</option>
+                        <option value="#takeaways">Board Takeaways</option>
+                    </select>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="introduction" class="py-16 sm:py-24 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h1 class="text-4xl md:text-5xl font-bold tracking-tight text-gray-900">The Balance Sheet as a Risk Barometer</h1>
+                <p class="mt-6 max-w-3xl mx-auto text-lg text-gray-600">This guide transforms the traditional view of the balance sheet from a static accounting document into a dynamic tool for strategic risk management. Discover how to identify key exposures and leverage commercial insurance to build a more resilient enterprise and protect shareholder equity.</p>
+            </div>
+            
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 mt-16">
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <h2 class="text-3xl font-bold text-gray-900 mb-4">The Core Equation of Value</h2>
+                        <p class="text-gray-600 mb-6">The balance sheet equation, $Assets = Liabilities + Equity$, is the bedrock of a company's financial health. Any event that impairs assets or inflates liabilities directly erodes equity. Effective risk management is fundamentally about preserving this equity by strategically retaining or transferring risk.</p>
+                        <div class="grid sm:grid-cols-2 gap-4">
+                            <div class="card p-4">
+                                <h3 class="font-semibold text-lg text-blue-800">Risk Retention</h3>
+                                <p class="text-sm text-gray-600 mt-1">Accepting the financial impact of a loss. A strategic choice for small, predictable risks, but exposes capital to large, unforeseen events.</p>
+                            </div>
+                            <div class="card p-4">
+                                <h3 class="font-semibold text-lg text-green-800">Risk Transfer</h3>
+                                <p class="text-sm text-gray-600 mt-1">Contractually shifting financial responsibility. Commercial insurance is the primary tool, converting large, uncertain losses into small, predictable premiums.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card p-6">
+                        <h3 class="text-xl font-semibold text-center mb-4">A Modern Company's Asset Composition</h3>
+                        <p class="text-center text-gray-600 text-sm mb-4">In today's economy, a company's value is often dominated by intangible assets like data and intellectual property, which face unique and growing risks.</p>
+                        <div class="chart-container">
+                            <canvas id="assetCompositionChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="industries" class="py-16 sm:py-24">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Industry-Specific Risk Deep Dive</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-600">Every industry faces a unique risk landscape. Select an industry below to explore its most critical balance sheet vulnerabilities and the specific insurance solutions designed to mitigate them.</p>
+                </div>
+                
+                <div class="flex flex-wrap justify-center gap-3 sm:gap-4 mb-12" id="industry-buttons-container">
+                    <!-- Industry buttons will be populated by JS -->
+                </div>
+
+                <div id="industry-content-container" class="mt-8">
+                    <!-- Dynamic content will be loaded here -->
+                </div>
+            </div>
+        </section>
+
+        <section id="matrix" class="py-16 sm:py-24 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900">The Insurance Protection Matrix</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-600">A strategic dashboard mapping risk categories to insurance solutions, safeguarding assets, liabilities, revenue, and reputation.</p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="card p-6">
+                        <h3 class="font-bold text-xl text-blue-700 mb-4">🛡️ Asset Protection</h3>
+                        <p class="text-sm text-gray-600 mb-3">Guarding the value of what you own, both physical and financial.</p>
+                        <ul class="space-y-2 text-sm">
+                            <li><strong>Tangible:</strong> Property, Stock, Fleet Insurance</li>
+                            <li><strong>Financial:</strong> Trade Credit Insurance</li>
+                            <li><strong>Intangible:</strong> Cyber & IP Insurance</li>
+                        </ul>
+                    </div>
+                    <div class="card p-6">
+                        <h3 class="font-bold text-xl text-red-700 mb-4">⚖️ Liability Protection</h3>
+                        <p class="text-sm text-gray-600 mb-3">Shielding against claims from third parties and stakeholders.</p>
+                        <ul class="space-y-2 text-sm">
+                            <li><strong>Public/Product:</strong> General & Product Liability</li>
+                            <li><strong>Professional:</strong> E&O, Med Mal, Crime</li>
+                            <li><strong>Leadership:</strong> D&O Liability</li>
+                            <li><strong>Data:</strong> Data Breach Liability</li>
+                        </ul>
+                    </div>
+                    <div class="card p-6">
+                        <h3 class="font-bold text-xl text-green-700 mb-4">💰 Revenue Protection</h3>
+                        <p class="text-sm text-gray-600 mb-3">Ensuring continuity of income streams during disruptions.</p>
+                        <ul class="space-y-2 text-sm">
+                            <li><strong>Physical Disruption:</strong> Business Interruption</li>
+                            <li><strong>Cyber Disruption:</strong> System Downtime BI</li>
+                            <li><strong>Human Capital:</strong> Key Person Insurance</li>
+                        </ul>
+                    </div>
+                    <div class="card p-6">
+                        <h3 class="font-bold text-xl text-purple-700 mb-4">🌟 Reputation Protection</h3>
+                        <p class="text-sm text-gray-600 mb-3">Managing crises and preserving stakeholder trust.</p>
+                         <ul class="space-y-2 text-sm">
+                            <li><strong>Crisis Response:</strong> Cyber (PR/Crisis Mgmt)</li>
+                            <li><strong>Recall Costs:</strong> Product Recall Insurance</li>
+                            <li><strong>Leadership:</strong> D&O (Reputation cover)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="takeaways" class="py-16 sm:py-24">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                 <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Strategic Takeaways for the Boardroom</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-600">Elevating the insurance discussion from an operational expense to a strategic priority for capital protection.</p>
+                </div>
+                <div class="grid md:grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="card p-6">
+                        <h3 class="font-bold text-xl text-red-700 mb-4">Key Uninsured Exposures</h3>
+                         <ul class="space-y-3 text-gray-700">
+                            <li><strong>Manufacturing:</strong> Non-physical damage supply chain failure.</li>
+                            <li><strong>Technology:</strong> Intellectual property infringement lawsuits.</li>
+                            <li><strong>Healthcare:</strong> Dual impact of a cyber breach (fines + reputational harm).</li>
+                            <li><strong>Retail:</strong> E-commerce liability on a traditional program.</li>
+                            <li><strong>Construction:</strong> Cost to re-do faulty work (a common CGL exclusion).</li>
+                        </ul>
+                    </div>
+                     <div class="card p-6">
+                        <h3 class="font-bold text-xl text-green-700 mb-4">Actionable Recommendations</h3>
+                         <ul class="space-y-3 text-gray-700">
+                            <li class="flex items-start"><span class="text-green-600 mr-3 mt-1">✔</span><div><strong>Conduct a Risk Audit:</strong> Analyze non-physical damage BI exposures.</div></li>
+                            <li class="flex items-start"><span class="text-green-600 mr-3 mt-1">✔</span><div><strong>Optimize Portfolio:</strong> Stress-test Cyber & D&O policy limits against worst-case scenarios.</div></li>
+                            <li class="flex items-start"><span class="text-green-600 mr-3 mt-1">✔</span><div><strong>Scrutinize Exclusions:</strong> Forensically review "your work/product" exclusions to find and fill critical gaps.</div></li>
+                            <li class="flex items-start"><span class="text-green-600 mr-3 mt-1">✔</span><div><strong>Align with Strategy:</strong> Ensure insurance evolves in lockstep with business pivots (e.g., M&A, new tech).</div></li>
+                        </ul>
+                    </div>
+                    <div class="card p-6">
+                        <h3 class="font-bold text-xl text-blue-700 mb-4">A Forward Look: Emerging Risks</h3>
+                         <ul class="space-y-3 text-gray-700">
+                            <li><strong>AI-Driven Liabilities:</strong> New E&O and IP risks from generative AI outputs.</li>
+                            <li><strong>ESG & Climate Risk:</strong> Growing D&O liability for failure to manage and disclose climate-related risks.</li>
+                            <li><strong>Geopolitical Instability:</strong> Amplified supply chain volatility and state-sponsored cyber threats testing "act of war" exclusions.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white">
+        <div class="container mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center">
+            <p>Interactive Risk Guide based on "The Resilient Balance Sheet."</p>
+            <p class="text-sm text-gray-400 mt-2">This application is for informational purposes only and does not constitute financial or insurance advice.</p>
+        </div>
+    </footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const riskData = {
+        'Manufacturing': {
+            summary: 'Defined by high capital investment in tangible assets, reliance on global supply chains, and significant product-related liabilities, demanding a tailored insurance strategy.',
+            risks: [
+                { name: 'PP&E: Equipment Breakdown & Property Damage', solution: '<strong>Primary:</strong> Equipment Breakdown & Commercial Property.<br><strong>Why it matters:</strong> Preserves asset value and reduces repair costs. Property policies often exclude internal mechanical failure, a gap covered by Equipment Breakdown.', icon: '🏭' },
+                { name: 'Inventory: Supply Chain Disruption & BI', solution: '<strong>Primary:</strong> Contingent Business Interruption (CBI).<br><strong>Why it matters:</strong> Ensures operational continuity. Standard BI requires physical damage to your property; CBI covers events at supplier locations.', icon: '🔗' },
+                { name: 'Liabilities: Product Liability & Recall', solution: '<strong>Primary:</strong> Product Liability & Product Recall Expense.<br><strong>Why it matters:</strong> Manages litigation and recall costs. CGL may have insufficient limits for high-risk goods.', icon: '⚙️' }
+            ]
+        },
+        'Technology': {
+            summary: 'Value is overwhelmingly concentrated in intangible assets like IP and data. Most profound risks relate to performance, data security, and intellectual capital, not physical damage.',
+            risks: [
+                { name: 'Service Delivery: Errors & Omissions', solution: '<strong>Primary:</strong> Technology Errors & Omissions (Tech E&O).<br><strong>Why it matters:</strong> Protects from client claims. CGL does not cover pure financial loss from service failure.', icon: '💻' },
+                { name: 'Data & IP: Cybersecurity & Infringement', solution: '<strong>Primary:</strong> Cyber Insurance & IP Insurance.<br><strong>Why it matters:</strong> Protects innovation, competitive edge, and ensures legal compliance. Standard policies broadly exclude these risks.', icon: '🛡️' },
+                { name: 'Infrastructure: Data Center Outages', solution: '<strong>Primary:</strong> Property All Risks & Cyber Insurance.<br><strong>Why it matters:</strong> Ensures continuity of digital services and protects against physical and cyber perils.', icon: '💡' }
+            ]
+        },
+        'Healthcare': {
+            summary: 'Operates under an intense trifecta of risk: profound professional liability (malpractice), stringent regulatory oversight (HIPAA), and persistent financial pressures.',
+            risks: [
+                { name: 'Professional Liability: Medical Malpractice', solution: '<strong>Primary:</strong> Medical Malpractice Insurance.<br><strong>Why it matters:</strong> Shields financial health and reputation from negligence claims, the sector\'s single greatest liability exposure.', icon: '⚕️' },
+                { name: 'Patient Data: HIPAA & Cyber Risk', solution: '<strong>Primary:</strong> Cyber Insurance with Regulatory Fines Coverage.<br><strong>Why it matters:</strong> Critical for regulatory compliance and data protection. A breach creates a dual threat of fines and reputational harm.', icon: '🔒' },
+                { name: 'Medical Assets: Equipment & Inventory', solution: '<strong>Primary:</strong> Property Insurance & Stock Insurance.<br><strong>Why it matters:</strong> Ensures uninterrupted patient care by protecting against equipment failure, spoilage, and theft.', icon: '💊' }
+            ]
+        },
+        'Retail & E-Commerce': {
+            summary: 'Defined by a balance sheet heavy with inventory, significant lease liabilities, and intense customer-facing operations, with growing digital exposure.',
+            risks: [
+                { name: 'Physical Assets: Stores & Inventory', solution: '<strong>Primary:</strong> Commercial Property & Stock Insurance.<br><strong>Why it matters:</strong> Protects physical assets and reduces stock-related financial risk from fire, theft, or damage.', icon: '🏬' },
+                { name: 'Customer Liability: Product & Premises', solution: '<strong>Primary:</strong> Commercial General Liability (CGL).<br><strong>Why it matters:</strong> Manages litigation from defective products and slip-and-fall incidents in-store.', icon: '🛒' },
+                { name: 'Digital Assets: Customer Data & Fraud', solution: '<strong>Primary:</strong> Cyber Insurance.<br><strong>Why it matters:</strong> Protects against digital breaches. A traditional retail program may be wholly inadequate for e-commerce risks.', icon: '🌐' }
+            ]
+        },
+        'Construction': {
+            summary: 'Project-based, with high-hazard operations and complex contractual risks. Financial health is tied to managing individual projects, as a single failure can have a disproportionate impact.',
+            risks: [
+                { name: 'Project Assets: Site Damage & Delays', solution: '<strong>Primary:</strong> Builder\'s Risk Insurance.<br><strong>Why it matters:</strong> A specialized property policy covering the structure under construction from physical loss or damage.', icon: '🏗️' },
+                { name: 'Professional Liability: Faulty Workmanship', solution: '<strong>Primary:</strong> Contractors Professional Liability (E&O).<br><strong>Why it matters:</strong> Fills the critical CGL "your work" exclusion for the cost to re-do faulty work.', icon: '📐' },
+                { name: 'Contractual Liability: Surety Default', solution: '<strong>Primary:</strong> Surety Bonds (Performance, Payment).<br><strong>Why it matters:</strong> Guarantees project performance and payment to subcontractors, essential for securing work.', icon: '✍️' }
+            ]
+        },
+        'Logistics & Transportation': {
+            summary: 'Centered on mobile assets, complex supply chains, and workforce safety. Risks are tied to fleet operations, goods in transit, and warehouse management.',
+            risks: [
+                { name: 'Fleet & Mobile Assets: Accidents & Damage', solution: '<strong>Primary:</strong> Motor Fleet Insurance & Liability.<br><strong>Why it matters:</strong> Protects mobility and shields against third-party risks from vehicle accidents.', icon: '🚚' },
+                { name: 'Goods in Transit: Cargo & Stock Loss', solution: '<strong>Primary:</strong> Stock Throughput / Marine Cargo.<br><strong>Why it matters:</strong> Secures the value of goods from theft, fire, or transit loss from point of origin to final destination.', icon: '📦' },
+                { name: 'Workforce: Driver & Staff Safety', solution: '<strong>Primary:</strong> Employer Liability / Workers\' Comp.<br><strong>Why it matters:</strong> Protects the workforce and reduces liability from employee injury claims.', icon: '👷' }
+            ]
+        }
+    };
+    
+    const industries = Object.keys(riskData);
+    const industryButtonContainer = document.getElementById('industry-buttons-container');
+    const industryContentContainer = document.getElementById('industry-content-container');
+    
+    function displayIndustryInfo(industryName) {
+        const data = riskData[industryName];
+        if (!data) return;
+
+        let riskHTML = data.risks.map(risk => `
+            <div class="card p-5">
+                <div class="flex items-start space-x-4">
+                    <div class="text-3xl">${risk.icon}</div>
+                    <div>
+                        <h4 class="text-lg font-semibold text-gray-800">${risk.name}</h4>
+                        <p class="mt-2 text-sm text-gray-600">${risk.solution}</p>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+
+        industryContentContainer.innerHTML = `
+            <div class="content-section active bg-white p-6 sm:p-8 rounded-lg shadow-lg">
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">${industryName}</h3>
+                <p class="text-gray-600 mb-8">${data.summary}</p>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    ${riskHTML}
+                </div>
+            </div>
+        `;
+        
+        document.querySelectorAll('.industry-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.industry === industryName);
+        });
+    }
+
+    industries.forEach(industry => {
+        const button = document.createElement('button');
+        button.className = 'industry-btn bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-300 rounded-full shadow-sm';
+        button.textContent = industry;
+        button.dataset.industry = industry;
+        button.addEventListener('click', () => displayIndustryInfo(industry));
+        industryButtonContainer.appendChild(button);
+    });
+    
+    displayIndustryInfo(industries[0]);
+
+    const assetCtx = document.getElementById('assetCompositionChart').getContext('2d');
+    new Chart(assetCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Intangible Assets (IP, Data)', 'Tangible Assets (PP&E)', 'Goodwill & Brand Equity'],
+            datasets: [{
+                label: 'Asset Composition',
+                data: [55, 30, 15],
+                backgroundColor: [
+                    'rgba(0, 90, 156, 0.8)',
+                    'rgba(74, 108, 111, 0.8)',
+                    'rgba(173, 181, 189, 0.8)'
+                ],
+                borderColor: [
+                    'rgba(0, 90, 156, 1)',
+                    'rgba(74, 108, 111, 1)',
+                    'rgba(173, 181, 189, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.label}: ${context.raw}%`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+    
+    const mobileNav = document.getElementById('mobile-nav');
+    mobileNav.addEventListener('change', (e) => {
+        const targetId = e.target.value;
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+            targetElement.scrollIntoView({ behavior: 'smooth' });
+        }
+    });
+
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = document.querySelectorAll('main > section');
+
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            if (pageYOffset >= sectionTop - 80) {
+                current = section.getAttribute('id');
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href').includes(current)) {
+                link.classList.add('active');
+            }
+        });
+        
+        if (document.getElementById(current)) {
+            mobileNav.value = `#${current}`;
+        }
+    });
+
+});
+</script>
+</body>
+</html>

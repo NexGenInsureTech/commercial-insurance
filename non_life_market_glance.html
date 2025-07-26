@@ -91,19 +91,6 @@
       .strategy-pillar:hover {
         background-color: rgba(255, 255, 255, 0.2);
       }
-      .blueprint-card {
-        background-color: white;
-        border-radius: 0.75rem;
-        padding: 1rem;
-        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1),
-          0 2px 4px -2px rgb(0 0 0 / 0.1);
-        height: 100%;
-      }
-      @media (min-width: 640px) {
-        .blueprint-card {
-          padding: 1.5rem;
-        }
-      }
       .collapsible-header {
         cursor: pointer;
         transition: background-color 0.2s ease-in-out;
@@ -118,6 +105,100 @@
       }
       .collapsible-icon {
         transition: transform 0.3s ease;
+      }
+      .raas-tab {
+        cursor: pointer;
+        padding: 0.75rem 1.5rem;
+        border-bottom: 3px solid transparent;
+        transition: all 0.3s ease;
+        font-weight: 600;
+      }
+      .raas-tab.active {
+        border-bottom-color: #6366f1;
+        color: #6366f1;
+      }
+      .raas-tab-content {
+        display: none;
+      }
+      .raas-tab-content.active {
+        display: block;
+      }
+      .pitch-deck-viewer {
+        position: relative;
+        background-color: #1f2937;
+        border-radius: 0.5rem;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        height: 450px;
+      }
+      .pitch-deck-slide {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        padding: 2rem;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.5s ease, visibility 0.5s ease;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        background-size: cover;
+        background-position: center;
+      }
+      .pitch-deck-slide::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background-color: rgba(17, 24, 39, 0.6);
+        z-index: 1;
+      }
+      .pitch-deck-slide > * {
+        position: relative;
+        z-index: 2;
+        color: white;
+      }
+      .pitch-deck-slide.active {
+        opacity: 1;
+        visibility: visible;
+      }
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s, visibility 0.3s;
+      }
+      .modal-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+      .modal-content {
+        background: white;
+        padding: 2rem;
+        border-radius: 0.5rem;
+        width: 90%;
+        max-width: 500px;
+        transform: scale(0.95);
+        transition: transform 0.3s;
+      }
+      .modal-overlay.active .modal-content {
+        transform: scale(1);
       }
     </style>
   </head>
@@ -539,22 +620,738 @@
           </div>
         </div>
       </section>
+
+      <section id="raas-blueprint" class="mb-12">
+        <div class="text-center mb-8">
+          <h2 class="text-2xl sm:text-3xl font-bold text-blue-900">
+            Risk Management as a Service (RaaS): Product Catalog
+          </h2>
+          <p class="text-base md:text-lg text-gray-600 mt-2 max-w-4xl mx-auto">
+            A deep dive into the RaaS product construct, transforming the
+            insurer's role from a simple vendor to a strategic risk partner for
+            high-value SMEs.
+          </p>
+        </div>
+        <div class="bg-white rounded-lg shadow-md">
+          <div class="border-b border-gray-200">
+            <nav class="flex flex-wrap -mb-px" id="raas-tabs">
+              <button class="raas-tab active" data-tab="manufacturing">
+                Precision Manufacturing
+              </button>
+              <button class="raas-tab" data-tab="tech">Tech & ITES</button>
+              <button class="raas-tab" data-tab="export">
+                Export-Oriented Business
+              </button>
+            </nav>
+          </div>
+          <div class="p-4 md:p-6">
+            <div id="manufacturing-content" class="raas-tab-content active">
+              <h3 class="text-xl font-bold text-indigo-700 mb-4">
+                Business Shield: Manufacturing+
+              </h3>
+              <div class="space-y-4">
+                <div>
+                  <h4 class="font-semibold text-gray-800">1. Risk Mapping</h4>
+                  <ul class="list-disc list-inside text-sm text-gray-600 mt-2">
+                    <li>
+                      <strong>Operational:</strong> Machinery breakdown, fire at
+                      premises, supply chain disruption, skilled labor
+                      accidents.
+                    </li>
+                    <li>
+                      <strong>Financial:</strong> Business interruption costs,
+                      damage to high-value stock, product recall expenses.
+                    </li>
+                    <li>
+                      <strong>Liability:</strong> Defective product claims
+                      (product liability), workplace accidents (workmen's
+                      compensation).
+                    </li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-800">
+                    2. Product Construct
+                  </h4>
+                  <ul class="list-disc list-inside text-sm text-gray-600 mt-2">
+                    <li>
+                      <strong>Core Covers:</strong> Standard Fire & Special
+                      Perils (IAR Policy), Machinery Breakdown, Burglary.
+                    </li>
+                    <li>
+                      <strong>Value-Add Covers:</strong> Business Interruption
+                      (following fire/machinery breakdown), Product Liability,
+                      Public Liability.
+                    </li>
+                    <li>
+                      <strong>Key Exclusions:</strong> Normal wear & tear,
+                      willful negligence, war & terrorism (can be covered as
+                      add-on).
+                    </li>
+                  </ul>
+                </div>
+                <div class="bg-gray-50 rounded-lg">
+                  <div
+                    class="collapsible-header flex justify-between items-center p-3"
+                  >
+                    <h4 class="font-semibold text-gray-800">
+                      3. Underwriting & Actuarial Notes
+                    </h4>
+                    <span
+                      class="collapsible-icon text-gray-600 text-xl font-bold transform"
+                      >▸</span
+                    >
+                  </div>
+                  <div class="collapsible-content px-3 pb-3">
+                    <p class="text-sm text-gray-600">
+                      <strong>Underwriting:</strong> Focus on quality of
+                      machinery (age, maintenance records), fire safety
+                      installations (sprinklers, alarms), and supply chain
+                      resilience. A physical risk survey is mandatory for sums
+                      insured above ₹50 Cr. <br /><strong>Actuarial:</strong>
+                      Pricing to be loaded based on industry type (e.g.,
+                      chemical vs. assembly), claims history (3-year loss
+                      ratio), and quality of risk management practices observed
+                      during the survey.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="tech-content" class="raas-tab-content">
+              <h3 class="text-xl font-bold text-teal-700 mb-4">
+                Business Shield: TechGuard+
+              </h3>
+              <div class="space-y-4">
+                <div>
+                  <h4 class="font-semibold text-gray-800">1. Risk Mapping</h4>
+                  <ul class="list-disc list-inside text-sm text-gray-600 mt-2">
+                    <li>
+                      <strong>Operational:</strong> System downtime, data
+                      breach, loss of critical data, project delivery failure.
+                    </li>
+                    <li>
+                      <strong>Financial:</strong> Costs of data restoration,
+                      regulatory fines (e.g., GDPR, DPDP Act), reputational
+                      damage, contractual penalties.
+                    </li>
+                    <li>
+                      <strong>Liability:</strong> Errors & Omissions (E&O)
+                      leading to client financial loss, intellectual property
+                      infringement, Directors & Officers (D&O) liability.
+                    </li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-800">
+                    2. Product Construct
+                  </h4>
+                  <ul class="list-disc list-inside text-sm text-gray-600 mt-2">
+                    <li>
+                      <strong>Core Covers:</strong> Professional Indemnity
+                      (E&O), Cyber Insurance (first-party & third-party).
+                    </li>
+                    <li>
+                      <strong>Value-Add Covers:</strong> Directors & Officers
+                      (D&O) Liability, Commercial General Liability, Office
+                      Package Policy (for assets).
+                    </li>
+                    <li>
+                      <strong>Key Exclusions:</strong> Deliberate fraudulent
+                      acts, prior known circumstances, infrastructure failure of
+                      third-party vendors (e.g., cloud provider outage).
+                    </li>
+                  </ul>
+                </div>
+                <div class="bg-gray-50 rounded-lg">
+                  <div
+                    class="collapsible-header flex justify-between items-center p-3"
+                  >
+                    <h4 class="font-semibold text-gray-800">
+                      3. Underwriting & Actuarial Notes
+                    </h4>
+                    <span
+                      class="collapsible-icon text-gray-600 text-xl font-bold transform"
+                      >▸</span
+                    >
+                  </div>
+                  <div class="collapsible-content px-3 pb-3">
+                    <p class="text-sm text-gray-600">
+                      <strong>Underwriting:</strong> Scrutinize contractual
+                      agreements with clients, cybersecurity posture (MFA,
+                      encryption, backup policy), and employee training
+                      protocols. A self-assessment cybersecurity questionnaire
+                      is mandatory. <br /><strong>Actuarial:</strong> Pricing
+                      heavily influenced by nature of service (e.g., FinTech vs.
+                      BPO), geographical exposure (USA/EU clients attract higher
+                      loading), and limits of liability requested. Deductibles
+                      structured to encourage good risk behavior.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="export-content" class="raas-tab-content">
+              <h3 class="text-xl font-bold text-amber-700 mb-4">
+                Business Shield: GlobalTrade+
+              </h3>
+              <div class="space-y-4">
+                <div>
+                  <h4 class="font-semibold text-gray-800">1. Risk Mapping</h4>
+                  <ul class="list-disc list-inside text-sm text-gray-600 mt-2">
+                    <li>
+                      <strong>Operational:</strong> Damage to goods in transit
+                      (sea/air/land), port delays, customs issues, cargo theft.
+                    </li>
+                    <li>
+                      <strong>Financial:</strong> Loss of revenue from damaged
+                      goods, currency fluctuation losses, non-payment by
+                      overseas buyer (trade credit risk).
+                    </li>
+                    <li>
+                      <strong>Liability:</strong> Product rejection at
+                      destination due to damage, liability to shipping lines or
+                      port authorities.
+                    </li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-800">
+                    2. Product Construct
+                  </h4>
+                  <ul class="list-disc list-inside text-sm text-gray-600 mt-2">
+                    <li>
+                      <strong>Core Covers:</strong> Marine Cargo Insurance (Open
+                      Policy), Fire & Burglary for stock at warehouse.
+                    </li>
+                    <li>
+                      <strong>Value-Add Covers:</strong> Trade Credit Insurance
+                      (against buyer default), Product Rejection Insurance,
+                      Seller's Interest Insurance.
+                    </li>
+                    <li>
+                      <strong>Key Exclusions:</strong> Inherent vice of cargo,
+                      improper packaging, losses due to sanctions or trade
+                      embargoes.
+                    </li>
+                  </ul>
+                </div>
+                <div class="bg-gray-50 rounded-lg">
+                  <div
+                    class="collapsible-header flex justify-between items-center p-3"
+                  >
+                    <h4 class="font-semibold text-gray-800">
+                      3. Underwriting & Actuarial Notes
+                    </h4>
+                    <span
+                      class="collapsible-icon text-gray-600 text-xl font-bold transform"
+                      >▸</span
+                    >
+                  </div>
+                  <div class="collapsible-content px-3 pb-3">
+                    <p class="text-sm text-gray-600">
+                      <strong>Underwriting:</strong> Assess nature of goods
+                      (perishable vs. durable), trade routes (high-risk piracy
+                      areas), packaging standards, and buyer's creditworthiness
+                      (for trade credit). Past transit loss history is a key
+                      factor. <br /><strong>Actuarial:</strong> Rates vary
+                      significantly based on conveyance type (air is cheaper
+                      than sea), destination country risk profile, and coverage
+                      clauses (e.g., ICC-A vs. ICC-C). Volume discounts
+                      available for high-turnover exporters under an open policy
+                      structure.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="pitch-decks" class="mb-12">
+        <div class="text-center mb-8">
+          <h2 class="text-2xl sm:text-3xl font-bold text-blue-900">
+            Interactive Pitch Decks for High-Value SMEs
+          </h2>
+          <p class="text-base md:text-lg text-gray-600 mt-2 max-w-4xl mx-auto">
+            A dynamic presentation tool for our techno-sales team to showcase
+            our tailored value proposition to key SME segments.
+          </p>
+        </div>
+        <div class="bg-white rounded-lg shadow-md">
+          <div class="border-b border-gray-200">
+            <nav class="flex flex-wrap -mb-px" id="pitch-deck-tabs">
+              <button class="raas-tab active" data-deck="deck-manufacturing">
+                Precision Manufacturing
+              </button>
+              <button class="raas-tab" data-deck="deck-tech">
+                Tech & ITES
+              </button>
+              <button class="raas-tab" data-deck="deck-export">
+                Export-Oriented Business
+              </button>
+            </nav>
+          </div>
+          <div class="p-4 md:p-6">
+            <div id="deck-manufacturing" class="raas-tab-content active">
+              <div class="pitch-deck-viewer">
+                <div
+                  class="pitch-deck-slide active"
+                  style="
+                    background-image: url('https://placehold.co/1200x600/1e3a8a/ffffff?text=Modern+Factory');
+                  "
+                >
+                  <h3 class="text-4xl font-bold">
+                    A Strategic Risk Partnership for Precision Manufacturing
+                  </h3>
+                  <p class="mt-4 text-xl">
+                    Protecting Your Assets, Securing Your Growth.
+                  </p>
+                </div>
+                <div
+                  class="pitch-deck-slide"
+                  style="
+                    background-image: url('https://placehold.co/1200x600/374151/ffffff?text=CNC+Machinery');
+                  "
+                >
+                  <h4 class="text-3xl font-bold">Understanding Your World</h4>
+                  <p class="mt-4 text-lg max-w-2xl">
+                    You operate in a world of tight tolerances and complex
+                    supply chains. We understand the pressures of JIT delivery,
+                    quality control, and operational uptime that define your
+                    success.
+                  </p>
+                </div>
+                <div
+                  class="pitch-deck-slide"
+                  style="
+                    background-image: url('https://placehold.co/1200x600/4b5563/ffffff?text=Risk+Mapping');
+                  "
+                >
+                  <h4 class="text-3xl font-bold">
+                    Mapping Your Critical Risks
+                  </h4>
+                  <p class="mt-4 text-lg max-w-2xl">
+                    From machinery breakdown and supply chain failure to product
+                    liability claims, your risks are interconnected. We help you
+                    see the full picture.
+                  </p>
+                </div>
+                <div
+                  class="pitch-deck-slide"
+                  style="
+                    background-image: url('https://placehold.co/1200x600/1e40af/ffffff?text=Business+Shield');
+                  "
+                >
+                  <h4 class="text-3xl font-bold">
+                    Introducing Business Shield: Manufacturing+
+                  </h4>
+                  <p class="mt-4 text-lg max-w-2xl">
+                    An integrated insurance solution designed specifically for
+                    the complexities of modern manufacturing.
+                  </p>
+                </div>
+                <div
+                  class="pitch-deck-slide"
+                  style="
+                    background-image: url('https://placehold.co/1200x600/1d4ed8/ffffff?text=Protection');
+                  "
+                >
+                  <h4 class="text-3xl font-bold">
+                    Core Protection & Value-Add Covers
+                  </h4>
+                  <p class="mt-4 text-lg max-w-2xl">
+                    Comprehensive coverage for Fire, Machinery Breakdown,
+                    Business Interruption, and Product Liability, all in one
+                    seamless package.
+                  </p>
+                </div>
+                <div
+                  class="pitch-deck-slide"
+                  style="
+                    background-image: url('https://placehold.co/1200x600/2563eb/ffffff?text=RaaS');
+                  "
+                >
+                  <h4 class="text-3xl font-bold">
+                    Beyond Insurance: Our RaaS Commitment
+                  </h4>
+                  <p class="mt-4 text-lg max-w-2xl">
+                    We go beyond a policy with complimentary risk assessments,
+                    such as thermographic audits, to proactively reduce your
+                    risk of loss.
+                  </p>
+                </div>
+                <div
+                  class="pitch-deck-slide"
+                  style="
+                    background-image: url('https://placehold.co/1200x600/3b82f6/ffffff?text=Partnership');
+                  "
+                >
+                  <h4 class="text-3xl font-bold">
+                    Let's Build a Resilient Future, Together.
+                  </h4>
+                  <button
+                    class="pitch-deck-cta mt-6 bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-indigo-700 transition-colors"
+                    data-sector="Precision Manufacturing"
+                  >
+                    Schedule a Risk Consultation
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div id="deck-tech" class="raas-tab-content">
+              <div class="pitch-deck-viewer">
+                <div
+                  class="pitch-deck-slide active"
+                  style="
+                    background-image: url('https://placehold.co/1200x600/0d9488/ffffff?text=Data+Center');
+                  "
+                >
+                  <h3 class="text-4xl font-bold">
+                    A Strategic Risk Partnership for Tech & ITES
+                  </h3>
+                  <p class="mt-4 text-xl">
+                    Protecting Your Innovation, Securing Your Reputation.
+                  </p>
+                </div>
+                <div
+                  class="pitch-deck-slide"
+                  style="
+                    background-image: url('https://placehold.co/1200x600/14b8a6/ffffff?text=Code+on+Screen');
+                  "
+                >
+                  <h4 class="text-3xl font-bold">Understanding Your World</h4>
+                  <p class="mt-4 text-lg max-w-2xl">
+                    You thrive on innovation, data, and client trust. We
+                    understand the pressures of service level agreements, data
+                    privacy regulations, and the constant threat of cyber
+                    attacks.
+                  </p>
+                </div>
+                <div
+                  class="pitch-deck-slide"
+                  style="
+                    background-image: url('https://placehold.co/1200x600/2dd4bf/ffffff?text=Cyber+Security');
+                  "
+                >
+                  <h4 class="text-3xl font-bold">
+                    Mapping Your Critical Risks
+                  </h4>
+                  <p class="mt-4 text-lg max-w-2xl">
+                    From a simple coding error causing client loss (E&O) to a
+                    major data breach, your intangible assets carry tangible
+                    risks. We help you protect them.
+                  </p>
+                </div>
+                <div
+                  class="pitch-deck-slide"
+                  style="
+                    background-image: url('https://placehold.co/1200x600/0d9488/ffffff?text=TechGuard+');
+                  "
+                >
+                  <h4 class="text-3xl font-bold">
+                    Introducing Business Shield: TechGuard+
+                  </h4>
+                  <p class="mt-4 text-lg max-w-2xl">
+                    A comprehensive liability and asset protection suite
+                    designed for the fast-paced digital economy.
+                  </p>
+                </div>
+                <div
+                  class="pitch-deck-slide"
+                  style="
+                    background-image: url('https://placehold.co/1200x600/14b8a6/ffffff?text=Digital+Shield');
+                  "
+                >
+                  <h4 class="text-3xl font-bold">
+                    Core Protection & Value-Add Covers
+                  </h4>
+                  <p class="mt-4 text-lg max-w-2xl">
+                    Seamlessly integrated Professional Indemnity, Cyber
+                    Insurance, and D&O Liability to protect your code, your
+                    data, and your leadership.
+                  </p>
+                </div>
+                <div
+                  class="pitch-deck-slide"
+                  style="
+                    background-image: url('https://placehold.co/1200x600/2dd4bf/ffffff?text=Expert+Consulting');
+                  "
+                >
+                  <h4 class="text-3xl font-bold">
+                    Beyond Insurance: Our RaaS Commitment
+                  </h4>
+                  <p class="mt-4 text-lg max-w-2xl">
+                    Gain access to our panel of cybersecurity experts for a
+                    complimentary initial consultation to strengthen your
+                    digital defenses.
+                  </p>
+                </div>
+                <div
+                  class="pitch-deck-slide"
+                  style="
+                    background-image: url('https://placehold.co/1200x600/0d9488/ffffff?text=Secure+Future');
+                  "
+                >
+                  <h4 class="text-3xl font-bold">
+                    Let's Secure Your Digital Future, Together.
+                  </h4>
+                  <button
+                    class="pitch-deck-cta mt-6 bg-teal-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-teal-700 transition-colors"
+                    data-sector="Tech & ITES"
+                  >
+                    Schedule a Cyber Risk Review
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div id="deck-export" class="raas-tab-content">
+              <div class="pitch-deck-viewer">
+                <div
+                  class="pitch-deck-slide active"
+                  style="background-image: url('/images/cargo-ship-01.png')"
+                >
+                  <h3 class="text-4xl font-bold">
+                    A Strategic Risk Partnership for Exporters
+                  </h3>
+                  <p class="mt-4 text-xl">
+                    Protecting Your Cargo, Securing Your Payments.
+                  </p>
+                </div>
+                <div
+                  class="pitch-deck-slide"
+                  style="background-image: url('/images/logistics-01.png')"
+                >
+                  <h4 class="text-3xl font-bold">Understanding Your World</h4>
+                  <p class="mt-4 text-lg max-w-2xl">
+                    Your business crosses borders, navigating complex logistics,
+                    international regulations, and currency risks. We understand
+                    that your supply chain is your lifeline.
+                  </p>
+                </div>
+                <div
+                  class="pitch-deck-slide"
+                  style="background-image: url('/images/cargo-risk-02.png')"
+                >
+                  <h4 class="text-3xl font-bold">
+                    Mapping Your Critical Risks
+                  </h4>
+                  <p class="mt-4 text-lg max-w-2xl">
+                    From cargo damage at sea to a buyer defaulting on payment,
+                    your risks are global. We help you manage uncertainty from
+                    warehouse to destination.
+                  </p>
+                </div>
+                <div
+                  class="pitch-deck-slide"
+                  style="background-image: url('/images/risk-solution-01.png')"
+                >
+                  <h4 class="text-3xl font-bold">
+                    Introducing Business Shield: GlobalTrade+
+                  </h4>
+                  <p class="mt-4 text-lg max-w-2xl">
+                    An end-to-end risk solution that protects your goods in
+                    transit and the payments you are due to receive.
+                  </p>
+                </div>
+                <div
+                  class="pitch-deck-slide"
+                  style="background-image: url('/images/cargo-risk-02.png')"
+                >
+                  <h4 class="text-3xl font-bold">
+                    Core Protection & Value-Add Covers
+                  </h4>
+                  <p class="mt-4 text-lg max-w-2xl">
+                    A powerful combination of Marine Cargo Insurance and Trade
+                    Credit Insurance to cover your physical and financial supply
+                    chain.
+                  </p>
+                </div>
+                <div
+                  class="pitch-deck-slide"
+                  style="background-image: url('/images/raas.png')"
+                >
+                  <h4 class="text-3xl font-bold">
+                    Beyond Insurance: Our RaaS Commitment
+                  </h4>
+                  <p class="mt-4 text-lg max-w-2xl">
+                    Leverage our expertise with complimentary packaging
+                    consultations and access to our global network of risk
+                    surveyors.
+                  </p>
+                </div>
+                <div
+                  class="pitch-deck-slide"
+                  style="background-image: url('/images/cargo-ship-01.png')"
+                >
+                  <h4 class="text-3xl font-bold">
+                    Let's De-Risk Your Global Growth, Together.
+                  </h4>
+                  <button
+                    class="pitch-deck-cta mt-6 bg-amber-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-amber-700 transition-colors"
+                    data-sector="Export-Oriented Business"
+                  >
+                    Schedule a Trade Risk Analysis
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="flex justify-between p-4 bg-gray-50 border-t">
+            <button
+              class="deck-nav-btn prev-btn bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Previous
+            </button>
+            <button
+              class="deck-nav-btn next-btn bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      </section>
     </main>
 
     <footer class="bg-blue-900 text-white mt-12 p-4 sm:p-6">
       <div class="max-w-7xl mx-auto text-center text-blue-200">
         <p class="text-sm">
-          &copy; 2025 India Insurance Sector Analysis. Data synthesized for
-          strategic review.
-        </p>
-        <p class="text-xs mt-2">
-          This is a visual representation and does not constitute financial
-          advice. NEITHER Mermaid JS NOR SVG were used in this output.
+          &copy; 2025 Nikash Deka, India Insurance Sector Analysis.
         </p>
       </div>
     </footer>
 
-    <script>
+    <!-- Consultation Request Modal -->
+    <div id="consultation-modal" class="modal-overlay">
+      <div class="modal-content">
+        <div id="form-container">
+          <h3 class="text-2xl font-bold text-blue-900 mb-4">
+            Schedule a Risk Consultation
+          </h3>
+          <form id="consultation-form">
+            <input type="hidden" id="sme-sector" name="sme-sector" />
+            <div class="mb-4">
+              <label
+                for="company-name"
+                class="block text-sm font-medium text-gray-700"
+                >Company Name</label
+              >
+              <input
+                type="text"
+                id="company-name"
+                name="company-name"
+                required
+                class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              />
+            </div>
+            <div class="mb-4">
+              <label
+                for="contact-name"
+                class="block text-sm font-medium text-gray-700"
+                >Contact Name</label
+              >
+              <input
+                type="text"
+                id="contact-name"
+                name="contact-name"
+                required
+                class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              />
+            </div>
+            <div class="mb-4">
+              <label for="email" class="block text-sm font-medium text-gray-700"
+                >Email Address</label
+              >
+              <input
+                type="email"
+                id="email"
+                name="email"
+                required
+                class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              />
+            </div>
+            <div class="mb-4">
+              <label for="phone" class="block text-sm font-medium text-gray-700"
+                >Phone Number</label
+              >
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                required
+                class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              />
+            </div>
+            <div class="flex justify-end space-x-4">
+              <button
+                type="button"
+                id="close-modal-btn"
+                class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+              >
+                Submit Request
+              </button>
+            </div>
+          </form>
+        </div>
+        <div id="form-feedback" class="hidden text-center">
+          <!-- Success or Error message will be injected here -->
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+      import {
+        getAuth,
+        signInAnonymously,
+        signInWithCustomToken,
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+      import {
+        getFirestore,
+        collection,
+        addDoc,
+        serverTimestamp,
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+      // --- Firebase Initialization ---
+      let db;
+      try {
+        const firebaseConfig =
+          typeof __firebase_config !== "undefined"
+            ? JSON.parse(__firebase_config)
+            : null;
+        if (firebaseConfig) {
+          const app = initializeApp(firebaseConfig);
+          const auth = getAuth(app);
+          db = getFirestore(app);
+
+          if (
+            typeof __initial_auth_token !== "undefined" &&
+            __initial_auth_token
+          ) {
+            await signInWithCustomToken(auth, __initial_auth_token);
+          } else {
+            await signInAnonymously(auth);
+          }
+          console.log("Firebase initialized and authenticated successfully.");
+        } else {
+          console.error("Firebase config is not available.");
+        }
+      } catch (error) {
+        console.error("Firebase initialization failed:", error);
+      }
+
+      const appId =
+        typeof __app_id !== "undefined" ? __app_id : "default-app-id";
+
+      // --- Charting Logic ---
       const wrapLabel = (label, maxWidth) => {
         const words = label.split(" ");
         const lines = [];
@@ -588,17 +1385,13 @@
             position: "bottom",
             labels: {
               color: "#4B5563",
-              font: {
-                size: 12,
-              },
+              font: { size: 12 },
               boxWidth: 20,
               padding: 20,
             },
           },
           tooltip: {
-            callbacks: {
-              title: tooltipTitleCallback,
-            },
+            callbacks: { title: tooltipTitleCallback },
             backgroundColor: "#062A5F",
             titleFont: { size: 14 },
             bodyFont: { size: 12 },
@@ -608,110 +1401,92 @@
         },
       };
 
-      const portfolioMixData = {
-        labels: ["Health", "Motor", "Misc.", "Fire", "Other"],
-        datasets: [
-          {
-            label: "FY 2024-25 Portfolio Mix (%)",
-            data: [38.58, 32.2, 12.63, 7.89, 8.7],
-            backgroundColor: [
-              "#6366F1", // Indigo
-              "#0EA5E9", // Sky
-              "#F59E0B", // Amber
-              "#F43F5E", // Rose
-              "#14B8A6", // Teal
-            ],
-            borderColor: "#FFFFFF",
-            borderWidth: 2,
-            hoverOffset: 8,
-          },
-        ],
-      };
       new Chart(document.getElementById("portfolioMixChart"), {
         type: "doughnut",
-        data: portfolioMixData,
+        data: {
+          labels: ["Health", "Motor", "Misc.", "Fire", "Other"],
+          datasets: [
+            {
+              label: "FY 2024-25 Portfolio Mix (%)",
+              data: [38.58, 32.2, 12.63, 7.89, 8.7],
+              backgroundColor: [
+                "#6366F1",
+                "#0EA5E9",
+                "#F59E0B",
+                "#F43F5E",
+                "#14B8A6",
+              ],
+              borderColor: "#FFFFFF",
+              borderWidth: 2,
+              hoverOffset: 8,
+            },
+          ],
+        },
         options: { ...sharedChartOptions },
       });
 
-      const segmentGrowthData = {
-        labels: [
-          "Engineering",
-          "Fire",
-          "Motor",
-          "Health",
-          "Liability",
-          "Misc. (Crop/Credit)",
-        ].map((l) => wrapLabel(l, 16)),
-        datasets: [
-          {
-            label: "Q1 FY26 Growth YoY (%)",
-            data: [21.2, 17.14, 8.7, 8.1, 7.69, -19.48],
-            backgroundColor: [
-              "#10B981", // Emerald
-              "#14B8A6", // Teal
-              "#0EA5E9", // Sky
-              "#6366F1", // Indigo
-              "#8B5CF6", // Violet
-              "#F43F5E", // Rose
-            ],
-            borderRadius: 4,
-          },
-        ],
-      };
       new Chart(document.getElementById("segmentGrowthChart"), {
         type: "bar",
-        data: segmentGrowthData,
+        data: {
+          labels: [
+            "Engineering",
+            "Fire",
+            "Motor",
+            "Health",
+            "Liability",
+            "Misc. (Crop/Credit)",
+          ].map((l) => wrapLabel(l, 16)),
+          datasets: [
+            {
+              label: "Q1 FY26 Growth YoY (%)",
+              data: [21.2, 17.14, 8.7, 8.1, 7.69, -19.48],
+              backgroundColor: [
+                "#10B981",
+                "#14B8A6",
+                "#0EA5E9",
+                "#6366F1",
+                "#8B5CF6",
+                "#F43F5E",
+              ],
+              borderRadius: 4,
+            },
+          ],
+        },
         options: {
           ...sharedChartOptions,
           indexAxis: "y",
           scales: {
             x: {
-              grid: {
-                color: "#E5E7EB",
-              },
-              ticks: {
-                color: "#4B5563",
-                font: { size: 10 },
-              },
+              grid: { color: "#E5E7EB" },
+              ticks: { color: "#4B5563", font: { size: 10 } },
             },
             y: {
-              grid: {
-                display: false,
-              },
-              ticks: {
-                color: "#1F2937",
-                font: { size: 10, weight: "500" },
-              },
+              grid: { display: false },
+              ticks: { color: "#1F2937", font: { size: 10, weight: "500" } },
             },
           },
           plugins: {
             ...sharedChartOptions.plugins,
-            legend: {
-              display: false,
-            },
+            legend: { display: false },
           },
         },
       });
 
-      const fireVsEngData = {
-        labels: ["Fire Insurance", "Engineering Insurance"].map((l) =>
-          wrapLabel(l, 16)
-        ),
-        datasets: [
-          {
-            label: "Q1 FY26 Growth Rebound (%)",
-            data: [17.14, 21.2],
-            backgroundColor: [
-              "#F43F5E", // Rose
-              "#10B981", // Emerald
-            ],
-            barThickness: 40,
-          },
-        ],
-      };
       new Chart(document.getElementById("fireVsEngChart"), {
         type: "bar",
-        data: fireVsEngData,
+        data: {
+          labels: ["Fire Insurance", "Engineering Insurance"].map((l) =>
+            wrapLabel(l, 16)
+          ),
+          datasets: [
+            {
+              label: "Q1 FY26 Growth Rebound (%)",
+              data: [17.14, 21.2],
+              backgroundColor: ["#F43F5E", "#10B981"],
+              barThickness: 40,
+            },
+          ],
+        },
         options: {
           ...sharedChartOptions,
           scales: {
@@ -727,27 +1502,169 @@
           },
           plugins: {
             ...sharedChartOptions.plugins,
-            legend: {
-              display: false,
-            },
+            legend: { display: false },
           },
         },
       });
 
+      // --- Interactive Components Logic ---
       document.querySelectorAll(".collapsible-header").forEach((header) => {
         header.addEventListener("click", () => {
           const content = header.nextElementSibling;
           const icon = header.querySelector(".collapsible-icon");
+          const isExpanded = content.style.maxHeight;
 
-          if (content.style.maxHeight) {
-            content.style.maxHeight = null;
-            icon.style.transform = "rotate(0deg)";
-          } else {
+          document.querySelectorAll(".collapsible-content").forEach((c) => {
+            c.style.maxHeight = null;
+            c.previousElementSibling.querySelector(
+              ".collapsible-icon"
+            ).style.transform = "rotate(0deg)";
+          });
+
+          if (!isExpanded) {
             content.style.maxHeight = content.scrollHeight + "px";
             icon.style.transform = "rotate(90deg)";
           }
         });
       });
+
+      const raasTabs = document.querySelectorAll("#raas-tabs .raas-tab");
+      const raasTabContents = document.querySelectorAll(
+        "#raas-blueprint .raas-tab-content"
+      );
+      raasTabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          const target = tab.getAttribute("data-tab");
+          raasTabs.forEach((t) => t.classList.remove("active"));
+          tab.classList.add("active");
+          raasTabContents.forEach((c) => {
+            c.classList.remove("active");
+            if (c.id === `${target}-content`) c.classList.add("active");
+          });
+        });
+      });
+
+      const pitchDeckTabs = document.querySelectorAll(
+        "#pitch-deck-tabs .raas-tab"
+      );
+      const pitchDeckContents = document.querySelectorAll(
+        "#pitch-decks .raas-tab-content"
+      );
+      const nextBtn = document.querySelector(".next-btn");
+      const prevBtn = document.querySelector(".prev-btn");
+      let currentDeckId = "deck-manufacturing";
+
+      function updateDeckNav(direction) {
+        const currentDeck = document.getElementById(currentDeckId);
+        if (!currentDeck) return;
+        const slides = currentDeck.querySelectorAll(".pitch-deck-slide");
+        let currentIndex = Array.from(slides).findIndex((slide) =>
+          slide.classList.contains("active")
+        );
+        slides[currentIndex].classList.remove("active");
+
+        currentIndex =
+          direction === "next"
+            ? (currentIndex + 1) % slides.length
+            : (currentIndex - 1 + slides.length) % slides.length;
+
+        slides[currentIndex].classList.add("active");
+      }
+
+      pitchDeckTabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          currentDeckId = tab.getAttribute("data-deck");
+          pitchDeckTabs.forEach((t) => t.classList.remove("active"));
+          tab.classList.add("active");
+          pitchDeckContents.forEach((c) => {
+            c.classList.remove("active");
+            if (c.id === currentDeckId) c.classList.add("active");
+          });
+        });
+      });
+      nextBtn.addEventListener("click", () => updateDeckNav("next"));
+      prevBtn.addEventListener("click", () => updateDeckNav("prev"));
+
+      // --- Consultation Modal & Form Logic ---
+      const modal = document.getElementById("consultation-modal");
+      const closeModalBtn = document.getElementById("close-modal-btn");
+      const form = document.getElementById("consultation-form");
+      const formContainer = document.getElementById("form-container");
+      const formFeedback = document.getElementById("form-feedback");
+
+      function openModal(sector) {
+        form.reset();
+        document.getElementById("sme-sector").value = sector;
+        formContainer.classList.remove("hidden");
+        formFeedback.classList.add("hidden");
+        modal.classList.add("active");
+      }
+
+      function closeModal() {
+        modal.classList.remove("active");
+      }
+
+      document.querySelectorAll(".pitch-deck-cta").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const sector = btn.getAttribute("data-sector");
+          openModal(sector);
+        });
+      });
+      closeModalBtn.addEventListener("click", closeModal);
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) closeModal();
+      });
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        if (!db) {
+          showFeedback("Error: Database connection not available.", "error");
+          return;
+        }
+
+        const submitButton = form.querySelector('button[type="submit"]');
+        submitButton.disabled = true;
+        submitButton.textContent = "Submitting...";
+
+        const formData = {
+          companyName: form["company-name"].value,
+          contactName: form["contact-name"].value,
+          email: form["email"].value,
+          phone: form["phone"].value,
+          smeSector: form["sme-sector"].value,
+          submittedAt: serverTimestamp(),
+        };
+
+        try {
+          const collectionPath = `artifacts/${appId}/public/data/consultation_requests`;
+          await addDoc(collection(db, collectionPath), formData);
+          showFeedback(
+            "Thank you! Your request has been submitted successfully. We will contact you shortly.",
+            "success"
+          );
+          form.reset();
+        } catch (error) {
+          console.error("Error adding document: ", error);
+          showFeedback("An error occurred. Please try again later.", "error");
+        } finally {
+          submitButton.disabled = false;
+          submitButton.textContent = "Submit Request";
+        }
+      });
+
+      function showFeedback(message, type) {
+        formContainer.classList.add("hidden");
+        formFeedback.classList.remove("hidden");
+        formFeedback.innerHTML = `
+                <p class="text-lg ${
+                  type === "success" ? "text-green-600" : "text-red-600"
+                }">${message}</p>
+                <button id="feedback-close-btn" class="mt-4 px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">Close</button>
+            `;
+        document
+          .getElementById("feedback-close-btn")
+          .addEventListener("click", closeModal);
+      }
     </script>
   </body>
 </html>

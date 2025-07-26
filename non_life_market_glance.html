@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>India Non-Life Insurance: FY2026 Strategic Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f0f4f8;
+      }
+      .chart-container {
+        position: relative;
+        width: 100%;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        height: 350px;
+        max-height: 400px;
+      }
+      @media (max-width: 768px) {
+        .chart-container {
+          height: 300px;
+        }
+      }
+      .kpi-card {
+        background-color: white;
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1),
+          0 2px 4px -2px rgb(0 0 0 / 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .kpi-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+          0 4px 6px -2px rgb(0 0 0 / 0.1);
+      }
+      .text-blue-900 {
+        color: #062a5f;
+      }
+      .bg-blue-900 {
+        background-color: #062a5f;
+      }
+      .text-teal-500 {
+        color: #14b8a6;
+      }
+      .text-amber-500 {
+        color: #f59e0b;
+      }
+      .text-rose-500 {
+        color: #f43f5e;
+      }
+      .text-indigo-500 {
+        color: #6366f1;
+      }
+      .text-emerald-500 {
+        color: #10b981;
+      }
+      .text-sky-500 {
+        color: #0ea5e9;
+      }
+      .text-violet-500 {
+        color: #8b5cf6;
+      }
+      .trend-icon {
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body class="text-gray-800">
+    <header class="bg-blue-900 text-white p-6 md:p-8 shadow-lg">
+      <div class="max-w-7xl mx-auto">
+        <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight">
+          India's Non-Life Insurance Sector
+        </h1>
+        <p class="mt-2 text-lg md:text-xl text-blue-200">
+          A Strategic Rebalancing for FY2026
+        </p>
+      </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto p-4 md:p-8">
+      <section id="overview" class="mb-12">
+        <div class="text-center mb-8">
+          <h2 class="text-3xl font-bold text-blue-900">
+            Market at a Glance: Q1 FY2026
+          </h2>
+          <p class="text-lg text-gray-600 mt-2">
+            The industry crosses a major milestone amidst a period of
+            significant transition and rebalancing.
+          </p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+          <div class="kpi-card">
+            <h3 class="text-lg font-semibold text-gray-500">
+              Total Premiums (FY25)
+            </h3>
+            <p class="text-4xl font-extrabold text-blue-900 mt-2">₹3.08L Crs</p>
+            <p class="text-sm text-gray-500 mt-1">
+              A landmark achievement for the sector.
+            </p>
+          </div>
+          <div class="kpi-card">
+            <h3 class="text-lg font-semibold text-gray-500">
+              Industry Growth (Q1 FY26 YoY)
+            </h3>
+            <p class="text-4xl font-extrabold text-emerald-500 mt-2">8.84%</p>
+            <p class="text-sm text-gray-500 mt-1">
+              Showing signs of recovery and stabilization.
+            </p>
+          </div>
+          <div class="kpi-card">
+            <h3 class="text-lg font-semibold text-gray-500">
+              Health Insurance Market Share
+            </h3>
+            <p class="text-4xl font-extrabold text-indigo-500 mt-2">>40%</p>
+            <p class="text-sm text-gray-500 mt-1">
+              Now the largest segment in the market.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="portfolio-mix" class="mb-12">
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <h2 class="text-2xl font-bold text-blue-900 text-center mb-4">
+            Portfolio Mix: The Dominance of Retail
+          </h2>
+          <p class="text-center text-gray-600 mb-6 max-w-3xl mx-auto">
+            In FY2025, Health and Motor insurance collectively formed over 70%
+            of the non-life market. This heavy concentration highlights the
+            industry's reliance on retail segments and the strategic challenge
+            of diversification.
+          </p>
+          <div class="chart-container">
+            <canvas id="portfolioMixChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <section id="q1-performance" class="mb-12">
+        <div class="text-center mb-8">
+          <h2 class="text-3xl font-bold text-blue-900">
+            Q1 FY2026 Performance: A Story of Divergence
+          </h2>
+          <p class="text-lg text-gray-600 mt-2">
+            The first quarter revealed dramatic shifts, with commercial lines
+            surging while miscellaneous lines contracted sharply.
+          </p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="text-xl font-bold text-blue-900 mb-4 text-center">
+              Segment Growth Rate (YoY)
+            </h3>
+            <p class="text-center text-gray-600 mb-6">
+              This chart compares the year-over-year growth of key insurance
+              segments in Q1 FY2026. The powerful rebound in Fire and
+              Engineering contrasts starkly with the collapse in the
+              Miscellaneous segment, driven by a decline in crop insurance.
+            </p>
+            <div class="chart-container h-[400px] max-h-[450px]">
+              <canvas id="segmentGrowthChart"></canvas>
+            </div>
+          </div>
+          <div
+            class="bg-white rounded-lg shadow-md p-6 flex flex-col justify-center"
+          >
+            <h3 class="text-xl font-bold text-blue-900 mb-4 text-center">
+              Key Segment Dynamics
+            </h3>
+            <div class="space-y-4">
+              <div class="flex items-center p-3 bg-emerald-50 rounded-lg">
+                <span class="trend-icon text-emerald-500 mr-4">▲</span>
+                <div>
+                  <p class="font-semibold text-lg">Fire Insurance: +17.14%</p>
+                  <p class="text-gray-600">
+                    A spectacular rebound fueled by a hardening market and
+                    commercial renewals.
+                  </p>
+                </div>
+              </div>
+              <div class="flex items-center p-3 bg-rose-50 rounded-lg">
+                <span class="trend-icon text-rose-500 mr-4">▼</span>
+                <div>
+                  <p class="font-semibold text-lg">
+                    Misc. (Crop/Credit): -19.48%
+                  </p>
+                  <p class="text-gray-600">
+                    Sharp de-growth as insurers strategically reduce exposure to
+                    volatile crop business.
+                  </p>
+                </div>
+              </div>
+              <div class="flex items-center p-3 bg-sky-50 rounded-lg">
+                <span class="trend-icon text-sky-500 mr-4">▶</span>
+                <div>
+                  <p class="font-semibold text-lg">
+                    Liability Insurance: +7.69%
+                  </p>
+                  <p class="text-gray-600">
+                    Growth cools after a strong prior year, but long-term
+                    potential remains immense.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="strategic-focus" class="mb-12">
+        <div class="bg-blue-900 text-white rounded-lg shadow-xl p-8 md:p-10">
+          <div class="text-center mb-8">
+            <h2 class="text-3xl font-extrabold">
+              Strategic Imperative for FY2026
+            </h2>
+            <p class="mt-2 text-lg text-blue-200 max-w-4xl mx-auto">
+              With retail lines maturing, the path to profitable growth lies in
+              underserved commercial segments. Barring retail Health and Motor,
+              the focus must shift to areas aligned with national development
+              and offering superior margins.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div class="order-2 md:order-1">
+              <h3 class="text-2xl font-bold mb-4">
+                Recommendation: Focus on Engineering Insurance
+              </h3>
+              <p class="mb-4 text-blue-100">
+                Engineering insurance is the strategic sweet spot, benefiting
+                from a powerful growth surge (+21.2% in Q1), alignment with
+                India's infrastructure push, and a hardening market that allows
+                for better pricing and profitability.
+              </p>
+              <div class="space-y-3 text-blue-50">
+                <p class="flex items-center">
+                  <span class="font-bold text-teal-300 mr-2">✓</span> Align with
+                  'Make in India' & Infra spending.
+                </p>
+                <p class="flex items-center">
+                  <span class="font-bold text-teal-300 mr-2">✓</span> Capitalize
+                  on price-led, profitable growth.
+                </p>
+                <p class="flex items-center">
+                  <span class="font-bold text-teal-300 mr-2">✓</span> Tap into a
+                  significantly under-penetrated market.
+                </p>
+              </div>
+            </div>
+            <div class="order-1 md:order-2 bg-white rounded-lg p-6">
+              <h4 class="text-xl font-bold text-blue-900 text-center mb-4">
+                Growth Comparison: Fire vs. Engineering
+              </h4>
+              <p class="text-center text-gray-600 mb-6">
+                The exceptional growth in Engineering outpaced even the strong
+                rebound in the Fire segment, highlighting its unique momentum.
+              </p>
+              <div class="chart-container h-[250px] max-h-[300px]">
+                <canvas id="fireVsEngChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="flowchart" class="mb-12">
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <h2 class="text-2xl font-bold text-blue-900 text-center mb-4">
+            Blueprint for Growth in Engineering Lines
+          </h2>
+          <p class="text-center text-gray-600 mb-8 max-w-3xl mx-auto">
+            Capitalizing on the engineering opportunity requires a multi-pronged
+            approach focused on specialized expertise, innovation, and strategic
+            partnerships. This is not a volume game; it is a value game.
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+            <div class="flex flex-col items-center">
+              <div
+                class="bg-indigo-100 text-indigo-600 rounded-full h-16 w-16 flex items-center justify-center text-2xl font-bold mb-3"
+              >
+                1
+              </div>
+              <h4 class="font-bold text-lg text-blue-900">
+                Product Innovation
+              </h4>
+              <p class="text-gray-600 mt-1">
+                Develop tailored solutions for sunrise sectors like renewable
+                energy, data centers, and high-tech manufacturing.
+              </p>
+            </div>
+            <div class="flex flex-col items-center mt-4 md:mt-0">
+              <div
+                class="bg-teal-100 text-teal-600 rounded-full h-16 w-16 flex items-center justify-center text-2xl font-bold mb-3"
+              >
+                2
+              </div>
+              <h4 class="font-bold text-lg text-blue-900">
+                Underwriting Excellence
+              </h4>
+              <p class="text-gray-600 mt-1">
+                Invest in deep technical expertise and leverage data, IoT, and
+                AI for superior risk assessment and pricing.
+              </p>
+            </div>
+            <div class="flex flex-col items-center mt-4 md:mt-0">
+              <div
+                class="bg-amber-100 text-amber-600 rounded-full h-16 w-16 flex items-center justify-center text-2xl font-bold mb-3"
+              >
+                3
+              </div>
+              <h4 class="font-bold text-lg text-blue-900">
+                Specialized Distribution
+              </h4>
+              <p class="text-gray-600 mt-1">
+                Build dedicated B2B corporate teams and forge partnerships with
+                project finance institutions and EPC contractors.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="bg-blue-900 text-white mt-12 p-6">
+      <div class="max-w-7xl mx-auto text-center text-blue-200">
+        <p>
+          &copy; 2025 India Insurance Sector Analysis. Data synthesized for
+          strategic review.
+        </p>
+        <p class="text-xs mt-2">
+          This is a visual representation of market data and trends. It does not
+          constitute financial advice. NEITHER Mermaid JS NOR SVG were used in
+          this output.
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      const wrapLabel = (label, maxWidth) => {
+        const words = label.split(" ");
+        const lines = [];
+        let currentLine = "";
+        words.forEach((word) => {
+          if ((currentLine + " " + word).length > maxWidth) {
+            lines.push(currentLine);
+            currentLine = word;
+          } else {
+            currentLine = currentLine ? currentLine + " " + word : word;
+          }
+        });
+        lines.push(currentLine);
+        return lines;
+      };
+
+      const tooltipTitleCallback = (tooltipItems) => {
+        const item = tooltipItems[0];
+        let label = item.chart.data.labels[item.dataIndex];
+        if (Array.isArray(label)) {
+          return label.join(" ");
+        }
+        return label;
+      };
+
+      const sharedChartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: "bottom",
+            labels: {
+              color: "#4B5563",
+              font: {
+                size: 14,
+              },
+            },
+          },
+          tooltip: {
+            callbacks: {
+              title: tooltipTitleCallback,
+            },
+            backgroundColor: "#062A5F",
+            titleFont: { size: 16 },
+            bodyFont: { size: 14 },
+            padding: 12,
+            cornerRadius: 6,
+          },
+        },
+      };
+
+      const portfolioMixData = {
+        labels: ["Health", "Motor", "Miscellaneous", "Fire", "Other"],
+        datasets: [
+          {
+            label: "FY 2024-25 Portfolio Mix (%)",
+            data: [38.58, 32.2, 12.63, 7.89, 8.7],
+            backgroundColor: [
+              "#6366F1", // Indigo
+              "#0EA5E9", // Sky
+              "#F59E0B", // Amber
+              "#F43F5E", // Rose
+              "#14B8A6", // Teal
+            ],
+            borderColor: "#FFFFFF",
+            borderWidth: 2,
+            hoverOffset: 8,
+          },
+        ],
+      };
+      new Chart(document.getElementById("portfolioMixChart"), {
+        type: "doughnut",
+        data: portfolioMixData,
+        options: { ...sharedChartOptions },
+      });
+
+      const segmentGrowthData = {
+        labels: [
+          "Engineering",
+          "Fire",
+          "Motor",
+          "Health",
+          "Liability",
+          "Misc. (Crop/Credit)",
+        ].map((l) => wrapLabel(l, 16)),
+        datasets: [
+          {
+            label: "Q1 FY26 Growth YoY (%)",
+            data: [21.2, 17.14, 8.7, 8.1, 7.69, -19.48],
+            backgroundColor: [
+              "#10B981", // Emerald
+              "#14B8A6", // Teal
+              "#0EA5E9", // Sky
+              "#6366F1", // Indigo
+              "#8B5CF6", // Violet
+              "#F43F5E", // Rose
+            ],
+            borderRadius: 4,
+          },
+        ],
+      };
+      new Chart(document.getElementById("segmentGrowthChart"), {
+        type: "bar",
+        data: segmentGrowthData,
+        options: {
+          ...sharedChartOptions,
+          indexAxis: "y",
+          scales: {
+            x: {
+              grid: {
+                color: "#E5E7EB",
+              },
+              ticks: {
+                color: "#4B5563",
+                font: { size: 12 },
+              },
+            },
+            y: {
+              grid: {
+                display: false,
+              },
+              ticks: {
+                color: "#1F2937",
+                font: { size: 12, weight: "500" },
+              },
+            },
+          },
+          plugins: {
+            ...sharedChartOptions.plugins,
+            legend: {
+              display: false,
+            },
+          },
+        },
+      });
+
+      const fireVsEngData = {
+        labels: ["Fire Insurance", "Engineering Insurance"].map((l) =>
+          wrapLabel(l, 16)
+        ),
+        datasets: [
+          {
+            label: "Q1 FY26 Growth Rebound (%)",
+            data: [17.14, 21.2],
+            backgroundColor: [
+              "#F43F5E", // Rose
+              "#10B981", // Emerald
+            ],
+            barThickness: 50,
+          },
+        ],
+      };
+      new Chart(document.getElementById("fireVsEngChart"), {
+        type: "bar",
+        data: fireVsEngData,
+        options: {
+          ...sharedChartOptions,
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: { color: "#E5E7EB" },
+              ticks: { color: "#4B5563" },
+            },
+            x: {
+              grid: { display: false },
+              ticks: { color: "#1F2937", font: { weight: "600" } },
+            },
+          },
+          plugins: {
+            ...sharedChartOptions.plugins,
+            legend: {
+              display: false,
+            },
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

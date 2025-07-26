@@ -23,12 +23,13 @@
         max-width: 600px;
         margin-left: auto;
         margin-right: auto;
-        height: 350px;
-        max-height: 400px;
+        height: 300px;
+        max-height: 350px;
       }
-      @media (max-width: 768px) {
+      @media (min-width: 768px) {
         .chart-container {
-          height: 300px;
+          height: 350px;
+          max-height: 400px;
         }
       }
       .kpi-card {
@@ -75,72 +76,127 @@
         font-size: 1.5rem;
         font-weight: bold;
       }
+      .strategy-pillar {
+        background-color: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 0.75rem;
+        padding: 1rem;
+        transition: background-color 0.3s ease;
+      }
+      @media (min-width: 768px) {
+        .strategy-pillar {
+          padding: 1.5rem;
+        }
+      }
+      .strategy-pillar:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+      .blueprint-card {
+        background-color: white;
+        border-radius: 0.75rem;
+        padding: 1rem;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1),
+          0 2px 4px -2px rgb(0 0 0 / 0.1);
+        height: 100%;
+      }
+      @media (min-width: 640px) {
+        .blueprint-card {
+          padding: 1.5rem;
+        }
+      }
+      .collapsible-header {
+        cursor: pointer;
+        transition: background-color 0.2s ease-in-out;
+      }
+      .collapsible-header:hover {
+        background-color: #f9fafb;
+      }
+      .collapsible-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease-in-out;
+      }
+      .collapsible-icon {
+        transition: transform 0.3s ease;
+      }
     </style>
   </head>
   <body class="text-gray-800">
-    <header class="bg-blue-900 text-white p-6 md:p-8 shadow-lg">
+    <header class="bg-blue-900 text-white p-4 sm:p-6 md:p-8 shadow-lg">
       <div class="max-w-7xl mx-auto">
-        <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight">
+        <h1
+          class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight"
+        >
           India's Non-Life Insurance Sector
         </h1>
-        <p class="mt-2 text-lg md:text-xl text-blue-200">
+        <p class="mt-2 text-base sm:text-lg md:text-xl text-blue-200">
           A Strategic Rebalancing for FY2026
         </p>
       </div>
     </header>
 
-    <main class="max-w-7xl mx-auto p-4 md:p-8">
+    <main class="max-w-7xl mx-auto p-4 sm:p-6 md:p-8">
       <section id="overview" class="mb-12">
-        <div class="text-center mb-8">
-          <h2 class="text-3xl font-bold text-blue-900">
+        <div class="text-center mb-6 md:mb-8">
+          <h2 class="text-2xl sm:text-3xl font-bold text-blue-900">
             Market at a Glance: Q1 FY2026
           </h2>
-          <p class="text-lg text-gray-600 mt-2">
+          <p class="text-base md:text-lg text-gray-600 mt-2">
             The industry crosses a major milestone amidst a period of
-            significant transition and rebalancing.
+            significant transition.
           </p>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 text-center">
           <div class="kpi-card">
-            <h3 class="text-lg font-semibold text-gray-500">
+            <h3 class="text-base md:text-lg font-semibold text-gray-500">
               Total Premiums (FY25)
             </h3>
-            <p class="text-4xl font-extrabold text-blue-900 mt-2">₹3.08L Crs</p>
-            <p class="text-sm text-gray-500 mt-1">
-              A landmark achievement for the sector.
+            <p class="text-3xl sm:text-4xl font-extrabold text-blue-900 mt-2">
+              ₹3.08L Crs
+            </p>
+            <p class="text-xs sm:text-sm text-gray-500 mt-1">
+              A landmark achievement.
             </p>
           </div>
           <div class="kpi-card">
-            <h3 class="text-lg font-semibold text-gray-500">
-              Industry Growth (Q1 FY26 YoY)
+            <h3 class="text-base md:text-lg font-semibold text-gray-500">
+              Industry Growth (Q1 YoY)
             </h3>
-            <p class="text-4xl font-extrabold text-emerald-500 mt-2">8.84%</p>
-            <p class="text-sm text-gray-500 mt-1">
-              Showing signs of recovery and stabilization.
+            <p
+              class="text-3xl sm:text-4xl font-extrabold text-emerald-500 mt-2"
+            >
+              8.84%
+            </p>
+            <p class="text-xs sm:text-sm text-gray-500 mt-1">
+              Signs of stabilization.
             </p>
           </div>
           <div class="kpi-card">
-            <h3 class="text-lg font-semibold text-gray-500">
-              Health Insurance Market Share
+            <h3 class="text-base md:text-lg font-semibold text-gray-500">
+              Health Mkt. Share
             </h3>
-            <p class="text-4xl font-extrabold text-indigo-500 mt-2">>40%</p>
-            <p class="text-sm text-gray-500 mt-1">
-              Now the largest segment in the market.
+            <p class="text-3xl sm:text-4xl font-extrabold text-indigo-500 mt-2">
+              >40%
+            </p>
+            <p class="text-xs sm:text-sm text-gray-500 mt-1">
+              Largest market segment.
             </p>
           </div>
         </div>
       </section>
 
       <section id="portfolio-mix" class="mb-12">
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <h2 class="text-2xl font-bold text-blue-900 text-center mb-4">
+        <div class="bg-white rounded-lg shadow-md p-4 md:p-6">
+          <h2
+            class="text-xl sm:text-2xl font-bold text-blue-900 text-center mb-4"
+          >
             Portfolio Mix: The Dominance of Retail
           </h2>
-          <p class="text-center text-gray-600 mb-6 max-w-3xl mx-auto">
-            In FY2025, Health and Motor insurance collectively formed over 70%
-            of the non-life market. This heavy concentration highlights the
-            industry's reliance on retail segments and the strategic challenge
-            of diversification.
+          <p
+            class="text-center text-sm md:text-base text-gray-600 mb-6 max-w-3xl mx-auto"
+          >
+            In FY2025, Health and Motor insurance formed over 70% of the market,
+            highlighting the strategic challenge of diversification.
           </p>
           <div class="chart-container">
             <canvas id="portfolioMixChart"></canvas>
@@ -149,68 +205,69 @@
       </section>
 
       <section id="q1-performance" class="mb-12">
-        <div class="text-center mb-8">
-          <h2 class="text-3xl font-bold text-blue-900">
-            Q1 FY2026 Performance: A Story of Divergence
+        <div class="text-center mb-6 md:mb-8">
+          <h2 class="text-2xl sm:text-3xl font-bold text-blue-900">
+            Q1 FY2026: A Story of Divergence
           </h2>
-          <p class="text-lg text-gray-600 mt-2">
-            The first quarter revealed dramatic shifts, with commercial lines
-            surging while miscellaneous lines contracted sharply.
+          <p class="text-base md:text-lg text-gray-600 mt-2">
+            The first quarter revealed dramatic shifts across key insurance
+            segments.
           </p>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div class="bg-white rounded-lg shadow-md p-6">
-            <h3 class="text-xl font-bold text-blue-900 mb-4 text-center">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+          <div class="bg-white rounded-lg shadow-md p-4 md:p-6">
+            <h3
+              class="text-lg sm:text-xl font-bold text-blue-900 mb-4 text-center"
+            >
               Segment Growth Rate (YoY)
             </h3>
-            <p class="text-center text-gray-600 mb-6">
-              This chart compares the year-over-year growth of key insurance
-              segments in Q1 FY2026. The powerful rebound in Fire and
-              Engineering contrasts starkly with the collapse in the
-              Miscellaneous segment, driven by a decline in crop insurance.
+            <p class="text-center text-sm md:text-base text-gray-600 mb-6">
+              Commercial lines like Fire & Engineering rebounded powerfully,
+              while Miscellaneous lines contracted sharply.
             </p>
-            <div class="chart-container h-[400px] max-h-[450px]">
+            <div class="chart-container h-[350px] md:h-[400px] max-h-[450px]">
               <canvas id="segmentGrowthChart"></canvas>
             </div>
           </div>
           <div
-            class="bg-white rounded-lg shadow-md p-6 flex flex-col justify-center"
+            class="bg-white rounded-lg shadow-md p-4 md:p-6 flex flex-col justify-center"
           >
-            <h3 class="text-xl font-bold text-blue-900 mb-4 text-center">
+            <h3
+              class="text-lg sm:text-xl font-bold text-blue-900 mb-4 text-center"
+            >
               Key Segment Dynamics
             </h3>
             <div class="space-y-4">
               <div class="flex items-center p-3 bg-emerald-50 rounded-lg">
-                <span class="trend-icon text-emerald-500 mr-4">▲</span>
+                <span class="trend-icon text-emerald-500 mr-3">▲</span>
                 <div>
-                  <p class="font-semibold text-lg">Fire Insurance: +17.14%</p>
-                  <p class="text-gray-600">
-                    A spectacular rebound fueled by a hardening market and
-                    commercial renewals.
+                  <p class="font-semibold text-base md:text-lg">
+                    Fire: +17.14%
+                  </p>
+                  <p class="text-sm text-gray-600">
+                    Spectacular rebound fueled by commercial renewals.
                   </p>
                 </div>
               </div>
               <div class="flex items-center p-3 bg-rose-50 rounded-lg">
-                <span class="trend-icon text-rose-500 mr-4">▼</span>
+                <span class="trend-icon text-rose-500 mr-3">▼</span>
                 <div>
-                  <p class="font-semibold text-lg">
-                    Misc. (Crop/Credit): -19.48%
+                  <p class="font-semibold text-base md:text-lg">
+                    Misc. (Crop): -19.48%
                   </p>
-                  <p class="text-gray-600">
-                    Sharp de-growth as insurers strategically reduce exposure to
-                    volatile crop business.
+                  <p class="text-sm text-gray-600">
+                    Sharp de-growth as insurers reduce exposure.
                   </p>
                 </div>
               </div>
               <div class="flex items-center p-3 bg-sky-50 rounded-lg">
-                <span class="trend-icon text-sky-500 mr-4">▶</span>
+                <span class="trend-icon text-sky-500 mr-3">▶</span>
                 <div>
-                  <p class="font-semibold text-lg">
-                    Liability Insurance: +7.69%
+                  <p class="font-semibold text-base md:text-lg">
+                    Liability: +7.69%
                   </p>
-                  <p class="text-gray-600">
-                    Growth cools after a strong prior year, but long-term
-                    potential remains immense.
+                  <p class="text-sm text-gray-600">
+                    Growth cools but long-term potential remains.
                   </p>
                 </div>
               </div>
@@ -220,129 +277,279 @@
       </section>
 
       <section id="strategic-focus" class="mb-12">
-        <div class="bg-blue-900 text-white rounded-lg shadow-xl p-8 md:p-10">
-          <div class="text-center mb-8">
-            <h2 class="text-3xl font-extrabold">
-              Strategic Imperative for FY2026
+        <div
+          class="bg-blue-900 text-white rounded-lg shadow-xl p-4 sm:p-6 md:p-10"
+        >
+          <div class="text-center mb-6 md:mb-8">
+            <h2 class="text-2xl sm:text-3xl font-extrabold">
+              Strategic Imperative: Focus on Engineering
             </h2>
-            <p class="mt-2 text-lg text-blue-200 max-w-4xl mx-auto">
-              With retail lines maturing, the path to profitable growth lies in
-              underserved commercial segments. Barring retail Health and Motor,
-              the focus must shift to areas aligned with national development
-              and offering superior margins.
+            <p
+              class="mt-2 text-base md:text-lg text-blue-200 max-w-4xl mx-auto"
+            >
+              The path to profitable growth lies in Engineering Insurance,
+              benefiting from a +21.2% growth surge, national infra push, and
+              better pricing.
             </p>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-            <div class="order-2 md:order-1">
-              <h3 class="text-2xl font-bold mb-4">
-                Recommendation: Focus on Engineering Insurance
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 text-left">
+            <div class="strategy-pillar">
+              <h3 class="text-lg md:text-xl font-bold text-teal-300 mb-3">
+                1. Align with National Priorities
               </h3>
-              <p class="mb-4 text-blue-100">
-                Engineering insurance is the strategic sweet spot, benefiting
-                from a powerful growth surge (+21.2% in Q1), alignment with
-                India's infrastructure push, and a hardening market that allows
-                for better pricing and profitability.
+              <p class="text-sm md:text-base text-blue-100">
+                Partner with 'Make in India' & infra agenda. Develop specialized
+                products for national projects in transport, energy, and
+                manufacturing.
               </p>
-              <div class="space-y-3 text-blue-50">
-                <p class="flex items-center">
-                  <span class="font-bold text-teal-300 mr-2">✓</span> Align with
-                  'Make in India' & Infra spending.
-                </p>
-                <p class="flex items-center">
-                  <span class="font-bold text-teal-300 mr-2">✓</span> Capitalize
-                  on price-led, profitable growth.
-                </p>
-                <p class="flex items-center">
-                  <span class="font-bold text-teal-300 mr-2">✓</span> Tap into a
-                  significantly under-penetrated market.
-                </p>
-              </div>
             </div>
-            <div class="order-1 md:order-2 bg-white rounded-lg p-6">
-              <h4 class="text-xl font-bold text-blue-900 text-center mb-4">
-                Growth Comparison: Fire vs. Engineering
-              </h4>
-              <p class="text-center text-gray-600 mb-6">
-                The exceptional growth in Engineering outpaced even the strong
-                rebound in the Fire segment, highlighting its unique momentum.
+            <div class="strategy-pillar">
+              <h3 class="text-lg md:text-xl font-bold text-teal-300 mb-3">
+                2. Capitalize on Profitable Growth
+              </h3>
+              <p class="text-sm md:text-base text-blue-100">
+                Leverage the hardening market for underwriting discipline.
+                Invest in technical expertise for superior risk assessment and
+                value-based pricing.
               </p>
-              <div class="chart-container h-[250px] max-h-[300px]">
-                <canvas id="fireVsEngChart"></canvas>
-              </div>
+            </div>
+            <div class="strategy-pillar">
+              <h3 class="text-lg md:text-xl font-bold text-teal-300 mb-3">
+                3. Penetrate via Specialization
+              </h3>
+              <p class="text-sm md:text-base text-blue-100">
+                Build specialized B2B channels. Forge partnerships with EPC
+                contractors, project finance lenders, and industrial bodies.
+              </p>
+            </div>
+          </div>
+          <div class="mt-8 text-center bg-white rounded-lg p-4 md:p-6">
+            <h4
+              class="text-lg sm:text-xl font-bold text-blue-900 text-center mb-4"
+            >
+              Growth Comparison: Fire vs. Engineering
+            </h4>
+            <p class="text-center text-sm md:text-base text-gray-600 mb-6">
+              Engineering's growth outpaced even Fire's strong rebound,
+              highlighting its unique momentum.
+            </p>
+            <div class="chart-container h-[200px] sm:h-[250px] max-h-[300px]">
+              <canvas id="fireVsEngChart"></canvas>
             </div>
           </div>
         </div>
       </section>
 
-      <section id="flowchart" class="mb-12">
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <h2 class="text-2xl font-bold text-blue-900 text-center mb-4">
-            Blueprint for Growth in Engineering Lines
+      <section id="sme-blueprint" class="mb-12">
+        <div class="text-center mb-8">
+          <h2 class="text-2xl sm:text-3xl font-bold text-blue-900">
+            The 80/20 Blueprint: Winning the High-Value SME Market
           </h2>
-          <p class="text-center text-gray-600 mb-8 max-w-3xl mx-auto">
-            Capitalizing on the engineering opportunity requires a multi-pronged
-            approach focused on specialized expertise, innovation, and strategic
-            partnerships. This is not a volume game; it is a value game.
+          <p class="text-base md:text-lg text-gray-600 mt-2 max-w-4xl mx-auto">
+            Apply the Pareto Principle: focus on the vital 20% of SMEs that
+            drive 80% of profitable growth. This interactive guide details the
+            strategy.
           </p>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-            <div class="flex flex-col items-center">
-              <div
-                class="bg-indigo-100 text-indigo-600 rounded-full h-16 w-16 flex items-center justify-center text-2xl font-bold mb-3"
-              >
-                1
+        </div>
+        <div class="space-y-4">
+          <div class="bg-white rounded-lg shadow-md">
+            <div
+              class="collapsible-header flex justify-between items-center p-4"
+            >
+              <div class="flex items-center">
+                <div
+                  class="bg-indigo-100 text-indigo-600 rounded-full h-10 w-10 sm:h-12 sm:w-12 flex-shrink-0 flex items-center justify-center text-xl sm:text-2xl font-bold mr-4"
+                >
+                  1
+                </div>
+                <h3 class="text-lg sm:text-xl font-bold text-blue-900">
+                  Identify: Find the "Vital Few"
+                </h3>
               </div>
-              <h4 class="font-bold text-lg text-blue-900">
-                Product Innovation
-              </h4>
-              <p class="text-gray-600 mt-1">
-                Develop tailored solutions for sunrise sectors like renewable
-                energy, data centers, and high-tech manufacturing.
-              </p>
+              <span
+                class="collapsible-icon text-indigo-600 text-2xl font-bold transform"
+                >▸</span
+              >
             </div>
-            <div class="flex flex-col items-center mt-4 md:mt-0">
-              <div
-                class="bg-teal-100 text-teal-600 rounded-full h-16 w-16 flex items-center justify-center text-2xl font-bold mb-3"
-              >
-                2
-              </div>
-              <h4 class="font-bold text-lg text-blue-900">
-                Underwriting Excellence
-              </h4>
-              <p class="text-gray-600 mt-1">
-                Invest in deep technical expertise and leverage data, IoT, and
-                AI for superior risk assessment and pricing.
+            <div class="collapsible-content px-4 pb-4">
+              <p class="text-sm text-gray-600 mb-4">
+                Rigorously segment the market to find high-potential SMEs in
+                sectors like Manufacturing, Exports, Tech, and specialized
+                Services. Analyze your own portfolio to find existing profitable
+                clusters and create a data-backed "Ideal SME Customer Profile".
               </p>
+              <div
+                class="bg-indigo-50 p-4 rounded-lg border-l-4 border-indigo-500"
+              >
+                <h4 class="font-bold text-indigo-800">
+                  Example: Ideal SME Profile
+                </h4>
+                <p class="text-sm text-indigo-700 mt-2">
+                  <strong>Company:</strong> "Precision Auto Components Pvt.
+                  Ltd."<br /><strong>Location:</strong> Pune/Chakan industrial
+                  belt.<br /><strong>Profile:</strong> A tier-2 supplier to
+                  major automotive OEMs, specializing in high-precision machined
+                  parts. Employs 75 people, with advanced CNC machinery. Exports
+                  30% of its output to Europe. Faces risks related to machinery
+                  breakdown, supply chain disruption, and product quality
+                  liability.
+                </p>
+              </div>
             </div>
-            <div class="flex flex-col items-center mt-4 md:mt-0">
-              <div
-                class="bg-amber-100 text-amber-600 rounded-full h-16 w-16 flex items-center justify-center text-2xl font-bold mb-3"
-              >
-                3
+          </div>
+
+          <div class="bg-white rounded-lg shadow-md">
+            <div
+              class="collapsible-header flex justify-between items-center p-4"
+            >
+              <div class="flex items-center">
+                <div
+                  class="bg-teal-100 text-teal-600 rounded-full h-10 w-10 sm:h-12 sm:w-12 flex-shrink-0 flex items-center justify-center text-xl sm:text-2xl font-bold mr-4"
+                >
+                  2
+                </div>
+                <h3 class="text-lg sm:text-xl font-bold text-blue-900">
+                  Innovate: Create Superior Value
+                </h3>
               </div>
-              <h4 class="font-bold text-lg text-blue-900">
-                Specialized Distribution
-              </h4>
-              <p class="text-gray-600 mt-1">
-                Build dedicated B2B corporate teams and forge partnerships with
-                project finance institutions and EPC contractors.
+              <span
+                class="collapsible-icon text-teal-600 text-2xl font-bold transform"
+                >▸</span
+              >
+            </div>
+            <div class="collapsible-content px-4 pb-4">
+              <p class="text-sm text-gray-600 mb-4">
+                Develop a value proposition beyond standard policies. Create
+                bundled "Business Protection Suites", offer "Risk Management as
+                a Service" (RaaS) with checklists and webinars, and simplify the
+                user experience with digital journeys and dedicated claims
+                support.
               </p>
+              <div class="bg-teal-50 p-4 rounded-lg border-l-4 border-teal-500">
+                <h4 class="font-bold text-teal-800">
+                  Example: Product Innovation
+                </h4>
+                <p class="text-sm text-teal-700 mt-2">
+                  <strong>Product:</strong> "Manufacturing Shield+" Bundle<br /><strong
+                    >Core Covers:</strong
+                  >
+                  Fire & Special Perils, Machinery Breakdown, Burglary.<br /><strong
+                    >Value-Add Covers:</strong
+                  >
+                  Product Liability (basic limit), Marine Transit (for exports),
+                  Business Interruption (following machinery breakdown).<br /><strong
+                    >Service:</strong
+                  >
+                  Complimentary annual thermographic audit of electrical panels
+                  to prevent fire risk.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-lg shadow-md">
+            <div
+              class="collapsible-header flex justify-between items-center p-4"
+            >
+              <div class="flex items-center">
+                <div
+                  class="bg-amber-100 text-amber-600 rounded-full h-10 w-10 sm:h-12 sm:w-12 flex-shrink-0 flex items-center justify-center text-xl sm:text-2xl font-bold mr-4"
+                >
+                  3
+                </div>
+                <h3 class="text-lg sm:text-xl font-bold text-blue-900">
+                  Distribute: Engineer an Efficient Model
+                </h3>
+              </div>
+              <span
+                class="collapsible-icon text-amber-600 text-2xl font-bold transform"
+                >▸</span
+              >
+            </div>
+            <div class="collapsible-content px-4 pb-4">
+              <p class="text-sm text-gray-600 mb-4">
+                Engineer a high-efficiency distribution model. Empower
+                specialist commercial brokers, forge B2B alliances with
+                SME-focused lenders and industry associations, and de-emphasize
+                mass aggregators that drive competition solely on price.
+              </p>
+              <div
+                class="bg-amber-50 p-4 rounded-lg border-l-4 border-amber-500"
+              >
+                <h4 class="font-bold text-amber-800">
+                  Example: Distribution Channel
+                </h4>
+                <p class="text-sm text-amber-700 mt-2">
+                  <strong>Partnership:</strong> Alliance with a mid-sized bank
+                  specializing in SME business loans.<br /><strong
+                    >Model:</strong
+                  >
+                  When the bank approves a machinery loan for an SME like
+                  "Precision Auto Components," our "Manufacturing Shield+"
+                  policy is offered as a pre-underwritten, integrated part of
+                  the loan package. The bank's relationship manager is trained
+                  to explain the benefits, and the process is digitized for
+                  instant policy issuance.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-lg shadow-md">
+            <div
+              class="collapsible-header flex justify-between items-center p-4"
+            >
+              <div class="flex items-center">
+                <div
+                  class="bg-rose-100 text-rose-600 rounded-full h-10 w-10 sm:h-12 sm:w-12 flex-shrink-0 flex items-center justify-center text-xl sm:text-2xl font-bold mr-4"
+                >
+                  4
+                </div>
+                <h3 class="text-lg sm:text-xl font-bold text-blue-900">
+                  Measure: Track What Matters
+                </h3>
+              </div>
+              <span
+                class="collapsible-icon text-rose-600 text-2xl font-bold transform"
+                >▸</span
+              >
+            </div>
+            <div class="collapsible-content px-4 pb-4">
+              <p class="text-sm text-gray-600 mb-4">
+                Implement a data-driven performance loop. Move beyond GWP to
+                focus on KPIs like Combined Ratio per SME cluster, Customer
+                Lifetime Value (CLV), cross-sell ratios, and retention rates.
+                Establish formal feedback loops for continuous improvement.
+              </p>
+              <div class="bg-rose-50 p-4 rounded-lg border-l-4 border-rose-500">
+                <h4 class="font-bold text-rose-800">
+                  Example: Performance KPI Dashboard
+                </h4>
+                <p class="text-sm text-rose-700 mt-2">
+                  <strong>Segment:</strong> Auto Component SMEs - Pune
+                  Cluster<br /><strong>KPIs to Track:</strong><br />
+                  - Combined Ratio: Target < 95%<br />
+                  - Avg. Policies per Client: Target > 2.5<br />
+                  - 1-Year Retention Rate: Target > 90%<br />
+                  - % of Clients using RaaS: Target > 30%
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </section>
     </main>
 
-    <footer class="bg-blue-900 text-white mt-12 p-6">
+    <footer class="bg-blue-900 text-white mt-12 p-4 sm:p-6">
       <div class="max-w-7xl mx-auto text-center text-blue-200">
-        <p>
+        <p class="text-sm">
           &copy; 2025 India Insurance Sector Analysis. Data synthesized for
           strategic review.
         </p>
         <p class="text-xs mt-2">
-          This is a visual representation of market data and trends. It does not
-          constitute financial advice. NEITHER Mermaid JS NOR SVG were used in
-          this output.
+          This is a visual representation and does not constitute financial
+          advice. NEITHER Mermaid JS NOR SVG were used in this output.
         </p>
       </div>
     </footer>
@@ -382,8 +589,10 @@
             labels: {
               color: "#4B5563",
               font: {
-                size: 14,
+                size: 12,
               },
+              boxWidth: 20,
+              padding: 20,
             },
           },
           tooltip: {
@@ -391,16 +600,16 @@
               title: tooltipTitleCallback,
             },
             backgroundColor: "#062A5F",
-            titleFont: { size: 16 },
-            bodyFont: { size: 14 },
-            padding: 12,
+            titleFont: { size: 14 },
+            bodyFont: { size: 12 },
+            padding: 10,
             cornerRadius: 6,
           },
         },
       };
 
       const portfolioMixData = {
-        labels: ["Health", "Motor", "Miscellaneous", "Fire", "Other"],
+        labels: ["Health", "Motor", "Misc.", "Fire", "Other"],
         datasets: [
           {
             label: "FY 2024-25 Portfolio Mix (%)",
@@ -462,7 +671,7 @@
               },
               ticks: {
                 color: "#4B5563",
-                font: { size: 12 },
+                font: { size: 10 },
               },
             },
             y: {
@@ -471,7 +680,7 @@
               },
               ticks: {
                 color: "#1F2937",
-                font: { size: 12, weight: "500" },
+                font: { size: 10, weight: "500" },
               },
             },
           },
@@ -496,7 +705,7 @@
               "#F43F5E", // Rose
               "#10B981", // Emerald
             ],
-            barThickness: 50,
+            barThickness: 40,
           },
         ],
       };
@@ -509,11 +718,11 @@
             y: {
               beginAtZero: true,
               grid: { color: "#E5E7EB" },
-              ticks: { color: "#4B5563" },
+              ticks: { color: "#4B5563", font: { size: 10 } },
             },
             x: {
               grid: { display: false },
-              ticks: { color: "#1F2937", font: { weight: "600" } },
+              ticks: { color: "#1F2937", font: { weight: "600", size: 10 } },
             },
           },
           plugins: {
@@ -523,6 +732,21 @@
             },
           },
         },
+      });
+
+      document.querySelectorAll(".collapsible-header").forEach((header) => {
+        header.addEventListener("click", () => {
+          const content = header.nextElementSibling;
+          const icon = header.querySelector(".collapsible-icon");
+
+          if (content.style.maxHeight) {
+            content.style.maxHeight = null;
+            icon.style.transform = "rotate(0deg)";
+          } else {
+            content.style.maxHeight = content.scrollHeight + "px";
+            icon.style.transform = "rotate(90deg)";
+          }
+        });
       });
     </script>
   </body>

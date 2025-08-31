@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SME and Corporate Insurance Analysis</title>
+    <!-- Google Fonts for a clean, modern look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        color: #333;
+        background-color: #f5f5f5;
+      }
+      h1,
+      h2,
+      h3,
+      h4 {
+        font-family: "Playfair Display", serif;
+      }
+      .prose-style h2 {
+        font-size: 2.25rem;
+        margin-bottom: 1rem;
+        color: #1f2937;
+      }
+      .prose-style h3 {
+        font-size: 1.5rem;
+        margin-top: 2rem;
+        margin-bottom: 0.75rem;
+        color: #1f2937;
+      }
+      .prose-style p {
+        margin-bottom: 1rem;
+        line-height: 1.75;
+      }
+      .prose-style ul {
+        list-style-type: disc;
+        padding-left: 1.5rem;
+        margin-top: 0.5rem;
+      }
+      .prose-style li {
+        margin-bottom: 0.5rem;
+      }
+      /* Modal-specific styles */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.75);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 50;
+        transition: opacity 0.3s ease-in-out;
+      }
+      .modal-content {
+        background-color: #fff;
+        color: #333;
+        padding: 2rem;
+        border-radius: 1rem;
+        max-width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+        position: relative;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Hero Section -->
+    <div class="relative bg-gray-900 text-white overflow-hidden py-24 md:py-32">
+      <div class="container mx-auto px-4 text-center z-10">
+        <h1
+          class="text-4xl sm:text-5xl lg:text-7xl font-bold leading-tight tracking-tight mb-4"
+        >
+          The Untapped Opportunity in Indian Insurance
+        </h1>
+        <p
+          class="text-xl sm:text-2xl font-light text-gray-300 max-w-3xl mx-auto"
+        >
+          A comprehensive data analysis of the SME and Corporate insurance
+          segments, revealing key trends and market potential.
+        </p>
+      </div>
+      <div
+        class="absolute inset-0 bg-gradient-to-br from-blue-700 to-indigo-900 opacity-80"
+      ></div>
+    </div>
+
+    <!-- Main Content Area -->
+    <main class="container mx-auto px-4 md:px-6 lg:px-8 max-w-4xl py-16">
+      <div class="text-center mb-8">
+        <button
+          id="open-modal-btn"
+          class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-200"
+        >
+          View Original Document
+        </button>
+      </div>
+      <article class="prose-style">
+        <!-- Market Size and Penetration -->
+        <section id="market-size" class="mb-16">
+          <h2 class="text-gray-800">Market Size and Penetration Gap</h2>
+          <p>
+            The SME and corporate insurance segment in India presents a
+            <strong class="text-teal-600">massive untapped opportunity</strong>.
+            With 62-63 million enterprises in the country, only
+            <strong class="text-red-600"
+              >3% have adequate insurance coverage</strong
+            >, leaving 85-90% of SMEs vulnerable to business risks. This
+            represents approximately 1.86-1.89 million insured SMEs out of the
+            total universe, indicating a penetration gap of unprecedented scale.
+          </p>
+          <p>
+            The commercial insurance market was valued at
+            <strong>USD 37.82 billion in 2024</strong> and is projected to reach
+            <strong>USD 81.04 billion by 2033</strong>, growing at a CAGR of
+            8.13%. This growth trajectory is significantly driven by increasing
+            enterprise risk awareness, infrastructure investments, and digital
+            transformation initiatives.
+          </p>
+        </section>
+        <!-- Economic Significance -->
+        <section id="economic-significance" class="mb-16">
+          <h2 class="text-gray-800">Economic Significance of SMEs</h2>
+          <p>
+            SMEs represent the backbone of India's economy with substantial
+            economic contributions:
+          </p>
+          <ul class="list-disc list-inside space-y-2">
+            <li>
+              <strong class="text-teal-600">30-33% contribution to GDP</strong>
+            </li>
+            <li>
+              <strong class="text-teal-600"
+                >40% of total workforce employment</strong
+              >
+            </li>
+            <li>
+              <strong class="text-teal-600"
+                >42% of India's total exports</strong
+              >
+            </li>
+            <li>
+              <strong class="text-teal-600">45% of manufacturing output</strong>
+            </li>
+            <li>
+              <strong class="text-teal-600">96% of industrial units</strong> in
+              the country
+            </li>
+          </ul>
+          <p>
+            Despite this economic significance, the insurance penetration
+            remains critically low, creating both vulnerability and opportunity.
+          </p>
+        </section>
+        <!-- Insurance Product Penetration Analysis -->
+        <section id="product-analysis" class="mb-16">
+          <h2 class="text-gray-800">Insurance Product Penetration Analysis</h2>
+          <p>
+            The penetration rates vary dramatically based on regulatory
+            requirements:
+          </p>
+          <h3 class="text-gray-800">
+            Mandatory vs Voluntary Coverage Disparity
+          </h3>
+          <div class="flex flex-col md:flex-row md:space-x-8">
+            <div class="w-full md:w-1/2">
+              <h4 class="text-lg font-semibold text-gray-700 mb-2">
+                High Penetration (Mandatory):
+              </h4>
+              <ul class="list-disc list-inside">
+                <li>
+                  <strong>Fire Insurance</strong>: 94% penetration (mandatory
+                  for loans)
+                </li>
+                <li>
+                  <strong>Motor Insurance</strong>: 100% for vehicle owners
+                  (legal requirement)
+                </li>
+              </ul>
+            </div>
+            <div class="w-full md:w-1/2 mt-8 md:mt-0">
+              <h4 class="text-lg font-semibold text-gray-700 mb-2">
+                Moderate Penetration (Employee Benefits):
+              </h4>
+              <ul class="list-disc list-inside">
+                <li>
+                  <strong>Group Life Insurance</strong>: 44% of enterprises
+                </li>
+                <li>
+                  <strong>Employee Group Health Insurance</strong>: 40% coverage
+                </li>
+                <li>
+                  <strong>Personal Life Insurance</strong> (business owners):
+                  65%
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="mt-8">
+            <h4 class="text-lg font-semibold text-gray-700 mb-2">
+              Low Penetration (Voluntary Business Products):
+            </h4>
+            <ul class="list-disc list-inside">
+              <li><strong>Machine Breakdown Insurance</strong>: 24%</li>
+              <li><strong>Loss of Profit Insurance</strong>: 13%</li>
+              <li><strong>Professional Indemnity</strong>: 12%</li>
+              <li><strong>Personal Health Insurance</strong>: 24%</li>
+              <li>
+                <strong>Cyber Insurance</strong>: <1% (despite 20% increase in
+                cyber crimes)
+              </li>
+            </ul>
+          </div>
+        </section>
+        <!-- Emerging Risks & Drivers -->
+        <section id="emerging-risks" class="mb-16">
+          <h2 class="text-gray-800">
+            Emerging Risk Categories and Market Drivers
+          </h2>
+          <p>
+            The market is being reshaped by new challenges and growth enablers.
+          </p>
+          <h3 class="text-gray-800">Cyber Security: The Next Frontier</h3>
+          <p>
+            <strong>Cyber insurance</strong> is the fastest-growing segment with
+            a <strong class="text-teal-600">29.26% CAGR</strong>. This is fueled
+            by a 20% increase in cybercrime and new legislation like the Digital
+            Personal Data Protection Act 2023, which imposes fines up to ₹250
+            crore. Despite high risk exposure, less than 1% of Indian businesses
+            have coverage, highlighting a significant market opportunity.
+          </p>
+          <h3 class="text-gray-800">Market Growth Drivers</h3>
+          <p>Growth is enabled by:</p>
+          <ul class="list-disc list-inside">
+            <li>
+              <strong>Government initiatives</strong> like the MyMSME portal.
+            </li>
+            <li>
+              The rise of
+              <strong class="text-teal-600">digital platforms</strong> and
+              mobile-first interfaces.
+            </li>
+            <li>Regulatory support from IRDAI with standardized products.</li>
+          </ul>
+        </section>
+        <!-- Corporate vs SME Dynamics -->
+        <section id="corporate-vs-sme" class="mb-16">
+          <h2 class="text-gray-800">Corporate vs SME Insurance Dynamics</h2>
+          <p>
+            The needs and characteristics of corporate and SME segments vary
+            significantly:
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+              <h4 class="text-lg font-semibold text-gray-700 mb-2">
+                SME Market:
+              </h4>
+              <ul class="list-disc list-inside">
+                <li><strong>3-15% coverage</strong> across products.</li>
+                <li>
+                  Average policy size: <strong>₹10,000 - ₹5 lakh</strong>.
+                </li>
+                <li>Driven by digital platforms, mobile-first interfaces.</li>
+                <li>
+                  Benefits from
+                  <strong class="text-teal-600"
+                    >fast-track claim settlement</strong
+                  >
+                  up to ₹5 lakh.
+                </li>
+              </ul>
+            </div>
+            <div class="mt-8 md:mt-0">
+              <h4 class="text-lg font-semibold text-gray-700 mb-2">
+                Corporate Market:
+              </h4>
+              <ul class="list-disc list-inside">
+                <li>
+                  <strong>70-80% coverage</strong> with comprehensive policies.
+                </li>
+                <li>
+                  Average policy size: <strong>₹10 lakh - ₹100+ crore</strong>.
+                </li>
+                <li>Distribution is 80-90% broker-assisted.</li>
+                <li>Claims processing is complex and case-by-case.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+        <!-- Future Market Projections -->
+        <section id="future-projections" class="mb-16">
+          <h2 class="text-gray-800">Future Market Projections</h2>
+          <p>
+            Technology is poised to transform the market. The integration of
+            <strong class="text-teal-600">AI-powered underwriting</strong>,
+            IoT-based risk monitoring, and blockchain-based claims processing
+            are expected to reduce costs and improve accessibility for SME
+            products.
+          </p>
+          <p>
+            The SME insurance market in India is estimated to be worth
+            <strong>₹1.5-1.8 lakh crore</strong>, with significant growth
+            potential as penetration improves from the current 3% baseline.
+          </p>
+        </section>
+        <!-- Citations -->
+        <section id="citations" class="mt-16 pt-8 border-t border-gray-300">
+          <h2 class="text-xl font-semibold text-gray-700 mb-4">References</h2>
+          <ol class="text-sm text-gray-600 list-decimal list-inside space-y-1">
+            <li>
+              <a
+                href="https://economictimes.com/small-biz/sme-sector/only-3-of-indias-62-million-business-owners-have-sme-insurance-icici-lombards-anand-singhi/articleshow/111333380.cms"
+                class="text-blue-600 hover:underline"
+                >https://economictimes.com/...</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://niapune.org.in/uploads/researchreports/MSE InsuranceReport 07 09 2023.pdf"
+                class="text-blue-600 hover:underline"
+                >https://niapune.org.in/...</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://www.mckinsey.com/in/our-insights/steering-indian-insurance-from-growth-to-value-in-the-upcoming-techade"
+                class="text-blue-600 hover:underline"
+                >https://www.mckinsey.com/...</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://www.imarcgroup.com/india-commercial-insurance-market"
+                class="text-blue-600 hover:underline"
+                >https://www.imarcgroup.com/...</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://www.gicouncil.in/news-media/gic-in-the-news/qa-topic-insurance-offerings-for-msmes/"
+                class="text-blue-600 hover:underline"
+                >https://www.gicouncil.in/...</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://www.swissre.com/institute/research/topics-and-risk-dialogues/economy-and-insurance-outlook/india-economy-insurance-market-growth.html"
+                class="text-blue-600 hover:underline"
+                >https://www.swissre.com/...</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://www.thebrainyinsights.com/report/sme-insurance-market-14540"
+                class="text-blue-600 hover:underline"
+                >https://www.thebrainyinsights.com/...</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://riskcovry.com/pulse-under-penetration-of-insurance-in-msme-sector/"
+                class="text-blue-600 hover:underline"
+                >https://riskcovry.com/...</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://www.statista.com/outlook/fmo/insurances/india"
+                class="text-blue-600 hover:underline"
+                >https://www.statista.com/...</a
+              >
+            </li>
+          </ol>
+        </section>
+      </article>
+    </main>
+
+    <!-- Modal for Original Document -->
+    <div id="document-modal" class="modal-overlay hidden">
+      <div class="modal-content">
+        <button
+          id="close-modal-btn"
+          class="absolute top-4 right-4 text-gray-500 hover:text-gray-900 transition-colors"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+        <div class="prose max-w-none text-sm text-gray-600 p-8">
+          <img
+            src="/images/market.jpg"
+            style="height: 64px; margin-right: 32px"
+            alt="Perplexity Logo"
+          />
+          <h1 class="text-4xl font-bold mb-4">
+            SME and Corporate Insurance Segments: Comprehensive Data Analysis
+          </h1>
+
+          <h2 class="text-2xl font-bold mt-8 mb-2">
+            Market Size and Penetration Gap
+          </h2>
+          <p>
+            The SME and corporate insurance segment in India presents a
+            <strong>massive untapped opportunity</strong>. With
+            <strong>62-63 million enterprises</strong> in the country, only
+            <strong>3% have adequate insurance coverage</strong>, leaving
+            <strong>85-90% of SMEs vulnerable</strong> to business risks. This
+            represents approximately
+            <strong>1.86-1.89 million insured SMEs</strong> out of the total
+            universe, indicating a penetration gap of unprecedented scale.<a
+              href="#modal-ref-1"
+              ><sup>[1]</sup></a
+            ><a href="#modal-ref-2"><sup>[2]</sup></a
+            ><a href="#modal-ref-3"><sup>[3]</sup></a>
+          </p>
+          <p>
+            The <strong>commercial insurance market</strong> was valued at
+            <strong>USD 37.82 billion in 2024</strong> and is projected to reach
+            <strong>USD 81.04 billion by 2033</strong>, growing at a
+            <strong>CAGR of 8.13%</strong>. This growth trajectory is
+            significantly driven by increasing enterprise risk awareness,
+            infrastructure investments, and digital transformation
+            initiatives.<a href="#modal-ref-4"><sup>[4]</sup></a>
+          </p>
+
+          <h2 class="text-2xl font-bold mt-8 mb-2">
+            Economic Significance of SMEs
+          </h2>
+          <p>
+            SMEs represent the backbone of India's economy with substantial
+            economic contributions:<a href="#modal-ref-2"><sup>[2]</sup></a
+            ><a href="#modal-ref-1"><sup>[1]</sup></a>
+          </p>
+          <ul class="list-disc list-inside">
+            <li><strong>30-33% contribution to GDP</strong></li>
+            <li><strong>40% of total workforce employment</strong></li>
+            <li><strong>42% of India's total exports</strong></li>
+            <li><strong>45% of manufacturing output</strong></li>
+            <li><strong>96% of industrial units</strong> in the country</li>
+          </ul>
+          <p>
+            Despite this economic significance, the insurance penetration
+            remains critically low, creating both vulnerability and opportunity.
+          </p>
+
+          <h2 class="text-2xl font-bold mt-8 mb-2">
+            Insurance Product Penetration Analysis
+          </h2>
+          <h3 class="text-xl font-bold mt-4 mb-1">
+            Mandatory vs Voluntary Coverage Disparity
+          </h3>
+          <p>
+            The penetration rates vary dramatically based on regulatory
+            requirements:<a href="#modal-ref-5"><sup>[5]</sup></a>
+          </p>
+          <p><strong>High Penetration (Mandatory Products):</strong></p>
+          <ul class="list-disc list-inside">
+            <li>
+              <strong>Fire Insurance</strong>: 94% penetration (mandatory for
+              loans)
+            </li>
+            <li>
+              <strong>Motor Insurance</strong>: 100% for vehicle owners (legal
+              requirement)
+            </li>
+          </ul>
+          <p><strong>Moderate Penetration (Employee Benefits):</strong></p>
+          <ul class="list-disc list-inside">
+            <li><strong>Group Life Insurance</strong>: 44% of enterprises</li>
+            <li>
+              <strong>Employee Group Health Insurance</strong>: 40% coverage
+            </li>
+            <li>
+              <strong>Personal Life Insurance</strong> (business owners): 65%
+            </li>
+          </ul>
+          <p><strong>Low Penetration (Voluntary Business Products):</strong></p>
+          <ul class="list-disc list-inside">
+            <li><strong>Machine Breakdown Insurance</strong>: 24%</li>
+            <li><strong>Loss of Profit Insurance</strong>: 13%</li>
+            <li><strong>Professional Indemnity</strong>: 12%</li>
+            <li><strong>Personal Health Insurance</strong>: 24%</li>
+            <li>
+              <strong>Cyber Insurance</strong>: <1% (despite 20% increase in
+              cyber crimes)<a href="#modal-ref-6"><sup>[6]</sup></a
+              ><a href="#modal-ref-7"><sup>[7]</sup></a>
+            </li>
+          </ul>
+
+          <h2 class="text-2xl font-bold mt-8 mb-2">
+            SME Segmentation and Insurance Needs
+          </h2>
+          <h3 class="text-xl font-bold mt-4 mb-1">By Business Size</h3>
+          <ul class="list-disc list-inside">
+            <li>
+              <strong>Micro Enterprises</strong> (35% of SMEs): Basic fire,
+              accident, and micro-insurance products
+            </li>
+            <li>
+              <strong>Small Enterprises</strong> (65% of SMEs): Property,
+              liability, and employee benefit coverage
+            </li>
+            <li>
+              <strong>Medium Enterprises</strong> (3-5% of SMEs): Comprehensive
+              commercial coverage with higher premiums
+            </li>
+          </ul>
+          <h3 class="text-xl font-bold mt-4 mb-1">By Industry Vertical</h3>
+          <p>
+            <strong>Manufacturing SMEs</strong> (25-30% of total) require
+            machine breakdown, fire, and workers' compensation coverage,
+            representing established insurance needs with moderate growth
+            potential.
+          </p>
+          <p>
+            <strong>IT/Technology SMEs</strong> (8-10% of total) show
+            <strong>very high growth potential</strong> for cyber insurance,
+            errors & omissions, and business interruption coverage due to
+            digital transformation risks.<a href="#modal-ref-7"
+              ><sup>[7]</sup></a
+            ><a href="#modal-ref-8"><sup>[8]</sup></a>
+          </p>
+          <p>
+            <strong>Service SMEs</strong> (40-45% of total) need professional
+            indemnity, cyber liability, and general liability coverage, with
+            high growth potential driven by digitalization trends.
+          </p>
+
+          <h2 class="text-2xl font-bold mt-8 mb-2">
+            Corporate vs SME Insurance Dynamics
+          </h2>
+          <h3 class="text-xl font-bold mt-4 mb-1">
+            Market Characteristics Comparison
+          </h3>
+          <p><strong>Penetration Rates:</strong></p>
+          <ul class="list-disc list-inside">
+            <li><strong>SMEs</strong>: 3-15% coverage across products</li>
+            <li>
+              <strong>Corporates</strong>: 70-80% coverage with comprehensive
+              policies
+            </li>
+          </ul>
+          <p><strong>Policy Size Distribution:</strong></p>
+          <ul class="list-disc list-inside">
+            <li>
+              <strong>SMEs</strong>: ₹10,000 - ₹5 lakh average policy size
+            </li>
+            <li>
+              <strong>Corporates</strong>: ₹10 lakh - ₹100+ crore coverage
+              amounts
+            </li>
+          </ul>
+          <p><strong>Distribution and Technology:</strong></p>
+          <ul class="list-disc list-inside">
+            <li>
+              <strong>SMEs</strong>: Digital platforms (14.4% CAGR growth),
+              mobile-first interfaces, 30-40% broker-assisted
+            </li>
+            <li>
+              <strong>Corporates</strong>: 80-90% broker-assisted with
+              sophisticated platform requirements
+            </li>
+          </ul>
+          <p>
+            <strong>Claims Processing:</strong><br />
+            SMEs benefit from
+            <strong
+              >fast-track claim settlement up to ₹5 lakh within 10 working
+              days</strong
+            >
+            using AI and big data analytics, compared to complex case-by-case
+            corporate claims processing.<a href="#modal-ref-2"
+              ><sup>[2]</sup></a
+            >
+          </p>
+
+          <h2 class="text-2xl font-bold mt-8 mb-2">
+            Emerging Risk Categories and Insurance Demand
+          </h2>
+          <h3 class="text-xl font-bold mt-4 mb-1">
+            Cyber Security: Highest Growth Potential
+          </h3>
+          <p>
+            <strong>Cyber insurance</strong> represents the fastest-growing
+            segment with <strong>29.26% CAGR</strong>, driven by:
+          </p>
+          <ul class="list-disc list-inside">
+            <li>
+              <strong>20% increase in cybercrime cases</strong> in 2023<a
+                href="#modal-ref-6"
+                ><sup>[6]</sup></a
+              >
+            </li>
+            <li>
+              <strong>4+ million cyber security incidents</strong> reported by
+              CERT-In
+            </li>
+            <li>
+              <strong>Digital Personal Data Protection Act 2023</strong>
+              imposing fines up to <strong>₹250 crore</strong
+              ><a href="#modal-ref-7"><sup>[7]</sup></a>
+            </li>
+            <li>
+              SMEs losing up to <strong>₹7 crore annually</strong> from cyber
+              attacks<a href="#modal-ref-9"><sup>[9]</sup></a>
+            </li>
+          </ul>
+          <p>
+            Despite high risk exposure,
+            <strong>less than 1% of Indian businesses</strong> have cyber
+            insurance coverage, compared to
+            <strong>over 30% in developed markets</strong>.<a
+              href="#modal-ref-6"
+              ><sup>[6]</sup></a
+            >
+          </p>
+
+          <h3 class="text-xl font-bold mt-4 mb-1">
+            Supply Chain and Business Interruption
+          </h3>
+          <p>
+            The <strong>COVID-19 experience</strong> has significantly increased
+            awareness of business interruption risks, with SMEs recognizing
+            their vulnerability due to
+            <strong>limited cash reserves</strong> and
+            <strong>thinner operational margins</strong> compared to large
+            corporations.<a href="#modal-ref-1"><sup>[1]</sup></a
+            ><a href="#modal-ref-2"><sup>[2]</sup></a>
+          </p>
+
+          <h3 class="text-xl font-bold mt-4 mb-1">Climate-Related Risks</h3>
+          <p>
+            SMEs face increasing exposure to
+            <strong
+              >natural disasters, flooding, and climate change impacts</strong
+            >, creating demand for
+            <strong>climate-resilient insurance products</strong> and
+            <strong>parametric coverage</strong> solutions.
+          </p>
+
+          <h2 class="text-2xl font-bold mt-8 mb-2">
+            Regional and Demographic Patterns
+          </h2>
+          <h3 class="text-xl font-bold mt-4 mb-1">Geographic Distribution</h3>
+          <p>
+            <strong>Rajasthan leads</strong> in insurance uptake among SMEs,
+            followed by <strong>Kerala and Karnataka</strong>. This regional
+            variation reflects differences in industrial development, financial
+            literacy, and distribution reach.<a href="#modal-ref-5"
+              ><sup>[5]</sup></a
+            >
+          </p>
+          <h3 class="text-xl font-bold mt-4 mb-1">Gender-Based Patterns</h3>
+          <p>
+            <strong>Women-led enterprises</strong> show
+            <strong>higher adoption rates</strong> for loss of profit insurance
+            and machine breakdown insurance, indicating greater risk awareness
+            and business continuity planning among female entrepreneurs.<a
+              href="#modal-ref-5"
+              ><sup>[5]</sup></a
+            >
+          </p>
+          <h3 class="text-xl font-bold mt-4 mb-1">Education Correlation</h3>
+          <p>
+            <strong>Higher insurance uptake</strong> is observed among
+            enterprises owned by
+            <strong
+              >professionals, technically educated, and post-graduate</strong
+            >
+            business owners, particularly for group life and health insurance
+            products.<a href="#modal-ref-5"><sup>[5]</sup></a>
+          </p>
+
+          <h2 class="text-2xl font-bold mt-8 mb-2">
+            Market Growth Drivers and Challenges
+          </h2>
+          <h3 class="text-xl font-bold mt-4 mb-1">Growth Enablers</h3>
+          <ul class="list-disc list-inside">
+            <li>
+              <strong>Government initiatives</strong>: MyMSME portal, MSME
+              Samadhaan, 25% procurement mandate
+            </li>
+            <li>
+              <strong>Credit schemes</strong>: Emergency Credit Line Guarantee
+              Scheme (ECLGS)
+            </li>
+            <li>
+              <strong>Digital platforms</strong>: First-of-kind SME-focused
+              insurance platforms (sme.icicilombard.com)
+            </li>
+            <li>
+              <strong>Regulatory support</strong>: IRDAI standardized products
+              (Bharat Sookshma Udyam Suraksha, Bharat Laghu Udyam)
+            </li>
+          </ul>
+          <h3 class="text-xl font-bold mt-4 mb-1">Penetration Barriers</h3>
+          <ul class="list-disc list-inside">
+            <li>
+              <strong>Lack of awareness</strong>: 60% of SMEs don't understand
+              insurance benefits<a href="#modal-ref-2"><sup>[2]</sup></a>
+            </li>
+            <li>
+              <strong>Distribution gaps</strong>: Traditional channels
+              inadequate for SME reach
+            </li>
+            <li>
+              <strong>Product mismatch</strong>: Generic products don't address
+              SME-specific risks
+            </li>
+            <li>
+              <strong>Cost sensitivity</strong>: High premiums relative to SME
+              cash flows
+            </li>
+            <li>
+              <strong>Limited customization</strong>: Lack of flexible, scalable
+              insurance solutions
+            </li>
+          </ul>
+
+          <h2 class="text-2xl font-bold mt-8 mb-2">
+            Future Market Projections
+          </h2>
+          <h3 class="text-xl font-bold mt-4 mb-1">
+            Technology Integration Impact
+          </h3>
+          <p>
+            <strong>AI-powered underwriting</strong>,
+            <strong>IoT-based risk monitoring</strong>, and
+            <strong>blockchain-based claims processing</strong> are expected to
+            <strong>reduce costs</strong> and
+            <strong>improve accessibility</strong> for SME insurance products.<a
+              href="#modal-ref-3"
+              ><sup>[3]</sup></a
+            >
+          </p>
+          <h3 class="text-xl font-bold mt-4 mb-1">Market Size Projections</h3>
+          <p>
+            The SME insurance market in India is estimated to be worth
+            <strong>₹1.5-1.8 lakh crore</strong> with significant growth
+            potential as penetration improves from the current 3% baseline.<a
+              href="#modal-ref-3"
+              ><sup>[3]</sup></a
+            >
+          </p>
+          <p class="mt-8">
+            The SME and corporate insurance segments represent India's largest
+            untapped non-life insurance opportunity, with the potential for
+            exponential growth driven by digitalization, regulatory support, and
+            increasing risk awareness among business owners.
+          </p>
+
+          <section
+            id="modal-citations"
+            class="mt-16 pt-8 border-t border-gray-300"
+          >
+            <h2 class="text-2xl font-bold text-gray-700 mb-4">References</h2>
+            <ol
+              class="text-sm text-gray-600 list-decimal list-inside space-y-1"
+            >
+              <li id="modal-ref-1">
+                <a
+                  href="https://economictimes.com/small-biz/sme-sector/only-3-of-indias-62-million-business-owners-have-sme-insurance-icici-lombards-anand-singhi/articleshow/111333380.cms"
+                  class="text-blue-600 hover:underline"
+                  >https://economictimes.com/small-biz/sme-sector/only-3-of-indias-62-million-business-owners-have-sme-insurance-icici-lombards-anand-singhi/articleshow/111333380.cms</a
+                >
+              </li>
+              <li id="modal-ref-2">
+                <a
+                  href="https://niapune.org.in/uploads/researchreports/MSE InsuranceReport 07 09 2023.pdf"
+                  class="text-blue-600 hover:underline"
+                  >https://niapune.org.in/uploads/researchreports/MSE
+                  InsuranceReport 07 09 2023.pdf</a
+                >
+              </li>
+              <li id="modal-ref-3">
+                <a
+                  href="https://www.mckinsey.com/in/our-insights/steering-indian-insurance-from-growth-to-value-in-the-upcoming-techade"
+                  class="text-blue-600 hover:underline"
+                  >https://www.mckinsey.com/in/our-insights/steering-indian-insurance-from-growth-to-value-in-the-upcoming-techade</a
+                >
+              </li>
+              <li id="modal-ref-4">
+                <a
+                  href="https://www.imarcgroup.com/india-commercial-insurance-market"
+                  class="text-blue-600 hover:underline"
+                  >https://www.imarcgroup.com/india-commercial-insurance-market</a
+                >
+              </li>
+              <li id="modal-ref-5">
+                <a
+                  href="https://www.gicouncil.in/news-media/gic-in-the-news/qa-topic-insurance-offerings-for-msmes/"
+                  class="text-blue-600 hover:underline"
+                  >https://www.gicouncil.in/news-media/gic-in-the-news/qa-topic-insurance-offerings-for-msmes/</a
+                >
+              </li>
+              <li id="modal-ref-6">
+                <a
+                  href="https://www.swissre.com/institute/research/topics-and-risk-dialogues/economy-and-insurance-outlook/india-economy-insurance-market-growth.html"
+                  class="text-blue-600 hover:underline"
+                  >https://www.swissre.com/institute/research/topics-and-risk-dialogues/economy-and-insurance-outlook/india-economy-insurance-market-growth.html</a
+                >
+              </li>
+              <li id="modal-ref-7">
+                <a
+                  href="https://www.thebrainyinsights.com/report/sme-insurance-market-14540"
+                  class="text-blue-600 hover:underline"
+                  >https://www.thebrainyinsights.com/report/sme-insurance-market-14540</a
+                >
+              </li>
+              <li id="modal-ref-8">
+                <a
+                  href="https://riskcovry.com/pulse-under-penetration-of-insurance-in-msme-sector/"
+                  class="text-blue-600 hover:underline"
+                  >https://riskcovry.com/pulse-under-penetration-of-insurance-in-msme-sector/</a
+                >
+              </li>
+              <li id="modal-ref-9">
+                <a
+                  href="https://www.statista.com/outlook/fmo/insurances/india"
+                  class="text-blue-600 hover:underline"
+                  >https://www.statista.com/outlook/fmo/insurances/india</a
+                >
+              </li>
+            </ol>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <!-- Back to Top Button -->
+    <button
+      id="back-to-top"
+      class="fixed bottom-6 right-6 p-3 bg-gray-800 text-white rounded-full shadow-lg transition-opacity duration-300 opacity-0 focus:outline-none"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M5 10l7-7m0 0l7 7m-7-7v18"
+        />
+      </svg>
+    </button>
+
+    <script>
+      const backToTopBtn = document.getElementById("back-to-top");
+      const openModalBtn = document.getElementById("open-modal-btn");
+      const closeModalBtn = document.getElementById("close-modal-btn");
+      const modal = document.getElementById("document-modal");
+
+      // Show/hide the back-to-top button
+      window.onscroll = function () {
+        if (
+          document.body.scrollTop > 100 ||
+          document.documentElement.scrollTop > 100
+        ) {
+          backToTopBtn.classList.remove("opacity-0");
+        } else {
+          backToTopBtn.classList.add("opacity-0");
+        }
+      };
+
+      // Smooth scroll to the top
+      backToTopBtn.addEventListener("click", function () {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+      });
+
+      // Open the modal
+      openModalBtn.addEventListener("click", function () {
+        modal.classList.remove("hidden");
+        document.body.style.overflow = "hidden"; // Prevent scrolling
+      });
+
+      // Close the modal
+      closeModalBtn.addEventListener("click", function () {
+        modal.classList.add("hidden");
+        document.body.style.overflow = "auto"; // Restore scrolling
+      });
+
+      // Close modal when clicking outside of it
+      modal.addEventListener("click", function (e) {
+        if (e.target === modal) {
+          modal.classList.add("hidden");
+          document.body.style.overflow = "auto";
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,2800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MSME Suraksha - Digital Insurance Platform</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.16/i18next.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;5m00;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* Custom Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .animate-fadeIn {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-slideInUp {
+            animation: slideInUp 0.5s ease-out;
+        }
+
+        /* Chart.js responsiveness */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+        /* Custom scrollbar for dark mode */
+        :root {
+            color-scheme: light;
+        }
+        :root.dark {
+            color-scheme: dark;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #2d3748;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #4a5568;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #718096;
+        }
+    </style>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            light: '#4f46e5',
+                            DEFAULT: '#4338ca',
+                            dark: '#3730a3',
+                        },
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        fadeIn: 'fadeIn 0.5s ease-in-out',
+                        slideInUp: 'slideInUp 0.5s ease-out',
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+    <div id="root"></div>
+
+    <script type="text/babel" data-type="module">
+
+        // --- React Imports ---
+        const { useState, useEffect, createContext, useContext, useRef, Fragment, useCallback } = React;
+
+        // --- i18next Configuration ---
+        const translations = {
+            en: {
+                translation: {
+                    // General
+                    'appTitle': 'MSME Suraksha',
+                    'login': 'Login',
+                    'register': 'Register',
+                    'logout': 'Logout',
+                    'email': 'Email Address',
+                    'password': 'Password',
+                    'name': 'Full Name',
+                    'role': 'Role',
+                    'customer': 'Customer',
+                    'agent': 'Agent',
+                    'insurer': 'Insurer',
+                    'admin': 'Admin',
+                    'welcome': 'Welcome, {{name}}',
+                    'loading': 'Loading...',
+                    'submit': 'Submit',
+                    'close': 'Close',
+                    'payNow': 'Pay Now',
+                    
+                    // Roles
+                    'role_customer': 'Customer (MSME Owner)',
+                    'role_agent': 'Agent / Broker',
+                    'role_insurer': 'Insurer',
+                    'role_admin': 'Platform Admin',
+
+                    // Nav
+                    'nav_dashboard': 'Dashboard',
+                    'nav_marketplace': 'Marketplace',
+                    'nav_my_policies': 'My Policies',
+                    'nav_file_claim': 'File a Claim',
+                    'nav_track_claims': 'Track Claims',
+                    'nav_api_docs': 'API Docs',
+                    'nav_project_info': 'Project Info',
+
+                    // Landing Page
+                    'landing_hero_title': 'Simplified Insurance for India\'s MSMEs',
+                    'landing_hero_subtitle': 'Protect your business, your employees, and your future with our all-in-one digital insurance platform.',
+                    'landing_hero_cta': 'Explore Products',
+                    'landing_tier_micro_title': 'Micro Enterprises',
+                    'landing_tier_micro_desc': 'For businesses with turnover up to ₹10 crore.',
+                    'landing_tier_small_title': 'Small Enterprises',
+                    'landing_tier_small_desc': 'For businesses with turnover up to ₹100 crore.',
+                    'landing_tier_medium_title': 'Medium Enterprises',
+                    'landing_tier_medium_desc': 'For businesses with turnover up to ₹500 crore.',
+                    'view_details': 'View Details',
+
+                    // Registration
+                    'register_title': 'Create Your Account',
+                    'register_step1': 'Account Details',
+                    'register_step2': 'e-KYC Verification',
+                    'register_step3': 'Business Details',
+                    'register_aadhaar': 'Aadhaar Number (12 digits)',
+                    'register_pan': 'PAN Number (10 chars)',
+                    'register_verify_kyc': 'Verify KYC',
+                    'register_otp_prompt': 'Enter 6-digit OTP sent to your mock number',
+                    'register_otp': 'OTP',
+                    'register_verify_otp': 'Verify OTP',
+                    'register_kyc_success': 'KYC Verified!',
+                    'register_udyam': 'Udyam Registration ID',
+                    'register_udyam_desc': '(e.g., UDYAM-XX-00-0000000)',
+                    'register_complete': 'Complete Registration',
+                    'register_already_have_account': 'Already have an account?',
+                    
+                    // Login
+                    'login_title': 'Login to your Account',
+                    'login_no_account': 'Don\'t have an account?',
+
+                    // Product Showcase
+                    'product_annual_premium': 'Indicative Annual Premium',
+                    'product_core_protection': 'Core Protection',
+                    'product_optional_addons': 'Optional Add-ons',
+                    'product_vas': 'Value-Added Services',
+                    'product_buy_now': 'Buy Now for',
+                    'product_included': 'Included',
+
+                    // Purchase Flow
+                    'purchase_title': 'Complete Your Purchase',
+                    'purchase_step1': 'Proposal Form',
+                    'purchase_step2': 'Review & Confirm',
+                    'purchase_step3': 'Payment',
+                    'purchase_business_name': 'Business Name',
+                    'purchase_business_address': 'Business Address',
+                    'purchase_nominee_name': 'Nominee Name',
+                    'purchase_nominee_relation': 'Nominee Relationship',
+                    'purchase_review_title': 'Review Your Policy',
+                    'purchase_premium_breakdown': 'Premium Breakdown',
+                    'purchase_base_premium': 'Base Premium',
+                    'purchase_total_addons': 'Total Add-ons',
+                    'purchase_gst': 'GST (18%)',
+                    'purchase_total_premium': 'Total Premium',
+                    'purchase_confirm_pay': 'Confirm & Pay',
+                    'purchase_payment_title': 'Simulated Payment',
+                    'purchase_payment_desc': 'This is a mock payment gateway. No real payment will be processed.',
+                    'purchase_success_title': 'Payment Successful!',
+                    'purchase_success_desc': 'Your policy has been issued. You will be redirected to your dashboard.',
+                    'purchase_policy_number': 'Policy Number',
+
+                    // Customer Dashboard
+                    'policy_locker_title': 'My Policies (Policy Locker)',
+                    'policy_locker_empty': 'You have not purchased any policies yet.',
+                    'policy_number': 'Policy No.',
+                    'policy_sum_insured': 'Sum Insured',
+                    'policy_premium_paid': 'Premium Paid',
+                    'policy_status': 'Status',
+                    'policy_status_active': 'Active',
+                    'policy_view_details': 'View Details',
+                    'file_claim_title': 'File a New Claim',
+                    'file_claim_select_policy': 'Select Policy to Claim Against',
+                    'file_claim_incident_date': 'Date of Incident',
+                    'file_claim_details': 'Describe the incident',
+                    'file_claim_upload_docs': 'Upload Documents (Mock)',
+                    'file_claim_submit': 'Submit Claim',
+                    'file_claim_success': 'Claim submitted successfully! Your Claim ID is {{id}}.',
+                    'track_claims_title': 'My Claims',
+                    'track_claims_empty': 'You have not filed any claims yet.',
+                    'claim_id': 'Claim ID',
+                    'claim_date_filed': 'Date Filed',
+                    'claim_status': 'Status',
+                    'claim_status_pending': 'Pending',
+                    'claim_status_approved': 'Approved',
+                    'claim_status_rejected': 'Rejected',
+
+                    // Admin Dashboard
+                    'admin_dashboard_title': 'Platform Dashboard',
+                    'admin_total_policies': 'Total Policies Issued',
+                    'admin_total_premium': 'Total Premium Collected',
+                    'admin_total_claims': 'Total Claims Filed',
+                    'admin_premium_inflows': 'Premium Inflows Over Time',
+                    'admin_policy_distribution': 'Policy Distribution by Tier',
+                    'admin_claims_status': 'Claims Status Overview',
+                    'admin_add_product_title': 'Add/Edit Product',
+                    'admin_add_product_desc': 'This form demonstrates how an admin could manage marketplace offerings.',
+
+                    // API Docs
+                    'api_docs_title': 'Mock API Documentation',
+                    'api_docs_desc': 'Simulated API endpoints for the prototype.',
+
+                    // Project Info
+                    'project_info_title': 'Project Information',
+                    'project_info_instructions_title': 'How to Use This Prototype',
+                    'project_info_instructions_1': '1. Use the "Switch Role" dropdown in the header to change user perspectives (Customer, Agent, Admin).',
+                    'project_info_instructions_2': '2. As a "Customer", you can register, login, browse the marketplace, and simulate a policy purchase.',
+                    'project_info_instructions_3': '3. The purchase flow includes a mock e-KYC, proposal form, and payment. A confetti animation confirms success.',
+                    'project_info_instructions_4': '4. In the Customer Dashboard, you can view your "Policy Locker", file a new claim, and track existing claims.',
+                    'project_info_instructions_5': '5. As an "Admin", you can view platform analytics (powered by Chart.js) and see mock management forms.',
+                    'project_info_instructions_6': '6. Use the Sun/Moon icon to toggle Dark/Light mode and the "EN | HI" button for multilingual support.',
+                    'project_info_architecture_title': 'Simulated Architecture',
+                    'project_info_architecture_desc': 'This prototype is a single HTML file using React (via CDN) for the UI. All backend functionality is simulated by a "mockAPI" object within the script, which uses setTimeout to mimic network latency and operates on an inline JSON "mockData" store. State (like login status) is persisted in localStorage for a seamless demo.',
+
+                    // Chatbot
+                    'chatbot_title': 'MSME Suraksha Assistant',
+                    'chatbot_greeting': 'Hello! How can I help you with MSME insurance today?',
+                    'chatbot_option_1': 'What is the "Vyapar Suraksha Starter Kit"?',
+                    'chatbot_option_2': 'How do I file a claim?',
+                    'chatbot_option_3': 'What is "Business Interruption Cash"?',
+                    'chatbot_response_1': 'The "Vyapar Suraksha Starter Kit" is our all-in-one package for Micro-Enterprises. It bundles Shop & Stock protection, Owner\'s Personal Accident cover, and a Digital Transaction Guard into one simple policy.',
+                    'chatbot_response_2': 'You can file a claim from your Customer Dashboard. Just click "File a Claim", select your policy, fill in the incident details, and submit. Our team will then review it.',
+                    'chatbot_response_3': '"Business Interruption Cash" is an optional add-on that provides a fixed per-day cash payout if your business has to shut down temporarily due to a covered event like a fire.',
+                }
+            },
+            hi: {
+                translation: {
+                    // General
+                    'appTitle': 'एमएसएमई सुरक्षा',
+                    'login': 'लॉग इन करें',
+                    'register': 'पंजीकरण करें',
+                    'logout': 'लॉग आउट',
+                    'email': 'ईमेल पता',
+                    'password': 'पासवर्ड',
+                    'name': 'पूरा नाम',
+                    'role': 'भूमिका',
+                    'customer': 'ग्राहक',
+                    'agent': 'एजेंट',
+                    'insurer': 'बीमाकर्ता',
+                    'admin': 'एडमिन',
+                    'welcome': 'स्वागत है, {{name}}',
+                    'loading': 'लोड हो रहा है...',
+                    'submit': 'प्रस्तुत करें',
+                    'close': 'बंद करें',
+                    'payNow': 'अभी भुगतान करें',
+
+                    // Roles
+                    'role_customer': 'ग्राहक (MSME मालिक)',
+                    'role_agent': 'एजेंट / ब्रोकर',
+                    'role_insurer': 'बीमाकर्ता',
+                    'role_admin': 'प्लेटफार्म एडमिन',
+
+                    // Nav
+                    'nav_dashboard': 'डैशबोर्ड',
+                    'nav_marketplace': 'मार्केटप्लेस',
+                    'nav_my_policies': 'मेरी पॉलिसियां',
+                    'nav_file_claim': 'दावा दायर करें',
+                    'nav_track_claims': 'दावे ट्रैक करें',
+                    'nav_api_docs': 'एपीआई डॉक्स',
+                    'nav_project_info': 'परियोजना की जानकारी',
+
+                    // Landing Page
+                    'landing_hero_title': 'भारत के MSMEs के लिए सरलीकृत बीमा',
+                    'landing_hero_subtitle': 'हमारे ऑल-इन-वन डिजिटल बीमा प्लेटफॉर्म के साथ अपने व्यवसाय, अपने कर्मचारियों और अपने भविष्य की रक्षा करें।',
+                    'landing_hero_cta': 'उत्पाद देखें',
+                    'landing_tier_micro_title': 'सूक्ष्म उद्यम',
+                    'landing_tier_micro_desc': '₹10 करोड़ तक के टर्नओवर वाले व्यवसायों के लिए।',
+                    'landing_tier_small_title': 'लघु उद्यम',
+                    'landing_tier_small_desc': '₹100 करोड़ तक के टर्नओवर वाले व्यवसायों के लिए।',
+                    'landing_tier_medium_title': 'मध्यम उद्यम',
+                    'landing_tier_medium_desc': '₹500 करोड़ तक के टर्नओवर वाले व्यवसायों के लिए।',
+
+                    // Registration
+                    'register_title': 'अपना खाता बनाएं',
+                    'register_step1': 'खाता विवरण',
+                    'register_step2': 'ई-केवाईसी सत्यापन',
+                    'register_step3': 'व्यावसायिक विवरण',
+                    'register_aadhaar': 'आधार संख्या (12 अंक)',
+                    'register_pan': 'पैन नंबर (10 अक्षर)',
+                    'register_verify_kyc': 'केवाईसी सत्यापित करें',
+                    'register_otp_prompt': 'आपके मॉक नंबर पर भेजा गया 6 अंकों का ओटीपी दर्ज करें',
+                    'register_otp': 'ओटीपी',
+                    'register_verify_otp': 'ओटीपी सत्यापित करें',
+                    'register_kyc_success': 'केवाईसी सत्यापित!',
+                    'register_udyam': 'उद्यम पंजीकरण आईडी',
+                    'register_udyam_desc': '(जैसे, UDYAM-XX-00-0000000)',
+                    'register_complete': 'पंजीकरण पूरा करें',
+                    'register_already_have_account': 'क्या आपका पहले से ही खाता है?',
+
+                    // Login
+                    'login_title': 'अपने खाते में लॉग इन करें',
+                    'login_no_account': 'क्या आपका खाता नहीं है?',
+
+                    // Product Showcase
+                    'product_annual_premium': 'सांकेतिक वार्षिक प्रीमियम',
+                    'product_core_protection': 'मुख्य सुरक्षा',
+                    'product_optional_addons': 'वैकल्पिक ऐड-ऑन',
+                    'product_vas': 'मूल्य वर्धित सेवाएं',
+                    'product_buy_now': 'अभी खरीदें',
+                    'product_included': 'शामिल है',
+
+                    // Purchase Flow
+                    'purchase_title': 'अपनी खरीद पूरी करें',
+                    'purchase_step1': 'प्रस्ताव प्रपत्र',
+                    'purchase_step2': 'समीक्षा करें और पुष्टि करें',
+                    'purchase_step3': 'भुगतान',
+                    'purchase_business_name': 'व्यवसाय का नाम',
+                    'purchase_business_address': 'व्यावसायिक पता',
+                    'purchase_nominee_name': 'नामित व्यक्ति का नाम',
+                    'purchase_nominee_relation': 'नामित व्यक्ति से संबंध',
+                    'purchase_review_title': 'अपनी पॉलिसी की समीक्षा करें',
+                    'purchase_premium_breakdown': 'प्रीमियम ब्रेकडाउन',
+                    'purchase_base_premium': 'आधार प्रीमियम',
+                    'purchase_total_addons': 'कुल ऐड-ऑन',
+                    'purchase_gst': 'जीएसटी (18%)',
+                    'purchase_total_premium': 'कुल प्रीमियम',
+                    'purchase_confirm_pay': 'पुष्टि करें और भुगतान करें',
+                    'purchase_payment_title': 'नकली भुगतान',
+                    'purchase_payment_desc': 'यह एक मॉक पेमेंट गेटवे है। कोई वास्तविक भुगतान संसाधित नहीं किया जाएगा।',
+                    'purchase_success_title': 'भुगतान सफल!',
+                    'purchase_success_desc': 'आपकी पॉलिसी जारी कर दी गई है। आपको आपके डैशबोर्ड पर पुनः निर्देशित किया जाएगा।',
+                    'purchase_policy_number': 'पॉलिसी नंबर',
+
+                    // Customer Dashboard
+                    'policy_locker_title': 'मेरी पॉलिसियां (पॉलिसी लॉकर)',
+                    'policy_locker_empty': 'आपने अभी तक कोई पॉलिसी नहीं खरीदी है।',
+                    'policy_number': 'पॉलिसी नं.',
+                    'policy_sum_insured': 'बीमित राशि',
+                    'policy_premium_paid': 'प्रीमियम भुगतान किया',
+                    'policy_status': 'स्थिति',
+                    'policy_status_active': 'सक्रिय',
+                    'policy_view_details': 'विवरण देखें',
+                    'file_claim_title': 'नया दावा दायर करें',
+                    'file_claim_select_policy': 'दावा करने के लिए पॉलिसी चुनें',
+                    'file_claim_incident_date': 'घटना की तारीख',
+                    'file_claim_details': 'घटना का वर्णन करें',
+                    'file_claim_upload_docs': 'दस्तावेज़ अपलोड करें (मॉक)',
+                    'file_claim_submit': 'दावा प्रस्तुत करें',
+                    'file_claim_success': 'दावा सफलतापूर्वक प्रस्तुत किया गया! आपकी दावा आईडी {{id}} है।',
+                    'track_claims_title': 'मेरे दावे',
+                    'track_claims_empty': 'आपने अभी तक कोई दावा दायर नहीं किया है।',
+                    'claim_id': 'दावा आईडी',
+                    'claim_date_filed': 'दायर करने की तारीख',
+                    'claim_status': 'स्थिति',
+                    'claim_status_pending': 'लंबित',
+                    'claim_status_approved': 'स्वीकृत',
+                    'claim_status_rejected': 'अस्वीकृत',
+                    
+                    // Admin Dashboard
+                    'admin_dashboard_title': 'प्लेटफार्म डैशबोर्ड',
+                    'admin_total_policies': 'कुल जारी पॉलिसियां',
+                    'admin_total_premium': 'एकत्रित कुल प्रीमियम',
+                    'admin_total_claims': 'कुल दायर दावे',
+                    'admin_premium_inflows': 'समय के साथ प्रीमियम आमद',
+                    'admin_policy_distribution': 'टियर के अनुसार पॉलिसी वितरण',
+                    'admin_claims_status': 'दावों की स्थिति का अवलोकन',
+                    'admin_add_product_title': 'उत्पाद जोड़ें/संपादित करें',
+                    'admin_add_product_desc': 'यह फॉर्म दर्शाता है कि एक एडमिन मार्केटप्लेस की पेशकशों का प्रबंधन कैसे कर सकता है।',
+
+                    // API Docs
+                    'api_docs_title': 'मॉक एपीआई दस्तावेज़ीकरण',
+                    'api_docs_desc': 'प्रोटोटाइप के लिए नकली एपीआई एंडपॉइंट।',
+
+                    // Project Info
+                    'project_info_title': 'परियोजना की जानकारी',
+                    'project_info_instructions_title': 'इस प्रोटोटाइप का उपयोग कैसे करें',
+                    'project_info_instructions_1': '1. उपयोगकर्ता के दृष्टिकोण (ग्राहक, एजेंट, एडमिन) को बदलने के लिए हेडर में "भूमिका बदलें" ड्रॉपडाउन का उपयोग करें।',
+                    'project_info_instructions_2': '2. "ग्राहक" के रूप में, आप पंजीकरण कर सकते हैं, लॉग इन कर सकते हैं, मार्केटप्लेस ब्राउज़ कर सकते हैं, और पॉलिसी खरीद का अनुकरण कर सकते हैं।',
+                    'project_info_instructions_3': '3. खरीद प्रवाह में एक मॉक ई-केवाईसी, प्रस्ताव प्रपत्र और भुगतान शामिल है। एक कंफ़ेटी एनीमेशन सफलता की पुष्टि करता है।',
+                    'project_info_instructions_4': '4. ग्राहक डैशबोर्ड में, आप अपनी "पॉलिसी लॉकर" देख सकते हैं, नया दावा दायर कर सकते हैं, और मौजूदा दावों को ट्रैक कर सकते हैं।',
+                    'project_info_instructions_5': '5. "एडमिन" के रूप में, आप प्लेटफ़ॉर्म एनालिटिक्स (Chart.js द्वारा संचालित) और मॉक प्रबंधन फ़ॉर्म देख सकते हैं।',
+                    'project_info_instructions_6': '6. डार्क/लाइट मोड को टॉगल करने के लिए सूर्य/चंद्रमा आइकन और बहुभाषी समर्थन के लिए "EN | HI" बटन का उपयोग करें।',
+                    'project_info_architecture_title': 'नकली वास्तुकला',
+                    'project_info_architecture_desc': 'यह प्रोटोटाइप यूआई के लिए रिएक्ट (सीडीएन के माध्यम से) का उपयोग करके एक एकल एचटीएमएल फ़ाइल है। सभी बैकएंड कार्यक्षमता स्क्रिप्ट के भीतर एक "मॉकएपीआई" ऑब्जेक्ट द्वारा नकली है, जो नेटवर्क विलंबता की नकल करने के लिए setTimeout का उपयोग करता है और एक इनलाइन JSON "मॉकडेटा" स्टोर पर काम करता है। निर्बाध डेमो के लिए स्थिति (जैसे लॉगिन स्थिति) localStorage में बनी रहती है।',
+                
+                    // Chatbot
+                    'chatbot_title': 'एमएसएमई सुरक्षा सहायक',
+                    'chatbot_greeting': 'नमस्ते! आज मैं एमएसएमई बीमा के साथ आपकी कैसे मदद कर सकता हूँ?',
+                    'chatbot_option_1': '"व्यापार सुरक्षा स्टार्टर किट" क्या है?',
+                    'chatbot_option_2': 'मैं दावा कैसे दायर करूं?',
+                    'chatbot_option_3': '"बिजनेस इंटरप्शन कैश" क्या है?',
+                    'chatbot_response_1': '"व्यापार सुरक्षा स्टार्टर किट" सूक्ष्म-उद्यमों के लिए हमारा ऑल-इन-वन पैकेज है। यह दुकान और स्टॉक सुरक्षा, मालिक का व्यक्तिगत दुर्घटना कवर, और एक डिजिटल लेनदेन गार्ड को एक सरल पॉलिसी में बंडल करता है।',
+                    'chatbot_response_2': 'आप अपने ग्राहक डैशबोर्ड से दावा दायर कर सकते हैं। बस "दावा दायर करें" पर क्लिक करें, अपनी पॉलिसी चुनें, घटना का विवरण भरें और सबमिट करें। हमारी टीम फिर इसकी समीक्षा करेगी।',
+                    'chatbot_response_3': '"बिजनेस इंटरप्शन कैश" एक वैकल्पिक ऐड-ऑन है जो आग जैसी कवर की गई घटना के कारण आपके व्यवसाय को अस्थायी रूप से बंद करना पड़ता है, तो एक निश्चित प्रति-दिन नकद भुगतान प्रदान करता है।',
+                }
+            }
+        };
+
+        i18next.init({
+            lng: localStorage.getItem('msme-lang') || 'en',
+            debug: false,
+            resources: translations,
+        });
+
+        // --- Global App Context ---
+        const AppContext = createContext(null);
+
+        // --- MOCK DATA STORE ---
+        // This object simulates our entire database.
+        const mockData = {
+            users: [
+                { id: 1, udyamId: 'UDYAM-MH-01-0000123', name: 'Rohan Gupta', email: 'rohan@customer.com', role: 'customer', aadhaar: '123456789012', pan: 'ABCDE1234F', password: 'password123' },
+                { id: 2, udyamId: null, name: 'Priya Sharma', email: 'priya@agent.com', role: 'agent', aadhaar: '234567890123', pan: 'BCDEF2345G', password: 'password123' },
+                { id: 3, udyamId: null, name: 'Amit Singh', email: 'amit@insurer.com', role: 'insurer', aadhaar: '345678901234', pan: 'CDEFG3456H', password: 'password123' },
+                { id: 4, udyamId: null, name: 'Admin User', email: 'admin@platform.com', role: 'admin', aadhaar: '456789012345', pan: 'DEFGH4567I', password: 'password123' },
+            ],
+            msmeProductBouquets: {
+                micro: {
+                    id: 'tier1',
+                    title: 'Vyapar Suraksha Starter Kit',
+                    target: 'Turnover up to ₹10 crore',
+                    premiumRange: '₹2,500 - ₹7,500',
+                    basePremium: 2500,
+                    coreProtection: {
+                        title: 'All-in-One Suraksha',
+                        description: 'A single, pre-underwritten policy combining essential covers. It protects the physical shop, the owner\'s well-being, and digital transactions.',
+                        sumInsured: 1000000,
+                        subComponents: [
+                            { name: 'Shop & Stock Protector', description: 'Covers physical structure and inventory against fire, burglary, theft, and natural calamities.' },
+                            { name: 'Owner\'s Personal Accident Shield', description: 'Provides a ₹5 Lakhs lump sum benefit for the owner in case of accidental death or permanent disability.' },
+                            { name: 'Digital Transaction Guard', description: 'Protects against losses from UPI fraud, phishing, and other digital payment scams up to ₹50,000.' },
+                        ],
+                    },
+                    addOns: [
+                        { id: 'addon1', name: 'Business Interruption Cash', additionalPremium: 500, description: 'A fixed per-day cash payout (e.g., ₹1,000/day for up to 15 days) if the business is forced to shut down.' },
+                    ],
+                    valueAddedServices: [
+                        { name: 'Emergency Business Assist', cost: 'Included', description: 'A 24/7 helpline for non-insurance emergencies (electricians, plumbers, etc.).' },
+                    ],
+                },
+                small: {
+                    id: 'tier2',
+                    title: 'Udyam Growth Engine',
+                    target: 'Turnover up to ₹100 crore',
+                    premiumRange: '₹20,000 - ₹60,000',
+                    basePremium: 20000,
+                    coreProtection: {
+                        title: 'Business Foundation Package',
+                        description: 'A foundational package covering property, liability, and mandatory employee protections.',
+                        sumInsured: 10000000,
+                        subComponents: [
+                            { name: 'Property All Risk (PAR)', description: 'Comprehensive "all risk" coverage for buildings, machinery, and stock.' },
+                            { name: 'Commercial General Liability (CGL)', description: 'Covers third-party bodily injury or property damage caused by business operations.' },
+                            { name: 'Workmen\'s Compensation (WC)', description: 'Legally mandatory cover for employees against workplace injury or death.' },
+                        ],
+                    },
+                    addOns: [
+                        { id: 'addon2', name: 'Group Health Insurance (GHI)', additionalPremium: 8000, description: 'Group health policy for employees (e.g., 10-50 staff) with ₹5 Lakhs sum insured per family.' },
+                        { id: 'addon3', name: 'Cyber Resilience Cover', additionalPremium: 15000, description: 'Dedicated cyber insurance covering data breach response and liability.' },
+                        { id: 'addon4', name: 'Marine & Transit Insurance', additionalPremium: 5000, description: 'Covers goods and raw materials against loss or damage during transport.' },
+                    ],
+                    valueAddedServices: [
+                        { name: 'Basic Risk Assessment', cost: 'Included', description: 'A complimentary basic risk assessment for your premises.' },
+                    ],
+                },
+                medium: {
+                    id: 'tier3',
+                    title: 'Enterprise Resilience Framework',
+                    target: 'Turnover up to ₹500 crore',
+                    premiumRange: '₹5,00,000+',
+                    basePremium: 500000,
+                    coreProtection: {
+                        title: 'Corporate Shield Program',
+                        description: 'A comprehensive, multi-line program including Industrial All Risks (IAR), a full suite of liability covers, and extensive employee benefits.',
+                        sumInsured: 100000000,
+                        subComponents: [
+                            { name: 'Industrial All Risks (IAR)', description: 'Highest level of property protection for large-scale operations.' },
+                            { name: 'Directors & Officers (D&O) Liability', description: 'Protects personal assets of directors and officers from management-related lawsuits.' },
+                        ],
+                    },
+                    addOns: [
+                        { id: 'addon5', name: 'Trade Credit Insurance', additionalPremium: 100000, description: 'Protects accounts receivable against non-payment or insolvency from buyers.' },
+                        { id: 'addon6', name: 'Parametric Insurance Solutions', additionalPremium: 250000, description: 'Innovative, trigger-based cover for non-damage business interruption (e.g., cyclone, flood).' },
+                    ],
+                    valueAddedServices: [
+                        { name: 'Full-Service Risk Consulting', cost: 'Included', description: 'Proactive risk management, business continuity planning, and supply chain vulnerability assessments.' },
+                    ],
+                },
+            },
+            policies: [
+                { id: 1, policyNumber: 'MSME-001-2024-987', userId: 1, productId: 'tier1', productName: 'Vyapar Suraksha Starter Kit', issueDate: '2024-10-01', premiumPaid: 3000, sumInsured: 1000000, status: 'Active', addOns: ['Business Interruption Cash'] },
+            ],
+            claims: [
+                { id: 1001, policyNumber: 'MSME-001-2024-987', userId: 1, status: 'Pending', details: 'Shop was flooded during the recent monsoon storm. Stock damaged.', dateFiled: '2024-10-20', incidentDate: '2024-10-18' },
+                { id: 1002, policyNumber: 'MSME-001-2024-987', userId: 1, status: 'Approved', details: 'UPI fraud incident. Loss of ₹25,000.', dateFiled: '2024-11-05', incidentDate: '2024-11-04' },
+            ],
+            apiDocs: [
+                { method: 'POST', path: '/api/auth/login', description: 'Authenticates a user and returns a user object and token.' },
+                { method: 'POST', path: '/api/auth/register', description: 'Creates a new user account after mock KYC.' },
+                { method: 'GET', path: '/api/products', description: 'Returns a list of all MSME product bouquets (Micro, Small, Medium).' },
+                { method: 'GET', path: '/api/products/:id', description: 'Returns the detailed information for a single product bouquet.' },
+                { method: 'GET', path: '/api/policies/:userId', description: 'Returns all policies for a given user.' },
+                { method: 'POST', path: '/api/policies/purchase', description: 'Simulates the purchase of a new policy.' },
+                { method: 'GET', path: '/api/claims/:userId', description: 'Returns all claims for a given user.' },
+                { method: 'POST', path: '/api/claims/file', description: 'Submits a new claim for review.' },
+                { method: 'GET', path: '/api/admin/stats', description: 'Returns dashboard statistics for the admin panel.' },
+            ],
+            dashboardStats: {
+                totalPolicies: 1250,
+                totalPremium: 7580000,
+                totalClaims: 340,
+                premiumInflows: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    data: [500000, 800000, 1200000, 1000000, 1800000, 2280000],
+                },
+                policyDistribution: {
+                    labels: ['Micro (Tier 1)', 'Small (Tier 2)', 'Medium (Tier 3)'],
+                    data: [800, 350, 100],
+                },
+                claimsStatus: {
+                    labels: ['Pending', 'Approved', 'Rejected'],
+                    data: [80, 210, 50],
+                },
+            }
+        };
+
+        // --- MOCK API MODULE ---
+        // This object simulates all API calls with network latency.
+        const mockAPI = {
+            login: ({ email, password }) => {
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        const user = mockData.users.find(u => u.email === email && u.password === password);
+                        if (user) {
+                            console.log('Mock API: Login successful for', user.email);
+                            resolve({ ...user }); // Return a copy
+                        } else {
+                            console.log('Mock API: Login failed for', email);
+                            reject({ message: 'Invalid email or password' });
+                        }
+                    }, 800);
+                });
+            },
+            register: ({ name, email, password, role, aadhaar, pan, udyamId }) => {
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        if (mockData.users.find(u => u.email === email)) {
+                            reject({ message: 'Email already exists' });
+                            return;
+                        }
+                        const newUser = {
+                            id: mockData.users.length + 1,
+                            udyamId: udyamId,
+                            name,
+                            email,
+                            role,
+                            aadhaar,
+                            pan,
+                            password,
+                        };
+                        mockData.users.push(newUser);
+                        console.log('Mock API: Registration successful for', newUser.email);
+                        resolve({ ...newUser }); // Return a copy
+                    }, 1200);
+                });
+            },
+            getProducts: () => {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        console.log('Mock API: Fetching all products');
+                        resolve(JSON.parse(JSON.stringify(mockData.msmeProductBouquets)));
+                    }, 500);
+                });
+            },
+            getProductDetails: (tierId) => {
+                 return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        const product = mockData.msmeProductBouquets[tierId];
+                         if (product) {
+                            console.log('Mock API: Fetching details for product', tierId);
+                            resolve(JSON.parse(JSON.stringify(product)));
+                        } else {
+                             reject({ message: 'Product not found' });
+                        }
+                    }, 500);
+                });
+            },
+            purchasePolicy: ({ userId, product, selectedAddOns, premiumDetails }) => {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        const newPolicy = {
+                            id: mockData.policies.length + 1,
+                            policyNumber: `MSME-00${mockData.policies.length + 1}-2025-${Math.floor(100 + Math.random() * 900)}`,
+                            userId: userId,
+                            productId: product.id,
+                            productName: product.title,
+                            issueDate: new Date().toISOString().split('T')[0],
+                            premiumPaid: premiumDetails.total,
+                            sumInsured: product.coreProtection.sumInsured,
+                            status: 'Active',
+                            addOns: selectedAddOns.map(a => a.name),
+                        };
+                        mockData.policies.push(newPolicy);
+                        console.log('Mock API: Policy purchased', newPolicy);
+                        resolve({ ...newPolicy });
+                    }, 2000);
+                });
+            },
+            getMyPolicies: (userId) => {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        const policies = mockData.policies.filter(p => p.userId === userId);
+                        console.log(`Mock API: Fetched ${policies.length} policies for user ${userId}`);
+                        resolve(JSON.parse(JSON.stringify(policies)));
+                    }, 700);
+                });
+            },
+            submitClaim: ({ userId, policyNumber, incidentDate, details }) => {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        const newClaim = {
+                            id: mockData.claims.length + 1003,
+                            policyNumber,
+                            userId,
+                            status: 'Pending',
+                            details,
+                            incidentDate,
+                            dateFiled: new Date().toISOString().split('T')[0],
+                        };
+                        mockData.claims.push(newClaim);
+                        console.log('Mock API: Claim submitted', newClaim);
+                        resolve({ ...newClaim });
+                    }, 1500);
+                });
+            },
+            getMyClaims: (userId) => {
+                 return new Promise((resolve) => {
+                    setTimeout(() => {
+                        const claims = mockData.claims.filter(c => c.userId === userId);
+                        console.log(`Mock API: Fetched ${claims.length} claims for user ${userId}`);
+                        resolve(JSON.parse(JSON.stringify(claims)));
+                    }, 700);
+                });
+            },
+            getDashboardStats: () => {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        console.log('Mock API: Fetching admin dashboard stats');
+                        // Update totals based on current mockData
+                        const stats = JSON.parse(JSON.stringify(mockData.dashboardStats));
+                        stats.totalPolicies = mockData.policies.length;
+                        stats.totalClaims = mockData.claims.length;
+                        stats.totalPremium = mockData.policies.reduce((acc, p) => acc + p.premiumPaid, 0);
+                        resolve(stats);
+                    }, 1000);
+                });
+            },
+            getApiDocs: () => {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        console.log('Mock API: Fetching API docs');
+                        resolve(JSON.parse(JSON.stringify(mockData.apiDocs)));
+                    }, 300);
+                });
+            }
+        };
+
+        // --- Helper Hook for i18n ---
+        const useTranslation = () => {
+            const [tick, setTick] = useState(0);
+
+            useEffect(() => {
+                const onLanguageChanged = () => {
+                    setTick(t => t + 1);
+                };
+                i18next.on('languageChanged', onLanguageChanged);
+                return () => {
+                    i18next.off('languageChanged', onLanguageChanged);
+                };
+            }, []);
+
+            return {
+                t: (key, options) => i18next.t(key, options),
+                i18n: i18next
+            };
+        };
+        
+        // --- Global App Provider ---
+        function AppProvider({ children }) {
+            const [currentUser, setCurrentUser] = useState(() => {
+                const storedUser = localStorage.getItem('msme-user');
+                return storedUser ? JSON.parse(storedUser) : null;
+            });
+            const [currentRole, setCurrentRole] = useState(() => {
+                 return localStorage.getItem('msme-role') || (currentUser ? currentUser.role : 'customer');
+            });
+            const [theme, setTheme] = useState(() => {
+                const storedTheme = localStorage.getItem('msme-theme');
+                if (storedTheme) return storedTheme;
+                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            });
+            const [language, setLanguage] = useState(() => {
+                return localStorage.getItem('msme-lang') || 'en';
+            });
+            const [view, setView] = useState({ name: 'landing' }); // Our "router"
+            const [isLoading, setIsLoading] = useState(false);
+            const [globalError, setGlobalError] = useState(null);
+
+            // Theme effect
+            useEffect(() => {
+                if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+                localStorage.setItem('msme-theme', theme);
+            }, [theme]);
+
+            // Language effect
+            useEffect(() => {
+                i18next.changeLanguage(language);
+                localStorage.setItem('msme-lang', language);
+            }, [language]);
+
+            // Persist user
+            useEffect(() => {
+                if (currentUser) {
+                    localStorage.setItem('msme-user', JSON.stringify(currentUser));
+                    localStorage.setItem('msme-role', currentRole);
+                } else {
+                    localStorage.removeItem('msme-user');
+                    localStorage.removeItem('msme-role');
+                }
+            }, [currentUser, currentRole]);
+            
+            // --- Auth Functions ---
+            const login = (user) => {
+                setCurrentUser(user);
+                setCurrentRole(user.role);
+                setView({ name: 'dashboard' });
+            };
+            
+            const logout = () => {
+                setCurrentUser(null);
+                setCurrentRole('customer');
+                setView({ name: 'login' });
+            };
+            
+            const setRole = (role) => {
+                setCurrentRole(role);
+                // Go to the dashboard for that role
+                setView({ name: 'dashboard' });
+            }
+
+            const toggleTheme = () => {
+                setTheme(t => t === 'light' ? 'dark' : 'light');
+            };
+
+            const toggleLanguage = () => {
+                setLanguage(l => l === 'en' ? 'hi' : 'en');
+            };
+
+            const value = {
+                currentUser,
+                login,
+                logout,
+                currentRole,
+                setRole,
+                theme,
+                toggleTheme,
+                language,
+                toggleLanguage,
+                view,
+                setView,
+                isLoading,
+                setIsLoading,
+                globalError,
+                setGlobalError
+            };
+
+            return (
+                <AppContext.Provider value={value}>
+                    {children}
+                </AppContext.Provider>
+            );
+        }
+        
+        // --- Reusable UI Components ---
+
+        function LoadingSpinner() {
+            return (
+                <div className="flex items-center justify-center space-x-2">
+                    <div className="w-4 h-4 rounded-full animate-pulse bg-brand-light"></div>
+                    <div className="w-4 h-4 rounded-full animate-pulse bg-brand-light" style={{ animationDelay: '0.2s' }}></div>
+                    <div className="w-4 h-4 rounded-full animate-pulse bg-brand-light" style={{ animationDelay: '0.4s' }}></div>
+                </div>
+            );
+        }
+        
+        function Modal({ children, isOpen, onClose }) {
+            if (!isOpen) return null;
+
+            return (
+                <div 
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 animate-fadeIn"
+                    onClick={onClose}
+                    aria-modal="true"
+                    role="dialog"
+                >
+                    <div 
+                        className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl p-6 w-full max-w-lg m-4 animate-slideInUp"
+                        onClick={e => e.stopPropagation()}
+                    >
+                        {children}
+                    </div>
+                </div>
+            );
+        }
+
+        function Button({ children, onClick, variant = 'primary', className = '', type = 'button', disabled = false }) {
+            const baseStyle = 'px-4 py-2 rounded-md font-semibold focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-200 ease-in-out';
+            const variants = {
+                primary: `bg-brand hover:bg-brand-dark focus:ring-brand-light text-white ${disabled ? 'bg-gray-400 cursor-not-allowed' : ''}`,
+                secondary: 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 focus:ring-gray-400 text-gray-800 dark:text-gray-100',
+                danger: 'bg-red-600 hover:bg-red-700 focus:ring-red-500 text-white',
+            };
+            return (
+                <button
+                    type={type}
+                    onClick={onClick}
+                    className={`${baseStyle} ${variants[variant]} ${className}`}
+                    disabled={disabled}
+                    aria-label={typeof children === 'string' ? children : 'button'}
+                >
+                    {children}
+                </button>
+            );
+        }
+
+        function Input({ id, label, type = 'text', value, onChange, placeholder = '', required = false, disabled = false }) {
+            return (
+                <div>
+                    <label htmlFor={id} className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{label}</label>
+                    <input
+                        type={type}
+                        id={id}
+                        name={id}
+                        value={value}
+                        onChange={onChange}
+                        placeholder={placeholder}
+                        required={required}
+                        disabled={disabled}
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-brand focus:border-brand dark:bg-gray-700 dark:text-white"
+                        aria-label={label}
+                    />
+                </div>
+            );
+        }
+        
+        function Select({ id, label, value, onChange, children, required = false }) {
+            return (
+                <div>
+                    <label htmlFor={id} className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{label}</label>
+                    <select
+                        id={id}
+                        name={id}
+                        value={value}
+                        onChange={onChange}
+                        required={required}
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-brand focus:border-brand dark:bg-gray-700 dark:text-white"
+                        aria-label={label}
+                    >
+                        {children}
+                    </select>
+                </div>
+            );
+        }
+
+        // --- Charting Component ---
+        function ChartComponent({ type, data, options }) {
+            const chartRef = useRef(null);
+            const chartInstance = useRef(null);
+
+            useEffect(() => {
+                if (chartInstance.current) {
+                    chartInstance.current.destroy();
+                }
+                
+                if (chartRef.current) {
+                    const ctx = chartRef.current.getContext('2d');
+                    chartInstance.current = new Chart(ctx, {
+                        type: type,
+                        data: data,
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    labels: {
+                                        color: document.documentElement.classList.contains('dark') ? '#e5e7eb' : '#374151'
+                                    }
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    ticks: {
+                                        color: document.documentElement.classList.contains('dark') ? '#e5e7eb' : '#374151'
+                                    },
+                                    grid: {
+                                        color: document.documentElement.classList.contains('dark') ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+                                    }
+                                },
+                                y: {
+                                    ticks: {
+                                        color: document.documentElement.classList.contains('dark') ? '#e5e7eb' : '#374151'
+                                    },
+                                    grid: {
+                                        color: document.documentElement.classList.contains('dark') ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+                                    }
+                                }
+                            },
+                            ...options
+                        }
+                    });
+                }
+
+                // Cleanup function
+                return () => {
+                    if (chartInstance.current) {
+                        chartInstance.current.destroy();
+                    }
+                };
+            }, [type, data, options, document.documentElement.classList.contains('dark')]); // Re-run on theme change
+
+            return (
+                <div className="chart-container">
+                    <canvas ref={chartRef} aria-label={`${type} chart`}></canvas>
+                </div>
+            );
+        }
+        
+        // --- Animated Counter Component ---
+        function AnimatedCounter({ target, duration = 1500, className = '' }) {
+            const [count, setCount] = useState(0);
+            const ref = useRef(null);
+
+            const easeOutQuad = t => t * (2 - t);
+
+            useEffect(() => {
+                let frame;
+                let start;
+                const node = ref.current;
+                
+                const animate = (timestamp) => {
+                    if (!start) start = timestamp;
+                    const progress = timestamp - start;
+                    const percentage = Math.min(progress / duration, 1);
+                    const easedPercentage = easeOutQuad(percentage);
+                    
+                    setCount(Math.floor(easedPercentage * target));
+
+                    if (progress < duration) {
+                        frame = requestAnimationFrame(animate);
+                    }
+                };
+
+                const observer = new IntersectionObserver((entries) => {
+                    if (entries[0].isIntersecting) {
+                        frame = requestAnimationFrame(animate);
+                        observer.disconnect();
+                    }
+                }, { threshold: 0.1 });
+                
+                if (node) {
+                    observer.observe(node);
+                }
+
+                return () => {
+                    cancelAnimationFrame(frame);
+                    observer.disconnect();
+                };
+            }, [target, duration]);
+
+            return <span ref={ref} className={className}>{count.toLocaleString('en-IN')}</span>;
+        }
+
+        // --- Icons (as React Components) ---
+        const Icons = {
+            Sun: ({ className = "w-6 h-6" }) => (
+                <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+            ),
+            Moon: ({ className = "w-6 h-6" }) => (
+                <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                </svg>
+            ),
+            Chat: ({ className = "w-6 h-6" }) => (
+                <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                </svg>
+            ),
+            Close: ({ className = "w-6 h-6" }) => (
+                <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            ),
+            Check: ({ className = "w-6 h-6" }) => (
+                <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+            ),
+            Shield: ({ className = "w-6 h-6" }) => (
+                <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                </svg>
+            ),
+            Menu: ({ className = "w-6 h-6" }) => (
+                <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+            ),
+            ChevronDown: ({ className = "w-5 h-5" }) => (
+                <svg className={className} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+            )
+        };
+        
+        // --- App Header ---
+        function Header() {
+            const { currentUser, currentRole, setRole, setView, logout, toggleTheme, theme, toggleLanguage, language } = useContext(AppContext);
+            const { t } = useTranslation();
+            const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+            
+            const roles = ['customer', 'agent', 'insurer', 'admin'];
+            
+            const NavLink = ({ viewName, children }) => (
+                <button
+                    onClick={() => {
+                        setView({ name: viewName });
+                        setIsMobileMenuOpen(false);
+                    }}
+                    className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+                    aria-label={children}
+                >
+                    {children}
+                </button>
+            );
+
+            const renderNavLinks = () => {
+                if (!currentUser) return null;
+                
+                switch(currentRole) {
+                    case 'customer':
+                        return (
+                            <>
+                                <NavLink viewName="dashboard">{t('nav_dashboard')}</NavLink>
+                                <NavLink viewName="marketplace">{t('nav_marketplace')}</NavLink>
+                                <NavLink viewName="file_claim">{t('nav_file_claim')}</NavLink>
+                                <NavLink viewName="track_claims">{t('nav_track_claims')}</NavLink>
+                            </>
+                        );
+                    case 'agent':
+                        return (
+                            <>
+                                <NavLink viewName="dashboard">{t('nav_dashboard')}</NavLink>
+                                <NavLink viewName="marketplace">{t('nav_marketplace')}</NavLink>
+                            </>
+                        );
+                    case 'insurer':
+                    case 'admin':
+                        return (
+                            <>
+                                <NavLink viewName="dashboard">{t('nav_dashboard')}</NavLink>
+                                <NavLink viewName="marketplace">{t('nav_marketplace')}</NavLink>
+                                <NavLink viewName="api_docs">{t('nav_api_docs')}</NavLink>
+                            </>
+                        );
+                    default:
+                        return null;
+                }
+            };
+            
+            return (
+                <header className="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-40">
+                    <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="flex items-center justify-between h-16">
+                            {/* Logo */}
+                            <div className="flex-shrink-0 flex items-center">
+                                <Icons.Shield className="h-8 w-8 text-brand" />
+                                <span 
+                                    className="font-bold text-xl ml-2 cursor-pointer"
+                                    onClick={() => setView({ name: currentUser ? 'dashboard' : 'landing' })}
+                                >
+                                    {t('appTitle')}
+                                </span>
+                            </div>
+
+                            {/* Desktop Nav */}
+                            <div className="hidden md:flex items-center space-x-4">
+                                <div className="flex items-baseline space-x-1">
+                                    {renderNavLinks()}
+                                </div>
+                                
+                                {/* Role Switcher */}
+                                {currentUser && (
+                                    <div className="ml-4">
+                                        <label htmlFor="role-switcher" className="sr-only">Switch Role</label>
+                                        <select
+                                            id="role-switcher"
+                                            name="role-switcher"
+                                            value={currentRole}
+                                            onChange={(e) => setRole(e.target.value)}
+                                            className="text-sm font-medium bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md py-1 px-2 focus:outline-none focus:ring-2 focus:ring-brand"
+                                        >
+                                            {roles.map(r => (
+                                                <option key={r} value={r}>{t(`role_${r}`)}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                )}
+                                
+                                {/* Controls */}
+                                <div className="flex items-center space-x-2">
+                                    <button
+                                        onClick={toggleLanguage}
+                                        className="p-2 rounded-full text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                                        aria-label="Toggle language"
+                                    >
+                                        <span className="font-semibold text-sm">{language === 'en' ? 'HI' : 'EN'}</span>
+                                    </button>
+                                    <button
+                                        onClick={toggleTheme}
+                                        className="p-2 rounded-full text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                                        aria-label="Toggle dark mode"
+                                    >
+                                        {theme === 'light' ? <Icons.Moon /> : <Icons.Sun />}
+                                    </button>
+                                    {currentUser ? (
+                                        <div className="flex items-center space-x-2">
+                                            <span className="text-sm font-medium hidden lg:block">{t('welcome', { name: currentUser.name.split(' ')[0] })}</span>
+                                            <Button onClick={logout} variant="secondary" className="py-1 px-3 text-sm">{t('logout')}</Button>
+                                        </div>
+                                    ) : (
+                                        <Button onClick={() => setView({ name: 'login' })} variant="primary" className="py-1 px-3 text-sm">{t('login')}</Button>
+                                    )}
+                                </div>
+                            </div>
+                            
+                            {/* Mobile Menu Button */}
+                            <div className="md:hidden flex items-center">
+                                <button
+                                    onClick={toggleLanguage}
+                                    className="p-2 rounded-full text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                                    aria-label="Toggle language"
+                                >
+                                    <span className="font-semibold text-sm">{language === 'en' ? 'HI' : 'EN'}</span>
+                                </button>
+                                <button
+                                    onClick={toggleTheme}
+                                    className="p-2 rounded-full text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                                    aria-label="Toggle dark mode"
+                                >
+                                    {theme === 'light' ? <Icons.Moon /> : <Icons.Sun />}
+                                </button>
+                                <button
+                                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                                    className="p-2 rounded-md text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                                    aria-controls="mobile-menu"
+                                    aria-expanded={isMobileMenuOpen}
+                                >
+                                    <span className="sr-only">Open main menu</span>
+                                    {isMobileMenuOpen ? <Icons.Close /> : <Icons.Menu />}
+                                </button>
+                            </div>
+                        </div>
+                    </nav>
+
+                    {/* Mobile Menu */}
+                    <div className={`${isMobileMenuOpen ? 'block' : 'hidden'} md:hidden border-t border-gray-200 dark:border-gray-700`} id="mobile-menu">
+                        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                            {renderNavLinks()}
+                        </div>
+                        <div className="pt-4 pb-3 border-t border-gray-200 dark:border-gray-700">
+                            {currentUser ? (
+                                <div className="px-4">
+                                    <div className="font-medium">{t('welcome', { name: currentUser.name })}</div>
+                                    <div className="text-sm text-gray-500 dark:text-gray-400">{currentUser.email}</div>
+                                    <div className="mt-3">
+                                        <label htmlFor="mobile-role-switcher" className="sr-only">Switch Role</label>
+                                        <select
+                                            id="mobile-role-switcher"
+                                            name="mobile-role-switcher"
+                                            value={currentRole}
+                                            onChange={(e) => {
+                                                setRole(e.target.value);
+                                                setIsMobileMenuOpen(false);
+                                            }}
+                                            className="w-full text-sm font-medium bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-brand"
+                                        >
+                                            {roles.map(r => (
+                                                <option key={r} value={r}>{t(`role_${r}`)}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <Button onClick={() => {
+                                        logout();
+                                        setIsMobileMenuOpen(false);
+                                    }} variant="secondary" className="w-full mt-3">{t('logout')}</Button>
+                                </div>
+                            ) : (
+                                <div className="px-4">
+                                    <Button onClick={() => {
+                                        setView({ name: 'login' });
+                                        setIsMobileMenuOpen(false);
+                                    }} variant="primary" className="w-full">{t('login')}</Button>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </header>
+            );
+        }
+
+        // --- Login & Registration Screen ---
+        function LoginScreen() {
+            const { login, setView, setIsLoading } = useContext(AppContext);
+            const { t } = useTranslation();
+            const [isLoginView, setIsLoginView] = useState(true);
+            const [error, setError] = useState(null);
+            
+            // Shared fields
+            const [email, setEmail] = useState('');
+            const [password, setPassword] = useState('');
+            
+            // Registration fields
+            const [name, setName] = useState('');
+            const [role, setRole] = useState('customer');
+            const [regStep, setRegStep] = useState(1); // 1: Details, 2: KYC, 3: Udyam
+            const [aadhaar, setAadhaar] = useState('');
+            const [pan, setPan] = useState('');
+            const [otp, setOtp] = useState('');
+            const [udyamId, setUdyamId] = useState('');
+            const [kycVerified, setKycVerified] = useState(false);
+            const [otpSent, setOtpSent] = useState(false);
+            
+            const handleLogin = async (e) => {
+                e.preventDefault();
+                setError(null);
+                setIsLoading(true);
+                try {
+                    const user = await mockAPI.login({ email, password });
+                    login(user);
+                } catch (err) {
+                    setError(err.message);
+                } finally {
+                    setIsLoading(false);
+                }
+            };
+            
+            const handleRegister = async (e) => {
+                e.preventDefault();
+                setError(null);
+                setIsLoading(true);
+                try {
+                    const user = await mockAPI.register({ name, email, password, role, aadhaar, pan, udyamId });
+                    login(user); // Auto-login after successful registration
+                } catch (err) {
+                    setError(err.message);
+                } finally {
+                    setIsLoading(false);
+                }
+            };
+
+            const handleVerifyKyc = (e) => {
+                e.preventDefault();
+                if (aadhaar.length === 12 && pan.length === 10) {
+                    setIsLoading(true);
+                    setTimeout(() => {
+                        setOtpSent(true);
+                        setIsLoading(false);
+                    }, 1000);
+                } else {
+                    setError('Please enter valid 12-digit Aadhaar and 10-character PAN.');
+                }
+            };
+            
+            const handleVerifyOtp = (e) => {
+                e.preventDefault();
+                if (otp.length === 6) {
+                    setIsLoading(true);
+                    setTimeout(() => {
+                        setKycVerified(true);
+                        setIsLoading(false);
+                        if (role === 'customer') {
+                            setRegStep(3);
+                        }
+                    }, 1000);
+                } else {
+                    setError('Please enter a 6-digit OTP.');
+                }
+            };
+
+            const resetForm = () => {
+                setError(null);
+                setEmail('');
+                setPassword('');
+                setName('');
+                setRole('customer');
+                setRegStep(1);
+                setAadhaar('');
+                setPan('');
+                setOtp('');
+                setUdyamId('');
+                setKycVerified(false);
+                setOtpSent(false);
+            };
+
+            const toggleView = () => {
+                resetForm();
+                setIsLoginView(!isLoginView);
+            };
+
+            const renderLoginForm = () => (
+                <form onSubmit={handleLogin} className="space-y-4">
+                    <Input id="email" label={t('email')} type="email" value={email} onChange={e => setEmail(e.target.value)} required />
+                    <Input id="password" label={t('password')} type="password" value={password} onChange={e => setPassword(e.target.value)} required />
+                    <Button type="submit" variant="primary" className="w-full" disabled={isLoading}>
+                        {isLoading ? <LoadingSpinner /> : t('login')}
+                    </Button>
+                </form>
+            );
+            
+            const renderRegisterForm = () => (
+                <form onSubmit={handleRegister} className="space-y-4">
+                    {/* Step 1: Account Details */}
+                    {regStep === 1 && (
+                        <div className="space-y-4 animate-fadeIn">
+                            <Input id="name" label={t('name')} type="text" value={name} onChange={e => setName(e.target.value)} required />
+                            <Input id="email" label={t('email')} type="email" value={email} onChange={e => setEmail(e.target.value)} required />
+                            <Input id="password" label={t('password')} type="password" value={password} onChange={e => setPassword(e.target.value)} required />
+                            <Select id="role" label={t('role')} value={role} onChange={e => setRole(e.target.value)} required>
+                                <option value="customer">{t('role_customer')}</option>
+                                <option value="agent">{t('role_agent')}</option>
+                            </Select>
+                            <Button onClick={() => setRegStep(2)} variant="primary" className="w-full">
+                                {t('register_step2')} &rarr;
+                            </Button>
+                        </div>
+                    )}
+                    
+                    {/* Step 2: e-KYC */}
+                    {regStep === 2 && (
+                        <div className="space-y-4 animate-fadeIn">
+                            <h4 className="text-md font-semibold text-center">{t('register_step2')}</h4>
+                            <Input id="aadhaar" label={t('register_aadhaar')} type="text" value={aadhaar} onChange={e => setAadhaar(e.target.value)} required disabled={otpSent} />
+                            <Input id="pan" label={t('register_pan')} type="text" value={pan} onChange={e => setPan(e.target.value)} required disabled={otpSent} />
+                            
+                            {!otpSent && (
+                                <Button onClick={handleVerifyKyc} variant="secondary" className="w-full" disabled={isLoading}>
+                                    {isLoading ? <LoadingSpinner /> : t('register_verify_kyc')}
+                                </Button>
+                            )}
+                            
+                            {otpSent && !kycVerified && (
+                                <div className="space-y-4">
+                                    <p className="text-sm text-green-600 text-center">{t('register_otp_prompt')}</p>
+                                    <Input id="otp" label={t('register_otp')} type="text" value={otp} onChange={e => setOtp(e.target.value)} required />
+                                    <Button onClick={handleVerifyOtp} variant="secondary" className="w-full" disabled={isLoading}>
+                                        {isLoading ? <LoadingSpinner /> : t('register_verify_otp')}
+                                    </Button>
+                                </div>
+                            )}
+                            
+                            {kycVerified && (
+                                <div className="text-center text-green-600 font-semibold flex items-center justify-center space-x-2">
+                                    <Icons.Check className="w-5 h-5" />
+                                    <span>{t('register_kyc_success')}</span>
+                                </div>
+                            )}
+                            
+                            {/* Navigation */}
+                            <div className="flex justify-between">
+                                <Button onClick={() => setRegStep(1)} variant="secondary">&larr; {t('register_step1')}</Button>
+                                {kycVerified && role === 'customer' && (
+                                    <Button onClick={() => setRegStep(3)} variant="primary" className="w-auto">
+                                        {t('register_step3')} &rarr;
+                                    </Button>
+                                )}
+                                {kycVerified && role !== 'customer' && (
+                                    <Button type="submit" variant="primary" className="w-auto" disabled={isLoading}>
+                                        {isLoading ? <LoadingSpinner /> : t('register_complete')}
+                                    </Button>
+                                )}
+                            </div>
+                        </div>
+                    )}
+                    
+                    {/* Step 3: Udyam ID (Customer only) */}
+                    {regStep === 3 && role === 'customer' && (
+                         <div className="space-y-4 animate-fadeIn">
+                            <h4 className="text-md font-semibold text-center">{t('register_step3')}</h4>
+                            <Input id="udyamId" label={t('register_udyam')} type="text" value={udyamId} onChange={e => setUdyamId(e.target.value)} placeholder="UDYAM-XX-00-0000000" required />
+                            <p className="text-xs text-gray-500">{t('register_udyam_desc')}</p>
+                            <div className="flex justify-between">
+                                <Button onClick={() => setRegStep(2)} variant="secondary">&larr; {t('register_step2')}</Button>
+                                <Button type="submit" variant="primary" className="w-auto" disabled={isLoading}>
+                                    {isLoading ? <LoadingSpinner /> : t('register_complete')}
+                                </Button>
+                            </div>
+                        </div>
+                    )}
+                </form>
+            );
+
+            return (
+                <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
+                    <div className="max-w-md w-full space-y-8 bg-white dark:bg-gray-800 p-8 rounded-xl shadow-2xl">
+                        <div>
+                            <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
+                                {isLoginView ? t('login_title') : t('register_title')}
+                            </h2>
+                        </div>
+                        
+                        {error && <div className="text-red-500 text-sm text-center p-3 bg-red-100 dark:bg-red-900 rounded-md">{error}</div>}
+                        
+                        {isLoginView ? renderLoginForm() : renderRegisterForm()}
+                        
+                        <div className="text-sm text-center">
+                            <button onClick={toggleView} className="font-medium text-brand hover:text-brand-dark">
+                                {isLoginView ? t('login_no_account') : t('register_already_have_account')} {isLoginView ? t('register') : t('login')}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+        
+        // --- Landing Page ---
+        function LandingPage() {
+            const { setView } = useContext(AppContext);
+            const { t } = useTranslation();
+            
+            const ProductTierCard = ({ title, desc, tier, delay = 0 }) => (
+                <div 
+                    className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 flex flex-col items-center text-center transform hover:-translate-y-2 transition-transform duration-300 animate-slideInUp"
+                    style={{ animationDelay: `${delay}ms` }}
+                >
+                    <div className="p-4 bg-brand-light rounded-full mb-4">
+                        <Icons.Shield className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="text-xl font-bold mb-2">{title}</h3>
+                    <p className="text-gray-600 dark:text-gray-400 mb-4">{desc}</p>
+                    <Button onClick={() => setView({ name: 'product_detail', payload: { tier } })} variant="primary">
+                        {t('view_details')}
+                    </Button>
+                </div>
+            );
+            
+            return (
+                <div className="animate-fadeIn">
+                    {/* Hero Section */}
+                    <section className="bg-gradient-to-r from-brand to-indigo-700 dark:from-brand-dark dark:to-indigo-900 text-white">
+                        <div className="container mx-auto px-6 py-24 text-center">
+                            <h1 className="text-4xl md:text-6xl font-extrabold mb-4 animate-slideInUp">{t('landing_hero_title')}</h1>
+                            <p className="text-lg md:text-xl text-indigo-100 mb-8 animate-slideInUp" style={{ animationDelay: '200ms' }}>
+                                {t('landing_hero_subtitle')}
+                            </p>
+                            <Button
+                                onClick={() => setView({ name: 'marketplace' })}
+                                className="bg-white text-brand hover:bg-gray-100 text-lg px-8 py-3 font-bold animate-slideInUp"
+                                style={{ animationDelay: '400ms' }}
+                            >
+                                {t('landing_hero_cta')}
+                            </Button>
+                        </div>
+                    </section>
+                    
+                    {/* Product Tiers */}
+                    <section className="py-20">
+                        <div className="container mx-auto px-6">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                <ProductTierCard 
+                                    title={t('landing_tier_micro_title')}
+                                    desc={t('landing_tier_micro_desc')}
+                                    tier="micro"
+                                    delay={100}
+                                />
+                                <ProductTierCard 
+                                    title={t('landing_tier_small_title')}
+                                    desc={t('landing_tier_small_desc')}
+                                    tier="small"
+                                    delay={200}
+                                />
+                                <ProductTierCard 
+                                    title={t('landing_tier_medium_title')}
+                                    desc={t('landing_tier_medium_desc')}
+                                    tier="medium"
+                                    delay={300}
+                                />
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            );
+        }
+
+        // --- Marketplace & Product Showcase ---
+        function Marketplace() {
+            const { setView, setIsLoading } = useContext(AppContext);
+            const { t } = useTranslation();
+            const [products, setProducts] = useState(null);
+            
+            useEffect(() => {
+                const fetchProducts = async () => {
+                    setIsLoading(true);
+                    try {
+                        const data = await mockAPI.getProducts();
+                        setProducts(data);
+                    } catch (err) {
+                        console.error(err);
+                    } finally {
+                        setIsLoading(false);
+                    }
+                };
+                fetchProducts();
+            }, []);
+            
+            if (!products) {
+                return <div className="p-8 text-center"><LoadingSpinner /></div>;
+            }
+            
+            return (
+                <div className="container mx-auto p-8 animate-fadeIn">
+                    <h1 className="text-3xl font-bold mb-8">{t('nav_marketplace')}</h1>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        {Object.keys(products).map(tier => (
+                            <div key={tier} className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 flex flex-col transform hover:-translate-y-2 transition-transform duration-300">
+                                <h2 className="text-2xl font-bold text-brand dark:text-brand-light mb-2">{products[tier].title}</h2>
+                                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">{t(`landing_tier_${tier}_title`)}: {products[tier].target}</p>
+                                <p className="font-semibold text-lg mb-2">{t('product_annual_premium')}</p>
+                                <p className="text-3xl font-bold mb-4">{products[tier].premiumRange}</p>
+                                <ul className="space-y-2 mb-6 text-sm flex-grow">
+                                    {products[tier].coreProtection.subComponents.slice(0, 2).map(sc => (
+                                        <li key={sc.name} className="flex items-start space-x-2">
+                                            <Icons.Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                                            <span>{sc.name}</span>
+                                        </li>
+                                    ))}
+                                    <li>...and more</li>
+                                </ul>
+                                <Button 
+                                    onClick={() => setView({ name: 'product_detail', payload: { tier } })}
+                                    variant="primary"
+                                    className="w-full"
+                                >
+                                    {t('view_details')}
+                                </Button>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+        
+        function ProductShowcase() {
+            const { view, setView, setIsLoading, currentUser } = useContext(AppContext);
+            const { t } = useTranslation();
+            const [product, setProduct] = useState(null);
+            const [selectedAddOns, setSelectedAddOns] = useState([]);
+            const [activeTab, setActiveTab] = useState('core');
+            const [totalPremium, setTotalPremium] = useState(0);
+
+            useEffect(() => {
+                const fetchProduct = async () => {
+                    setIsLoading(true);
+                    try {
+                        const data = await mockAPI.getProductDetails(view.payload.tier);
+                        setProduct(data);
+                        setTotalPremium(data.basePremium);
+                    } catch (err) {
+                        console.error(err);
+                    } finally {
+                        setIsLoading(false);
+                    }
+                };
+                fetchProduct();
+            }, [view.payload.tier]);
+
+            const handleAddOnToggle = (addOn) => {
+                let newSelected;
+                if (selectedAddOns.find(a => a.id === addOn.id)) {
+                    newSelected = selectedAddOns.filter(a => a.id !== addOn.id);
+                } else {
+                    newSelected = [...selectedAddOns, addOn];
+                }
+                setSelectedAddOns(newSelected);
+                
+                // Update total premium
+                const addOnPremium = newSelected.reduce((acc, curr) => acc + curr.additionalPremium, 0);
+                setTotalPremium(product.basePremium + addOnPremium);
+            };
+            
+            const handleBuyNow = () => {
+                if (!currentUser) {
+                    setView({ name: 'login' }); // Force login to buy
+                    return;
+                }
+                const premiumDetails = {
+                    base: product.basePremium,
+                    addOns: totalPremium - product.basePremium,
+                    gst: (totalPremium * 0.18),
+                    total: totalPremium * 1.18,
+                };
+                setView({
+                    name: 'purchase_flow',
+                    payload: { product, selectedAddOns, premiumDetails }
+                });
+            };
+
+            if (!product) {
+                return <div className="p-8 text-center"><LoadingSpinner /></div>;
+            }
+            
+            const TabButton = ({ id, label }) => (
+                <button
+                    onClick={() => setActiveTab(id)}
+                    className={`px-4 py-2 font-semibold ${activeTab === id ? 'border-b-2 border-brand text-brand' : 'text-gray-500 hover:text-gray-700'}`}
+                    role="tab"
+                    aria-selected={activeTab === id}
+                >
+                    {label}
+                </button>
+            );
+
+            return (
+                <div className="container mx-auto p-4 md:p-8 animate-fadeIn">
+                    <button onClick={() => setView({ name: 'marketplace' })} className="mb-4 text-sm text-brand hover:underline">
+                        &larr; {t('nav_marketplace')}
+                    </button>
+                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl overflow-hidden">
+                        <div className="p-6 md:p-8">
+                            <h1 className="text-3xl md:text-4xl font-extrabold text-brand dark:text-brand-light mb-2">{product.title}</h1>
+                            <p className="text-lg text-gray-600 dark:text-gray-400 mb-6">{product.target}</p>
+                            
+                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                                {/* Left/Main Column */}
+                                <div className="lg:col-span-2">
+                                    <div className="border-b border-gray-200 dark:border-gray-700 mb-4">
+                                        <nav className="-mb-px flex space-x-4" aria-label="Tabs">
+                                            <TabButton id="core" label={t('product_core_protection')} />
+                                            <TabButton id="addons" label={t('product_optional_addons')} />
+                                            <TabButton id="vas" label={t('product_vas')} />
+                                        </nav>
+                                    </div>
+                                    
+                                    {/* Tab Content */}
+                                    <div className="animate-fadeIn">
+                                        {activeTab === 'core' && (
+                                            <div role="tabpanel">
+                                                <h3 className="text-2xl font-bold mb-3">{product.coreProtection.title}</h3>
+                                                <p className="text-gray-600 dark:text-gray-400 mb-4">{product.coreProtection.description}</p>
+                                                <ul className="space-y-3">
+                                                    {product.coreProtection.subComponents.map(sc => (
+                                                        <li key={sc.name} className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                                            <h4 className="font-semibold">{sc.name}</h4>
+                                                            <p className="text-sm text-gray-500 dark:text-gray-400">{sc.description}</p>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        )}
+                                        {activeTab === 'addons' && (
+                                            <div role="tabpanel">
+                                                <h3 className="text-2xl font-bold mb-3">{t('product_optional_addons')}</h3>
+                                                <p className="text-gray-600 dark:text-gray-400 mb-4">Customize your plan by adding extra layers of protection.</p>
+                                                <div className="space-y-3">
+                                                    {product.addOns.map(addon => (
+                                                        <label key={addon.id} htmlFor={addon.id} className="flex items-start p-4 bg-gray-50 dark:bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600">
+                                                            <input
+                                                                type="checkbox"
+                                                                id={addon.id}
+                                                                checked={selectedAddOns.some(a => a.id === addon.id)}
+                                                                onChange={() => handleAddOnToggle(addon)}
+                                                                className="h-5 w-5 text-brand rounded border-gray-300 focus:ring-brand mt-1"
+                                                            />
+                                                            <div className="ml-4 flex-grow">
+                                                                <div className="flex justify-between items-center">
+                                                                    <span className="font-semibold">{addon.name}</span>
+                                                                    <span className="font-bold text-brand dark:text-brand-light">+ ₹{addon.additionalPremium.toLocaleString('en-IN')}</span>
+                                                                </div>
+                                                                <p className="text-sm text-gray-500 dark:text-gray-400">{addon.description}</p>
+                                                            </div>
+                                                        </label>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+                                        {activeTab === 'vas' && (
+                                            <div role="tabpanel">
+                                                <h3 className="text-2xl font-bold mb-3">{t('product_vas')}</h3>
+                                                <p className="text-gray-600 dark:text-gray-400 mb-4">Benefits included with your policy at no extra cost.</p>
+                                                <ul className="space-y-3">
+                                                    {product.valueAddedServices.map(vas => (
+                                                        <li key={vas.name} className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                                            <div className="flex justify-between items-center">
+                                                                <h4 className="font-semibold">{vas.name}</h4>
+                                                                <span className="text-sm font-bold text-green-600">{t('product_included')}</span>
+                                                            </div>
+                                                            <p className="text-sm text-gray-500 dark:text-gray-400">{vas.description}</p>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                                
+                                {/* Right/Summary Column */}
+                                <div className="lg:col-span-1">
+                                    <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 sticky top-24">
+                                        <h3 className="text-lg font-semibold mb-4">{t('purchase_premium_breakdown')}</h3>
+                                        <div className="space-y-2 mb-4">
+                                            <div className="flex justify-between">
+                                                <span>{t('purchase_base_premium')}</span>
+                                                <span className="font-medium">₹{product.basePremium.toLocaleString('en-IN')}</span>
+                                            </div>
+                                            {selectedAddOns.map(addon => (
+                                                <div key={addon.id} className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
+                                                    <span>{addon.name}</span>
+                                                    <span className="font-medium">+ ₹{addon.additionalPremium.toLocaleString('en-IN')}</span>
+                                                </div>
+                                            ))}
+                                            <hr className="border-gray-300 dark:border-gray-600" />
+                                            <div className="flex justify-between text-lg font-bold">
+                                                <span>Subtotal</span>
+                                                <span>₹{totalPremium.toLocaleString('en-IN')}</span>
+                                            </div>
+                                            <div className="flex justify-between text-sm text-gray-500">
+                                                <span>{t('purchase_gst')}</span>
+                                                <span>+ ₹{(totalPremium * 0.18).toLocaleString('en-IN')}</span>
+                                            </div>
+                                        </div>
+                                        <div className="bg-brand-light text-white rounded-lg p-4 text-center">
+                                            <span className="text-sm font-semibold uppercase">{t('purchase_total_premium')}</span>
+                                            <div className="text-3xl font-extrabold">₹{(totalPremium * 1.18).toLocaleString('en-IN')}</div>
+                                            <span className="text-xs">/ {t('product_annual_premium')}</span>
+                                        </div>
+                                        <Button 
+                                            onClick={handleBuyNow}
+                                            variant="primary" 
+                                            className="w-full mt-6 text-lg"
+                                        >
+                                            {t('product_buy_now')} ₹{(totalPremium * 1.18).toLocaleString('en-IN')}
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+        
+        // --- Purchase Flow ---
+        function PurchaseFlow() {
+            const { view, setView, setIsLoading, currentUser } = useContext(AppContext);
+            const { t } = useTranslation();
+            const { product, selectedAddOns, premiumDetails } = view.payload;
+            
+            const [step, setStep] = useState(1); // 1: Form, 2: Review, 3: Payment, 4: Success
+            
+            // Form state
+            const [businessName, setBusinessName] = useState(currentUser.name + "'s Store");
+            const [businessAddress, setBusinessAddress] = useState("123, Main Street, Mumbai");
+            const [nomineeName, setNomineeName] = useState("Jane Doe");
+            const [nomineeRelation, setNomineeRelation] = useState("Spouse");
+            
+            const [isPaying, setIsPaying] = useState(false);
+            const [newPolicy, setNewPolicy] = useState(null);
+
+            const handleSubmitProposal = (e) => {
+                e.preventDefault();
+                setStep(2); // Go to Review
+            };
+            
+            const handleConfirmPayment = () => {
+                setStep(3); // Show payment modal
+            };
+            
+            const handleMockPayment = async () => {
+                setIsPaying(true);
+                try {
+                    const policy = await mockAPI.purchasePolicy({
+                        userId: currentUser.id,
+                        product,
+                        selectedAddOns,
+                        premiumDetails
+                    });
+                    setNewPolicy(policy);
+                    // Trigger confetti!
+                    confetti({
+                        particleCount: 150,
+                        spread: 180,
+                        origin: { y: 0.6 }
+                    });
+                    setStep(4); // Show success screen
+                } catch (err) {
+                    console.error("Payment failed", err);
+                } finally {
+                    setIsPaying(false);
+                }
+            };
+            
+            const steps = [t('purchase_step1'), t('purchase_step2'), t('purchase_step3')];
+
+            return (
+                <div className="container mx-auto p-4 md:p-8 animate-fadeIn">
+                    <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-2xl overflow-hidden">
+                        {/* Header & Progress Bar */}
+                        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+                            <h1 className="text-2xl font-bold text-center mb-4">{t('purchase_title')}</h1>
+                            {/* Progress Bar */}
+                            {step <= 3 && (
+                                <ol className="flex items-center w-full">
+                                    {steps.map((stepName, index) => {
+                                        const stepIndex = index + 1;
+                                        const isCompleted = step > stepIndex;
+                                        const isCurrent = step === stepIndex;
+                                        return (
+                                            <li key={stepIndex} className={`flex w-full items-center ${stepIndex < steps.length ? "after:content-[''] after:w-full after:h-1 after:border-b after:border-4 after:inline-block" : ""} ${isCompleted ? 'after:border-brand' : 'after:border-gray-200 dark:after:border-gray-700'}`}>
+                                                <span className={`flex items-center justify-center w-10 h-10 rounded-full shrink-0 ${isCurrent ? 'bg-brand' : (isCompleted ? 'bg-brand-dark' : 'bg-gray-200 dark:bg-gray-700')} ${isCompleted || isCurrent ? 'text-white' : 'text-gray-500 dark:text-gray-400'}`}>
+                                                    {isCompleted ? <Icons.Check className="w-5 h-5" /> : stepIndex}
+                                                </span>
+                                            </li>
+                                        );
+                                    })}
+                                </ol>
+                            )}
+                        </div>
+
+                        {/* Step 1: Proposal Form */}
+                        {step === 1 && (
+                            <form onSubmit={handleSubmitProposal} className="p-6 space-y-4 animate-fadeIn">
+                                <h2 className="text-xl font-semibold">{t('purchase_step1')}</h2>
+                                <Input id="businessName" label={t('purchase_business_name')} value={businessName} onChange={e => setBusinessName(e.target.value)} required />
+                                <Input id="businessAddress" label={t('purchase_business_address')} value={businessAddress} onChange={e => setBusinessAddress(e.target.value)} required />
+                                <Input id="nomineeName" label={t('purchase_nominee_name')} value={nomineeName} onChange={e => setNomineeName(e.target.value)} required />
+                                <Input id="nomineeRelation" label={t('purchase_nominee_relation')} value={nomineeRelation} onChange={e => setNomineeRelation(e.target.value)} required />
+                                <Button type="submit" variant="primary" className="w-full">{t('purchase_step2')} &rarr;</Button>
+                            </form>
+                        )}
+                        
+                        {/* Step 2: Review */}
+                        {step === 2 && (
+                            <div className="p-6 animate-fadeIn">
+                                <h2 className="text-xl font-semibold mb-4">{t('purchase_review_title')}</h2>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                    {/* Policy Details */}
+                                    <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                                        <h3 className="font-bold text-lg mb-2">{product.title}</h3>
+                                        <p className="font-semibold">{t('product_core_protection')}:</p>
+                                        <ul className="list-disc list-inside text-sm text-gray-600 dark:text-gray-400 pl-2 mb-2">
+                                            {product.coreProtection.subComponents.map(sc => <li key={sc.name}>{sc.name}</li>)}
+                                        </ul>
+                                        {selectedAddOns.length > 0 && (
+                                            <>
+                                                <p className="font-semibold">{t('product_optional_addons')}:</p>
+                                                <ul className="list-disc list-inside text-sm text-gray-600 dark:text-gray-400 pl-2">
+                                                    {selectedAddOns.map(a => <li key={a.id}>{a.name}</li>)}
+                                                </ul>
+                                            </>
+                                        )}
+                                    </div>
+                                    {/* Premium Breakdown */}
+                                    <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                                        <h3 className="font-bold text-lg mb-2">{t('purchase_premium_breakdown')}</h3>
+                                        <div className="space-y-2">
+                                            <div className="flex justify-between"><span>{t('purchase_base_premium')}</span> <span className="font-medium">₹{premiumDetails.base.toLocaleString('en-IN')}</span></div>
+                                            <div className="flex justify-between"><span>{t('purchase_total_addons')}</span> <span className="font-medium">₹{premiumDetails.addOns.toLocaleString('en-IN')}</span></div>
+                                            <div className="flex justify-between"><span>{t('purchase_gst')}</span> <span className="font-medium">₹{premiumDetails.gst.toLocaleString('en-IN')}</span></div>
+                                            <hr className="border-gray-300 dark:border-gray-600" />
+                                            <div className="flex justify-between text-xl font-bold"><span>{t('purchase_total_premium')}</span> <span>₹{premiumDetails.total.toLocaleString('en-IN')}</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="flex justify-between">
+                                    <Button onClick={() => setStep(1)} variant="secondary">&larr; {t('purchase_step1')}</Button>
+                                    <Button onClick={handleConfirmPayment} variant="primary">{t('purchase_confirm_pay')}</Button>
+                                </div>
+                            </div>
+                        )}
+                        
+                        {/* Step 3: Payment Modal */}
+                        <Modal isOpen={step === 3} onClose={() => setStep(2)}>
+                            <h2 className="text-xl font-bold mb-4">{t('purchase_payment_title')}</h2>
+                            <p className="text-gray-600 dark:text-gray-400 mb-6">{t('purchase_payment_desc')}</p>
+                            <div className="space-y-2 mb-6">
+                                <div className="p-3 border rounded-md dark:border-gray-600">UPI</div>
+                                <div className="p-3 border rounded-md dark:border-gray-600">Credit/Debit Card</div>
+                                <div className="p-3 border rounded-md dark:border-gray-600">Netbanking</div>
+                            </div>
+                            <Button onClick={handleMockPayment} variant="primary" className="w-full text-lg" disabled={isPaying}>
+                                {isPaying ? <LoadingSpinner /> : `${t('payNow')} (₹${premiumDetails.total.toLocaleString('en-IN')})`}
+                            </Button>
+                        </Modal>
+                        
+                        {/* Step 4: Success */}
+                        {step === 4 && (
+                            <div className="p-12 text-center animate-fadeIn">
+                                <div className="w-20 h-20 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <Icons.Check className="w-12 h-12 text-green-600" />
+                                </div>
+                                <h2 className="text-3xl font-bold text-green-600 mb-2">{t('purchase_success_title')}</h2>
+                                <p className="text-gray-600 dark:text-gray-400 mb-4">{t('purchase_success_desc')}</p>
+                                <div className="text-lg">
+                                    <span className="font-semibold">{t('purchase_policy_number')}: </span>
+                                    <span className="font-mono text-brand dark:text-brand-light">{newPolicy?.policyNumber}</span>
+                                </div>
+                                {useEffect(() => {
+                                    const timer = setTimeout(() => {
+                                        setView({ name: 'dashboard' });
+                                    }, 4000);
+                                    return () => clearTimeout(timer);
+                                }, [])}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        // --- Customer Dashboard: Policy Locker ---
+        function PolicyLocker() {
+            const { currentUser, setIsLoading } = useContext(AppContext);
+            const { t } = useTranslation();
+            const [policies, setPolicies] = useState([]);
+            
+            useEffect(() => {
+                const fetchPolicies = async () => {
+                    setIsLoading(true);
+                    try {
+                        const data = await mockAPI.getMyPolicies(currentUser.id);
+                        setPolicies(data);
+                    } catch (err) {
+                        console.error(err);
+                    } finally {
+                        setIsLoading(false);
+                    }
+                };
+                fetchPolicies();
+            }, []);
+            
+            return (
+                <div className="animate-fadeIn">
+                    <h2 className="text-2xl font-bold mb-6">{t('policy_locker_title')}</h2>
+                    {policies.length === 0 ? (
+                        <p className="text-gray-500">{t('policy_locker_empty')}</p>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {policies.map(policy => (
+                                <div key={policy.id} className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+                                    <div className="flex justify-between items-start mb-4">
+                                        <div>
+                                            <h3 className="text-xl font-bold text-brand dark:text-brand-light">{policy.productName}</h3>
+                                            <p className="text-sm font-mono text-gray-500">{t('policy_number')} {policy.policyNumber}</p>
+                                        </div>
+                                        <span className="text-xs font-bold px-3 py-1 bg-green-100 text-green-800 rounded-full dark:bg-green-900 dark:text-green-200">{t('policy_status_active')}</span>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4 text-sm mb-4">
+                                        <div>
+                                            <p className="text-gray-500 dark:text-gray-400">{t('policy_sum_insured')}</p>
+                                            <p className="font-semibold text-lg">₹{policy.sumInsured.toLocaleString('en-IN')}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-gray-500 dark:text-gray-400">{t('policy_premium_paid')}</p>
+                                            <p className="font-semibold text-lg">₹{policy.premiumPaid.toLocaleString('en-IN')}</p>
+                                        </div>
+                                    </div>
+                                    <Button variant="secondary" className="w-full text-sm">{t('policy_view_details')} (Download PDF)</Button>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            );
+        }
+        
+        // --- Customer Dashboard: File a Claim ---
+        function FileClaim() {
+            const { currentUser, setIsLoading, setView } = useContext(AppContext);
+            const { t } = useTranslation();
+            const [policies, setPolicies] = useState([]);
+            const [selectedPolicy, setSelectedPolicy] = useState('');
+            const [incidentDate, setIncidentDate] = useState(new Date().toISOString().split('T')[0]);
+            const [details, setDetails] = useState('');
+            const [message, setMessage] = useState(null);
+            
+            useEffect(() => {
+                const fetchPolicies = async () => {
+                    const data = await mockAPI.getMyPolicies(currentUser.id);
+                    setPolicies(data);
+                    if (data.length > 0) {
+                        setSelectedPolicy(data[0].policyNumber);
+                    }
+                };
+                fetchPolicies();
+            }, []);
+            
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+                setMessage(null);
+                setIsLoading(true);
+                try {
+                    const newClaim = await mockAPI.submitClaim({
+                        userId: currentUser.id,
+                        policyNumber: selectedPolicy,
+                        incidentDate,
+                        details
+                    });
+                    setMessage({ type: 'success', text: t('file_claim_success', { id: newClaim.id }) });
+                    // Reset form
+                    setDetails('');
+                    setIncidentDate(new Date().toISOString().split('T')[0]);
+                    // Redirect to track claims after a delay
+                    setTimeout(() => setView({ name: 'track_claims' }), 2000);
+                } catch (err) {
+                    setMessage({ type: 'error', text: 'Claim submission failed.' });
+                } finally {
+                    setIsLoading(false);
+                }
+            };
+            
+            return (
+                <div className="animate-fadeIn max-w-2xl mx-auto">
+                    <h2 className="text-2xl font-bold mb-6">{t('file_claim_title')}</h2>
+                    <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 space-y-4">
+                        {message && (
+                            <div className={`p-3 rounded-md text-sm ${message.type === 'success' ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200' : 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200'}`}>
+                                {message.text}
+                            </div>
+                        )}
+                        <Select id="policy" label={t('file_claim_select_policy')} value={selectedPolicy} onChange={e => setSelectedPolicy(e.target.value)} required>
+                            {policies.map(p => (
+                                <option key={p.id} value={p.policyNumber}>
+                                    {p.productName} ({p.policyNumber})
+                                </option>
+                            ))}
+                        </Select>
+                        <Input id="incidentDate" label={t('file_claim_incident_date')} type="date" value={incidentDate} onChange={e => setIncidentDate(e.target.value)} required />
+                        <div>
+                            <label htmlFor="details" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('file_claim_details')}</label>
+                            <textarea
+                                id="details"
+                                rows="4"
+                                value={details}
+                                onChange={e => setDetails(e.target.value)}
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-brand focus:border-brand dark:bg-gray-700 dark:text-white"
+                                required
+                            ></textarea>
+                        </div>
+                        <Input id="documents" label={t('file_claim_upload_docs')} type="file" />
+                        <Button type="submit" variant="primary" className="w-full" disabled={isLoading}>
+                            {isLoading ? <LoadingSpinner /> : t('file_claim_submit')}
+                        </Button>
+                    </form>
+                </div>
+            );
+        }
+        
+        // --- Customer Dashboard: Track Claims ---
+        function TrackClaims() {
+            const { currentUser, setIsLoading } = useContext(AppContext);
+            const { t } = useTranslation();
+            const [claims, setClaims] = useState([]);
+            
+            useEffect(() => {
+                const fetchClaims = async () => {
+                    setIsLoading(true);
+                    try {
+                        const data = await mockAPI.getMyClaims(currentUser.id);
+                        setClaims(data.sort((a, b) => new Date(b.dateFiled) - new Date(a.dateFiled)));
+                    } catch (err) {
+                        console.error(err);
+                    } finally {
+                        setIsLoading(false);
+                    }
+                };
+                fetchClaims();
+            }, []);
+            
+            const getStatusColor = (status) => {
+                switch(status) {
+                    case 'Pending': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
+                    case 'Approved': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
+                    case 'Rejected': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
+                    default: return 'bg-gray-100 text-gray-800';
+                }
+            };
+            
+            const getStatusKey = (status) => {
+                switch(status) {
+                    case 'Pending': return 'claim_status_pending';
+                    case 'Approved': return 'claim_status_approved';
+                    case 'Rejected': return 'claim_status_rejected';
+                    default: return 'claim_status_pending';
+                }
+            }
+            
+            return (
+                <div className="animate-fadeIn">
+                    <h2 className="text-2xl font-bold mb-6">{t('track_claims_title')}</h2>
+                    {claims.length === 0 ? (
+                        <p className="text-gray-500">{t('track_claims_empty')}</p>
+                    ) : (
+                        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-x-auto">
+                            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead className="bg-gray-50 dark:bg-gray-700">
+                                    <tr>
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t('claim_id')}</th>
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t('policy_number')}</th>
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t('claim_date_filed')}</th>
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t('claim_status')}</th>
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t('file_claim_details')}</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                                    {claims.map(claim => (
+                                        <tr key={claim.id}>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">{claim.id}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-500">{claim.policyNumber}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm">{new Date(claim.dateFiled).toLocaleDateString('en-IN')}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(claim.status)}`}>
+                                                    {t(getStatusKey(claim.status))}
+                                                </span>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-normal text-sm text-gray-500 dark:text-gray-400 max-w-xs truncate">{claim.details}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+        
+        // --- Customer Dashboard: Main ---
+        function CustomerDashboard() {
+            const { view, setView } = useContext(AppContext);
+            const { t } = useTranslation();
+            
+            const dashboardView = view.name === 'dashboard' ? 'my_policies' : view.name;
+            
+            const NavItem = ({ viewName, label }) => (
+                <button
+                    onClick={() => setView({ name: viewName })}
+                    className={`px-4 py-2 font-semibold text-left ${dashboardView === viewName ? 'bg-brand-light text-white rounded-lg' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg'}`}
+                >
+                    {label}
+                </button>
+            );
+            
+            const renderView = () => {
+                switch(dashboardView) {
+                    case 'my_policies':
+                        return <PolicyLocker />;
+                    case 'file_claim':
+                        return <FileClaim />;
+                    case 'track_claims':
+                        return <TrackClaims />;
+                    default:
+                        return <PolicyLocker />;
+                }
+            };
+            
+            return (
+                <div className="container mx-auto p-4 md:p-8">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                        {/* Sidebar */}
+                        <aside className="md:col-span-1 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 h-min sticky top-24">
+                            <nav className="flex flex-col space-y-2">
+                                <NavItem viewName="my_policies" label={t('nav_my_policies')} />
+                                <NavItem viewName="file_claim" label={t('nav_file_claim')} />
+                                <NavItem viewName="track_claims" label={t('nav_track_claims')} />
+                            </nav>
+                        </aside>
+                        
+                        {/* Main Content */}
+                        <main className="md:col-span-3">
+                            {renderView()}
+                        </main>
+                    </div>
+                </div>
+            );
+        }
+
+        // --- Agent Dashboard (Prototype) ---
+        function AgentDashboard() {
+            const { t } = useTranslation();
+            
+            return (
+                <div className="container mx-auto p-8 animate-fadeIn">
+                    <h1 className="text-3xl font-bold mb-6">{t('role_agent')} {t('nav_dashboard')}</h1>
+                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+                        <h2 className="text-xl font-semibold mb-4">Customer Portfolio (Mock)</h2>
+                        <p className="text-gray-600 dark:text-gray-400 mb-4">This dashboard would show the agent's client list, policies sold, and commission tracking.</p>
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead className="bg-gray-50 dark:bg-gray-700">
+                                    <tr>
+                                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Customer</th>
+                                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Policy</th>
+                                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Premium</th>
+                                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Commission (Mock)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td className="px-4 py-3">Rohan Gupta</td>
+                                        <td className="px-4 py-3">Vyapar Suraksha Starter Kit</td>
+                                        <td className="px-4 py-3">₹3,000</td>
+                                        <td className="px-4 py-3 text-green-600">₹450</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <Button variant="primary" className="mt-6">Assist New Customer Purchase</Button>
+                    </div>
+                </div>
+            );
+        }
+        
+        // --- Insurer Dashboard (Prototype) ---
+        function InsurerDashboard() {
+            const { t } = useTranslation();
+            
+            return (
+                <div className="container mx-auto p-8 animate-fadeIn">
+                    <h1 className="text-3xl font-bold mb-6">{t('role_insurer')} {t('nav_dashboard')}</h1>
+                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+                        <h2 className="text-xl font-semibold mb-4">Underwriting & Claims Dashboard (Mock)</h2>
+                        <p className="text-gray-600 dark:text-gray-400">This dashboard would show claims awaiting approval, policy issuance statistics, and overall portfolio risk.</p>
+                        {/* In a real app, this would show charts and claim queues */}
+                    </div>
+                </div>
+            );
+        }
+
+        // --- Admin Dashboard (with Charts) ---
+        function AdminDashboard() {
+            const { t } = useTranslation();
+            const [stats, setStats] = useState(null);
+            
+            useEffect(() => {
+                const fetchStats = async () => {
+                    const data = await mockAPI.getDashboardStats();
+                    setStats(data);
+                };
+                fetchStats();
+            }, []);
+            
+            const StatCard = ({ title, value, isCurrency = false }) => (
+                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+                    <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase">{title}</h3>
+                    <p className="mt-1 text-3xl font-semibold">
+                        {isCurrency && '₹'}
+                        <AnimatedCounter target={value} />
+                    </p>
+                </div>
+            );
+            
+            const ChartCard = ({ title, children }) => (
+                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+                    <h3 className="text-lg font-semibold mb-4">{title}</h3>
+                    {children}
+                </div>
+            );
+
+            return (
+                <div className="container mx-auto p-8 animate-fadeIn">
+                    <h1 className="text-3xl font-bold mb-6">{t('admin_dashboard_title')}</h1>
+                    
+                    {/* Stat Cards */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <StatCard title={t('admin_total_policies')} value={stats?.totalPolicies || 0} />
+                        <StatCard title={t('admin_total_premium')} value={stats?.totalPremium || 0} isCurrency />
+                        <StatCard title={t('admin_total_claims')} value={stats?.totalClaims || 0} />
+                    </div>
+                    
+                    {/* Charts */}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                        <ChartCard title={t('admin_premium_inflows')}>
+                            {stats && (
+                                <ChartComponent
+                                    type="line"
+                                    data={{
+                                        labels: stats.premiumInflows.labels,
+                                        datasets: [{
+                                            label: 'Premium (₹)',
+                                            data: stats.premiumInflows.data,
+                                            borderColor: '#4338ca',
+                                            backgroundColor: 'rgba(67, 56, 202, 0.1)',
+                                            fill: true,
+                                            tension: 0.3,
+                                        }]
+                                    }}
+                                />
+                            )}
+                        </ChartCard>
+                        <ChartCard title={t('admin_policy_distribution')}>
+                            {stats && (
+                                <ChartComponent
+                                    type="doughnut"
+                                    data={{
+                                        labels: stats.policyDistribution.labels,
+                                        datasets: [{
+                                            data: stats.policyDistribution.data,
+                                            backgroundColor: ['#3730a3', '#4f46e5', '#818cf8'],
+                                        }]
+                                    }}
+                                    options={{
+                                        plugins: {
+                                            legend: { position: 'bottom' }
+                                        }
+                                    }}
+                                />
+                            )}
+                        </ChartCard>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <ChartCard title={t('admin_claims_status')}>
+                            {stats && (
+                                <ChartComponent
+                                    type="bar"
+                                    data={{
+                                        labels: stats.claimsStatus.labels,
+                                        datasets: [{
+                                            label: 'No. of Claims',
+                                            data: stats.claimsStatus.data,
+                                            backgroundColor: ['#f59e0b', '#10b981', '#ef4444'],
+                                        }]
+                                    }}
+                                    options={{
+                                        scales: { x: { grid: { display: false } } }
+                                    }}
+                                />
+                            )}
+                        </ChartCard>
+                        
+                        {/* Mock Form */}
+                        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+                            <h3 className="text-lg font-semibold mb-4">{t('admin_add_product_title')}</h3>
+                            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">{t('admin_add_product_desc')}</p>
+                            <form className="space-y-3">
+                                <Input id="product_title" label="Product Title" placeholder="e.g., Vyapar Suraksha 2.0" />
+                                <Input id="base_premium" label="Base Premium (₹)" type="number" placeholder="3000" />
+                                <Button type="submit" variant="primary">Save Product</Button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+        
+        // --- API Docs Page ---
+        function ApiDocs() {
+            const { t } = useTranslation();
+            const [docs, setDocs] = useState([]);
+            
+            useEffect(() => {
+                const fetchDocs = async () => {
+                    const data = await mockAPI.getApiDocs();
+                    setDocs(data);
+                };
+                fetchDocs();
+            }, []);
+            
+            const getMethodColor = (method) => {
+                switch(method) {
+                    case 'GET': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
+                    case 'POST': return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
+                    case 'PUT': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
+                    case 'DELETE': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
+                }
+            };
+            
+            return (
+                <div className="container mx-auto p-8 animate-fadeIn">
+                    <h1 className="text-3xl font-bold mb-2">{t('api_docs_title')}</h1>
+                    <p className="text-gray-600 dark:text-gray-400 mb-8">{t('api_docs_desc')}</p>
+                    
+                    <div className="space-y-4">
+                        {docs.map(endpoint => (
+                            <div key={endpoint.path} className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+                                <div className="flex items-center space-x-3 mb-2">
+                                    <span className={`text-sm font-bold px-3 py-1 rounded ${getMethodColor(endpoint.method)}`}>
+                                        {endpoint.method}
+                                    </span>
+                                    <span className="font-mono font-semibold text-lg">{endpoint.path}</span>
+                                </div>
+                                <p className="text-gray-600 dark:text-gray-400">{endpoint.description}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+        
+        // --- Floating Chatbot ---
+        function FloatingChatbot() {
+            const { t } = useTranslation();
+            const [isOpen, setIsOpen] = useState(false);
+            const [messages, setMessages] = useState([
+                { from: 'bot', text: t('chatbot_greeting') }
+            ]);
+            
+            const botResponses = {
+                'option_1': t('chatbot_response_1'),
+                'option_2': t('chatbot_response_2'),
+                'option_3': t('chatbot_response_3'),
+            };
+
+            const handleOptionClick = (optionKey, optionText) => {
+                const newMessages = [
+                    ...messages,
+                    { from: 'user', text: optionText },
+                    { from: 'bot', text: botResponses[optionKey] }
+                ];
+                setMessages(newMessages);
+            };
+
+            return (
+                <div className="fixed bottom-6 right-6 z-50">
+                    {/* Chat Bubble */}
+                    <AnimatePresence>
+                    {isOpen && (
+                        <motion.div 
+                            initial={{ opacity: 0, y: 50, scale: 0.8 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: 50, scale: 0.8 }}
+                            transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+                            className="w-80 h-96 bg-white dark:bg-gray-800 rounded-xl shadow-2xl flex flex-col origin-bottom-right"
+                        >
+                            {/* Header */}
+                            <div className="flex justify-between items-center p-3 border-b border-gray-200 dark:border-gray-700">
+                                <h3 className="font-bold text-sm">{t('chatbot_title')}</h3>
+                                <button onClick={() => setIsOpen(false)} className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700" aria-label={t('close')}>
+                                    <Icons.Close className="w-4 h-4" />
+                                </button>
+                            </div>
+                            {/* Messages */}
+                            <div className="flex-grow p-3 space-y-3 overflow-y-auto">
+                                {messages.map((msg, index) => (
+                                    <div key={index} className={`flex ${msg.from === 'bot' ? 'justify-start' : 'justify-end'}`}>
+                                        <div className={`p-2 rounded-lg max-w-[80%] text-sm ${msg.from === 'bot' ? 'bg-gray-100 dark:bg-gray-700' : 'bg-brand text-white'}`}>
+                                            {msg.text}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            {/* Options */}
+                            <div className="p-3 border-t border-gray-200 dark:border-gray-700 space-y-2">
+                                <button onClick={() => handleOptionClick('option_1', t('chatbot_option_1'))} className="w-full text-left text-xs p-2 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 rounded">
+                                    {t('chatbot_option_1')}
+                                </button>
+                                <button onClick={() => handleOptionClick('option_2', t('chatbot_option_2'))} className="w-full text-left text-xs p-2 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 rounded">
+                                    {t('chatbot_option_2')}
+                                </button>
+                                <button onClick={() => handleOptionClick('option_3', t('chatbot_option_3'))} className="w-full text-left text-xs p-2 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 rounded">
+                                    {t('chatbot_option_3')}
+                                </button>
+                            </div>
+                        </motion.div>
+                    )}
+                    </AnimatePresence>
+                    
+                    {/* Toggle Button */}
+                    <button
+                        onClick={() => setIsOpen(!isOpen)}
+                        className="p-4 bg-brand rounded-full text-white shadow-lg transform hover:scale-110 transition-transform duration-200"
+                        aria-label="Open chatbot"
+                    >
+                        {isOpen ? <Icons.Close className="w-6 h-6" /> : <Icons.Chat className="w-6 h-6" />}
+                    </button>
+                </div>
+            );
+        }
+        
+        // --- Project Info Panel ---
+        function ProjectInfo() {
+            const { t } = useTranslation();
+            const [isOpen, setIsOpen] = useState(false);
+
+            return (
+                <footer className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+                    <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+                        <button
+                            onClick={() => setIsOpen(!isOpen)}
+                            className="w-full flex justify-between items-center py-3 text-left font-semibold"
+                            aria-expanded={isOpen}
+                            aria-controls="project-info-panel"
+                        >
+                            <span>{t('project_info_title')}</span>
+                            <Icons.ChevronDown className={`w-5 h-5 transition-transform ${isOpen ? 'transform rotate-180' : ''}`} />
+                        </button>
+                        
+                        <AnimatePresence>
+                        {isOpen && (
+                            <motion.div
+                                id="project-info-panel"
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: 'auto', opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.3 }}
+                                className="overflow-hidden"
+                            >
+                                <div className="pb-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <div>
+                                        <h3 className="text-lg font-semibold mb-2">{t('project_info_instructions_title')}</h3>
+                                        <ul className="list-disc list-inside space-y-1 text-sm text-gray-600 dark:text-gray-400">
+                                            <li>{t('project_info_instructions_1')}</li>
+                                            <li>{t('project_info_instructions_2')}</li>
+                                            <li>{t('project_info_instructions_3')}</li>
+                                            <li>{t('project_info_instructions_4')}</li>
+                                            <li>{t('project_info_instructions_5')}</li>
+                                            <li>{t('project_info_instructions_6')}</li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <h3 className="text-lg font-semibold mb-2">{t('project_info_architecture_title')}</h3>
+                                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                                            {t('project_info_architecture_desc')}
+                                        </p>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        )}
+                        </AnimatePresence>
+                    </div>
+                </footer>
+            );
+        }
+
+        // --- Main App Component ---
+        function App() {
+            const { currentUser, view } = useContext(AppContext);
+            
+            // This is our mock "Router".
+            const renderView = () => {
+                if (!currentUser && view.name !== 'login') {
+                    // If not logged in, show login or landing
+                    if (view.name === 'landing') return <LandingPage />;
+                    return <LoginScreen />;
+                }
+                
+                switch(view.name) {
+                    case 'login':
+                        return <LoginScreen />;
+                    case 'landing':
+                        return <LandingPage />;
+                    case 'marketplace':
+                        return <Marketplace />;
+                    case 'product_detail':
+                        return <ProductShowcase />;
+                    case 'purchase_flow':
+                        return <PurchaseFlow />;
+                    case 'dashboard':
+                        // The dashboard component will internally route by role
+                        switch(useContext(AppContext).currentRole) {
+                            case 'customer': return <CustomerDashboard />;
+                            case 'agent': return <AgentDashboard />;
+                            case 'insurer': return <InsurerDashboard />;
+                            case 'admin': return <AdminDashboard />;
+                            default: return <CustomerDashboard />;
+                        }
+                    case 'my_policies':
+                    case 'file_claim':
+                    case 'track_claims':
+                        return <CustomerDashboard />; // Handled by CustomerDashboard's internal state
+                    case 'api_docs':
+                        return <ApiDocs />;
+                    default:
+                        return currentUser ? <CustomerDashboard /> : <LandingPage />;
+                }
+            };
+            
+            // We need to use dummy components for AnimatePresence and motion
+            // because they are not loaded from a CDN. We will fake the animations.
+            // For a real project, we'd use Framer Motion CDN.
+            // Since the prompt didn't include it, I'll remove the motion.div
+            // and just use CSS animations.
+            // RE-ADDING: Oh, wait. I can't use framer-motion. I'll use CSS.
+            // I've already added `animate-fadeIn` etc.
+            
+            // Let's re-implement the Chatbot and ProjectInfo without framer-motion
+            
+            function FloatingChatbotNoMotion() {
+                const { t } = useTranslation();
+                const [isOpen, setIsOpen] = useState(false);
+                const [messages, setMessages] = useState([]);
+                const chatEndRef = useRef(null);
+                
+                // Greeting effect
+                useEffect(() => {
+                    setMessages([{ from: 'bot', text: t('chatbot_greeting') }]);
+                }, [t]);
+
+                const botResponses = {
+                    'option_1': t('chatbot_response_1'),
+                    'option_2': t('chatbot_response_2'),
+                    'option_3': t('chatbot_response_3'),
+                };
+                
+                const scrollToBottom = () => {
+                    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+                };
+
+                const handleOptionClick = (optionKey, optionText) => {
+                    setMessages(prev => [...prev, { from: 'user', text: optionText }]);
+                    
+                    setTimeout(() => {
+                        setMessages(prev => [...prev, { from: 'bot', text: botResponses[optionKey] }]);
+                    }, 500);
+                };
+                
+                useEffect(scrollToBottom, [messages]);
+
+                return (
+                    <div className="fixed bottom-6 right-6 z-50">
+                        {/* Chat Bubble */}
+                        <div 
+                            className={`w-80 h-96 bg-white dark:bg-gray-800 rounded-xl shadow-2xl flex flex-col origin-bottom-right transition-all duration-300 ease-out
+                                ${isOpen ? 'opacity-100 transform scale-100' : 'opacity-0 transform scale-90 pointer-events-none'}`}
+                        >
+                            {/* Header */}
+                            <div className="flex justify-between items-center p-3 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
+                                <h3 className="font-bold text-sm">{t('chatbot_title')}</h3>
+                                <button onClick={() => setIsOpen(false)} className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700" aria-label={t('close')}>
+                                    <Icons.Close className="w-4 h-4" />
+                                </button>
+                            </div>
+                            {/* Messages */}
+                            <div className="flex-grow p-3 space-y-3 overflow-y-auto">
+                                {messages.map((msg, index) => (
+                                    <div key={index} className={`flex ${msg.from === 'bot' ? 'justify-start' : 'justify-end'}`}>
+                                        <div className={`p-2 rounded-lg max-w-[80%] text-sm ${msg.from === 'bot' ? 'bg-gray-100 dark:bg-gray-700' : 'bg-brand text-white'}`}>
+                                            {msg.text}
+                                        </div>
+                                    </div>
+                                ))}
+                                <div ref={chatEndRef} />
+                            </div>
+                            {/* Options */}
+                            <div className="p-3 border-t border-gray-200 dark:border-gray-700 space-y-2 flex-shrink-0">
+                                <button onClick={() => handleOptionClick('option_1', t('chatbot_option_1'))} className="w-full text-left text-xs p-2 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 rounded">
+                                    {t('chatbot_option_1')}
+                                </button>
+                                <button onClick={() => handleOptionClick('option_2', t('chatbot_option_2'))} className="w-full text-left text-xs p-2 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 rounded">
+                                    {t('chatbot_option_2')}
+                                </button>
+                                <button onClick={() => handleOptionClick('option_3', t('chatbot_option_3'))} className="w-full text-left text-xs p-2 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 rounded">
+                                    {t('chatbot_option_3')}
+                                </button>
+                            </div>
+                        </div>
+                        
+                        {/* Toggle Button */}
+                        <button
+                            onClick={() => setIsOpen(!isOpen)}
+                            className="absolute bottom-0 right-0 p-4 bg-brand rounded-full text-white shadow-lg transform hover:scale-110 transition-all duration-200"
+                            aria-label="Open chatbot"
+                        >
+                            {isOpen ? <Icons.Close className="w-6 h-6" /> : <Icons.Chat className="w-6 h-6" />}
+                        </button>
+                    </div>
+                );
+            }
+            
+            function ProjectInfoNoMotion() {
+                const { t } = useTranslation();
+                const [isOpen, setIsOpen] = useState(false);
+
+                return (
+                    <footer className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+                        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+                            <button
+                                onClick={() => setIsOpen(!isOpen)}
+                                className="w-full flex justify-between items-center py-3 text-left font-semibold"
+                                aria-expanded={isOpen}
+                                aria-controls="project-info-panel"
+                            >
+                                <span>{t('project_info_title')}</span>
+                                <Icons.ChevronDown className={`w-5 h-5 transition-transform ${isOpen ? 'transform rotate-180' : ''}`} />
+                            </button>
+                            
+                            <div
+                                id="project-info-panel"
+                                className={`transition-all duration-300 ease-in-out grid ${isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}
+                            >
+                                <div className="overflow-hidden">
+                                    <div className="pb-6 pt-2 grid grid-cols-1 md:grid-cols-2 gap-8">
+                                        <div>
+                                            <h3 className="text-lg font-semibold mb-2">{t('project_info_instructions_title')}</h3>
+                                            <ul className="list-disc list-inside space-y-1 text-sm text-gray-600 dark:text-gray-400">
+                                                <li>{t('project_info_instructions_1')}</li>
+                                                <li>{t('project_info_instructions_2')}</li>
+                                                <li>{t('project_info_instructions_3')}</li>
+                                                <li>{t('project_info_instructions_4')}</li>
+                                                <li>{t('project_info_instructions_5')}</li>
+                                                <li>{t('project_info_instructions_6')}</li>
+                                            </ul>
+                                        </div>
+                                        <div>
+                                            <h3 className="text-lg font-semibold mb-2">{t('project_info_architecture_title')}</h3>
+                                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                                                {t('project_info_architecture_desc')}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </footer>
+                );
+            }
+            
+            return (
+                <div className="flex flex-col min-h-screen">
+                    <Header />
+                    <main className="flex-grow">
+                        {renderView()}
+                    </main>
+                    <FloatingChatbotNoMotion />
+                    <ProjectInfoNoMotion />
+                </div>
+            );
+        }
+
+        // --- APP INITIALIZATION ---
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(
+            <AppProvider>
+                <App />
+            </AppProvider>
+        );
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MSME Suraksha - Digital Insurance Platform</title>
+
+  <!-- Tailwind CDN (JIT) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- React -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <!-- Babel for JSX in-browser -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <!-- i18next -->
+  <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.16/i18next.min.js"></script>
+  <!-- confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    :root { --brand: #0ea5e9; --bg: #f8fafc; --card: #ffffff; }
+    .dark { --bg: #0b1220; --card: #0f1724; --brand: #38bdf8; color-scheme: dark; }
+    html,body,#root { height:100%; margin:0; background:var(--bg); font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial; }
+    .fade-in { animation: fadeIn .4s ease both; }
+    @keyframes fadeIn { from {opacity:0; transform: translateY(6px);} to {opacity:1; transform:none;} }
+    .slide-up { animation: slideUp .45s cubic-bezier(.2,.9,.3,1) both; }
+    @keyframes slideUp { from{opacity:0; transform: translateY(12px);} to{opacity:1; transform:none;} }
+    .focus-ring:focus { outline:3px solid rgba(14,165,233,0.18); outline-offset:2px; border-radius:6px; }
+    /* small helpers */
+    .glass { background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.5)); backdrop-filter: blur(6px); }
+    .dark .glass { background: linear-gradient(180deg, rgba(15,23,36,0.6), rgba(15,23,36,0.55)); }
+    /* compact scrollbar */
+    ::-webkit-scrollbar { height:8px; width:8px; }
+    ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius:8px; }
+  </style>
+</head>
+<body>
+  <div id="root" class="min-h-screen"></div>
+
+  <script type="text/babel" data-type="module">
+    const { useState, useEffect, useRef, useContext, createContext } = React;
+
+    // ----------------------------
+    // MOCK DATA STORE
+    // ----------------------------
+    const mockData = {
+      users: [
+        { id: 'u_cust_001', name: 'Ramesh Sharma', email: 'ramesh@vyapar.com', role: 'customer', aadhaar: '111122223333', pan: 'ARWPS1234C', udyamId: 'UDYAM-IN-0001', password: 'password', createdAt: Date.now() - 86400000 },
+        { id: 'u_agent_001', name: 'Agent Meera', email: 'meera.agent@broker.com', role: 'agent', aadhaar: '222233334444', pan: 'AGENT1234P', password: 'agentpass', createdAt: Date.now() - 86400000 },
+        { id: 'u_admin_001', name: 'Admin', email: 'admin@suraksha.com', role: 'admin', aadhaar: '999988887777', pan: 'ADMIN0000A', password: 'adminpass', createdAt: Date.now() - 86400000 }
+      ],
+      msmeProductBouquets: {
+        micro: {
+          id: 'micro',
+          title: 'Vyapar Suraksha Starter Kit',
+          target: 'Turnover up to ₹10 crore',
+          coreProtection: {
+            title: 'All-in-One Suraksha',
+            premiumRange: '₹2,500 - ₹7,500',
+            description: 'Shop & Stock + Owner Personal Accident + Digital Transaction Guard.',
+            subComponents: [
+              { name: 'Shop & Stock Protector', desc: 'Fire, burglary, theft, storm & flood.' },
+              { name: "Owner's Personal Accident Shield", desc: '₹5 Lakh lump-sum for death/PD.' },
+              { name: 'Digital Transaction Guard', desc: 'UPI & payment scam protection up to ₹50,000.' }
+            ]
+          },
+          addOns: [
+            { id: 'bi_cash', name: 'Business Interruption Cash', additionalPremium: 1000, description: '₹1,000/day for up to 15 days.' }
+          ],
+          valueAddedServices: [
+            { name: 'Emergency Business Assist', cost: 'Included', description: '24/7 access to local electricians & plumbers.' }
+          ]
+        },
+        small: {
+          id: 'small',
+          title: 'Udyam Growth Engine',
+          target: 'Turnover up to ₹100 crore',
+          coreProtection: {
+            title: 'Business Foundation Package',
+            premiumRange: '₹20,000 - ₹60,000',
+            description: 'Property PAR + CGL + Workmen’s Compensation.',
+            subComponents: [
+              { name: 'Property All Risk', desc: 'Buildings, machinery, stock.' },
+              { name: 'Commercial General Liability', desc: 'Third-party liability.' },
+              { name: "Workmen's Compensation", desc: 'Employee injury / death cover.' }
+            ]
+          },
+          addOns: [
+            { id: 'ghi', name: 'Group Health Insurance', additionalPremium: 9000, description: 'Per employee / year (example).' },
+            { id: 'cyber', name: 'Cyber Resilience Cover', additionalPremium: 25000, description: 'Data breach & cyber BI cover.' }
+          ],
+          valueAddedServices: [
+            { name: 'Risk Consulting', cost: 'Included', description: 'BCP workshops & safety audits.' }
+          ]
+        },
+        medium: {
+          id: 'medium',
+          title: 'Enterprise Resilience Framework',
+          target: 'Turnover up to ₹500 crore',
+          coreProtection: {
+            title: 'Corporate Shield Program',
+            premiumRange: 'Custom (starts ₹5,00,000+)',
+            description: 'Industrial All Risks + Liability suite + Employee benefits.',
+            subComponents: [
+              { name: 'Industrial All Risks', desc: 'Comprehensive property & equipment cover.' },
+              { name: 'D&O Liability', desc: 'Directors & Officers protection.' },
+              { name: 'Trade Credit', desc: 'Protect receivables from buyer default.' }
+            ]
+          },
+          addOns: [
+            { id: 'parametric', name: 'Parametric Solutions', additionalPremium: 50000, description: 'Trigger-based rapid liquidity.' },
+            { id: 'tradecredit', name: 'Trade Credit Insurance', additionalPremium: 15000, description: 'Protect receivables.' }
+          ],
+          valueAddedServices: [
+            { name: 'Strategic Risk Portfolio', cost: 'Included', description: 'Scenario modeling & advisory.' }
+          ]
+        }
+      },
+      policies: [
+        // sample policy for ramesh
+        {
+          policyNumber: 'POL-MIC-0001',
+          userId: 'u_cust_001',
+          productId: 'micro',
+          issueDate: Date.now() - 7*86400000,
+          sumInsured: 1000000,
+          premiumPaid: 4500,
+          status: 'Active',
+          details: { addOns: ['bi_cash'] }
+        }
+      ],
+      claims: [
+        // sample
+        { claimId: 'CLM-0001', policyNumber: 'POL-MIC-0001', userId: 'u_cust_001', status: 'Pending', details: 'Fire damage to shopfront', dateFiled: Date.now() - 2*86400000 }
+      ],
+      transactions: [
+        { txId: 'TXN-1001', policyNumber: 'POL-MIC-0001', amount: 4500, date: Date.now() - 7*86400000 }
+      ]
+    };
+
+    // ----------------------------
+    // MOCK API MODULE
+    // ----------------------------
+    const mockAPI = {
+      latency(ms=700){ return new Promise(r=>setTimeout(r, ms)); },
+
+      login: async ({ email, password }) => {
+        await mockAPI.latency(600 + Math.random()*400);
+        const user = mockData.users.find(u => u.email.toLowerCase() === (email||'').toLowerCase() && u.password === password);
+        if (!user) throw new Error('Invalid credentials');
+        return { ...user };
+      },
+
+      register: async ({ name, email, role, aadhaar, pan, udyamId, password }) => {
+        await mockAPI.latency(900 + Math.random()*400);
+        if (mockData.users.some(u => u.email.toLowerCase() === email.toLowerCase())) {
+          throw new Error('Email already registered');
+        }
+        const id = (role === 'customer' ? 'u_cust_' : role==='agent' ? 'u_agent_' : 'u_user_') + Math.floor(Math.random()*9000+1000);
+        const user = { id, name, email, role, aadhaar, pan, udyamId, password, createdAt: Date.now() };
+        mockData.users.push(user);
+        return user;
+      },
+
+      verifyAadhaar: async (aadhaar) => {
+        await mockAPI.latency(500 + Math.random()*300);
+        // simplistic accept any 12-digit -> returns name hint
+        const ok = /^\d{12}$/.test(aadhaar);
+        return { ok, suggestedName: ok ? 'Name from e-KYC' : null };
+      },
+
+      otpVerify: async (otp) => {
+        await mockAPI.latency(300 + Math.random()*200);
+        // accept any 6-digit
+        return { ok: /^\d{6}$/.test(String(otp)) };
+      },
+
+      getProducts: async () => {
+        await mockAPI.latency(300);
+        return Object.values(mockData.msmeProductBouquets);
+      },
+
+      issuePolicy: async (policyPayload) => {
+        await mockAPI.latency(1200 + Math.random()*800);
+        const policyNumber = 'POL-' + policyPayload.productId.toUpperCase().slice(0,3) + '-' + Math.floor(Math.random()*9000+1000);
+        const policy = {
+          policyNumber,
+          userId: policyPayload.userId,
+          productId: policyPayload.productId,
+          issueDate: Date.now(),
+          sumInsured: policyPayload.sumInsured || 1000000,
+          premiumPaid: policyPayload.premiumPaid,
+          status: 'Active',
+          details: policyPayload.details || {}
+        };
+        mockData.policies.push(policy);
+        mockData.transactions.push({ txId: 'TXN-' + Math.floor(Math.random()*90000+1000), policyNumber, amount: policy.premiumPaid, date: Date.now() });
+        return policy;
+      },
+
+      getUserPolicies: async (userId) => {
+        await mockAPI.latency(300);
+        return mockData.policies.filter(p => p.userId === userId);
+      },
+
+      submitClaim: async (claimPayload) => {
+        await mockAPI.latency(700 + Math.random()*600);
+        const claimId = 'CLM-' + Math.floor(Math.random()*90000+1000);
+        const claim = { claimId, policyNumber: claimPayload.policyNumber, userId: claimPayload.userId, status: 'Pending', details: claimPayload.details, dateFiled: Date.now() };
+        mockData.claims.push(claim);
+        return claim;
+      },
+
+      getClaimsForUser: async (userId) => {
+        await mockAPI.latency(300);
+        return mockData.claims.filter(c => c.userId === userId);
+      },
+
+      getAllClaims: async () => {
+        await mockAPI.latency(300);
+        return mockData.claims.slice();
+      },
+
+      addOrEditProduct: async (product) => {
+        await mockAPI.latency(600);
+        mockData.msmeProductBouquets[product.id] = product;
+        return product;
+      },
+
+      getMetrics: async () => {
+        await mockAPI.latency(300);
+        const inflows = mockData.transactions.slice(-12).map((t,i)=> ({ month: i+1, amount: t.amount }));
+        const distribution = { micro: 0, small: 0, medium: 0 };
+        mockData.policies.forEach(p => { distribution[p.productId] = (distribution[p.productId] || 0) + 1; });
+        const claimsStatus = mockData.claims.reduce((acc,c)=>{ acc[c.status] = (acc[c.status]||0)+1; return acc; }, {});
+        return {
+          totalPolicies: mockData.policies.length,
+          totalClaims: mockData.claims.length,
+          inflows: inflows,
+          distribution,
+          claimsStatus
+        };
+      },
+
+      // admin helpers
+      downloadPolicyPDF: async (policyNumber) => {
+        await mockAPI.latency(300);
+        const policy = mockData.policies.find(p=>p.policyNumber===policyNumber);
+        const content = `MSME Suraksha\nPolicy Number: ${policy.policyNumber}\nProduct: ${policy.productId}\nIssued To: ${policy.userId}\nSum Insured: ₹${policy.sumInsured}\nPremium Paid: ₹${policy.premiumPaid}`;
+        return content;
+      }
+    };
+
+    // ----------------------------
+    // i18n (i18next basic setup)
+    // ----------------------------
+    const resources = {
+      en: {
+        translation: {
+          appTitle: 'MSME Suraksha',
+          tagline: 'Unified insurance for India\'s MSMEs',
+          login: 'Login',
+          register: 'Register',
+          logout: 'Logout',
+          role: 'Role',
+          viewProducts: 'View Products',
+          buyNow: 'Buy Now',
+          policies: 'My Policies',
+          claims: 'Claims',
+          dashboard: 'Dashboard',
+          adminPanel: 'Admin',
+          submit: 'Submit',
+          payNow: 'Pay Now',
+          success: 'Success',
+          openChat: 'Help',
+          english: 'English',
+          hindi: 'हिन्दी'
+        }
+      },
+      hi: {
+        translation: {
+          appTitle: 'एमएसएमई सुरक्षा',
+          tagline: 'भारत के MSME के लिए एकीकृत बीमा',
+          login: 'लॉगिन',
+          register: 'रजिस्टर',
+          logout: 'लॉगआउट',
+          role: 'भूमिका',
+          viewProducts: 'उत्पाद देखें',
+          buyNow: 'खरीदें',
+          policies: 'मेरी पालिसियाँ',
+          claims: 'क्लेम्स',
+          dashboard: 'डैशबोर्ड',
+          adminPanel: 'एडमिन',
+          submit: 'सबमिट करें',
+          payNow: 'भुगतान करें',
+          success: 'सफलता',
+          openChat: 'सहायता',
+          english: 'English',
+          hindi: 'हिन्दी'
+        }
+      }
+    };
+    i18next.init({ lng: localStorage.getItem('msme_lang') || 'en', resources });
+
+    // ----------------------------
+    // App-wide Context
+    // ----------------------------
+    const AppContext = createContext(null);
+
+    // ----------------------------
+    // Utility helpers
+    // ----------------------------
+    function currency(v){ return '₹' + Number(v).toLocaleString('en-IN'); }
+    function shortDate(ts){ const d = new Date(ts); return d.toLocaleDateString(); }
+
+    // ----------------------------
+    // Header Component
+    // ----------------------------
+    function Header(){ 
+      const ctx = useContext(AppContext);
+      const t = (k) => i18next.t(k);
+      const [showAuth,setShowAuth] = useState(false);
+      useEffect(()=> {
+        const onLang = ()=> ctx.setLang(i18next.language);
+        i18next.on('languageChanged', onLang);
+        return ()=> i18next.off('languageChanged', onLang);
+      },[]);
+      return (
+        <header className="glass sticky top-0 z-40 backdrop-blur-md border-b border-gray-200 dark:border-slate-700">
+          <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" aria-label="Top">
+            <div className="flex items-center justify-between h-16">
+              <div className="flex items-center gap-3">
+                <div className="rounded-md p-2" aria-hidden>
+                  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" className="text-sky-500"><rect width="24" height="24" rx="6" fill="currentColor"></rect></svg>
+                </div>
+                <div>
+                  <div className="font-semibold text-lg">{t('appTitle')}</div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">{t('tagline')}</div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <div className="hidden sm:flex items-center gap-2">
+                  <label htmlFor="role" className="sr-only">Role</label>
+                  <select id="role" aria-label="Role" value={ctx.role} onChange={(e)=>{ctx.setRole(e.target.value); ctx.setView('landing');}} className="focus-ring rounded-md border px-2 py-1 bg-transparent">
+                    <option value="customer">Customer</option>
+                    <option value="agent">Agent</option>
+                    <option value="insurer">Insurer</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button aria-label="Language toggle" onClick={()=>{
+                    const newLang = i18next.language === 'en' ? 'hi' : 'en';
+                    i18next.changeLanguage(newLang);
+                    localStorage.setItem('msme_lang', newLang);
+                    ctx.setLang(newLang);
+                  }} className="rounded px-3 py-1 text-sm border focus-ring">
+                    {i18next.language==='en' ? t('hindi') : t('english')}
+                  </button>
+
+                  <button aria-label="Theme toggle" onClick={()=>{
+                    const newTheme = ctx.theme === 'light' ? 'dark' : 'light';
+                    ctx.setTheme(newTheme);
+                    document.documentElement.classList.toggle('dark', newTheme==='dark');
+                    localStorage.setItem('msme_theme', newTheme);
+                  }} className="rounded px-3 py-1 text-sm border focus-ring">
+                    {ctx.theme==='light' ? 'Dark' : 'Light'}
+                  </button>
+
+                  {ctx.currentUser ? (
+                    <div className="flex items-center gap-3">
+                      <div className="text-sm">
+                        <div className="font-medium">{ctx.currentUser.name}</div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">{ctx.currentUser.role}</div>
+                      </div>
+                      <button className="px-3 py-1 border rounded focus-ring" onClick={()=>{
+                        localStorage.removeItem('msme_user'); ctx.setCurrentUser(null);
+                      }}>{t('logout')}</button>
+                    </div>
+                  ) : (
+                    <>
+                      <button className="px-3 py-1 bg-sky-500 text-white rounded focus-ring" onClick={()=> setShowAuth(true)}>{t('login')}</button>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          </nav>
+          {showAuth && <AuthModal onClose={()=>setShowAuth(false)} onLogin={(user)=>{ ctx.setCurrentUser(user); setShowAuth(false); }} />}
+        </header>
+      );
+    }
+
+    // ----------------------------
+    // AuthModal (Login / Register / eKYC / OTP)
+    // ----------------------------
+    function AuthModal({ onClose, onLogin }){
+      const ctx = useContext(AppContext);
+      const t = (k)=>i18next.t(k);
+      const [mode,setMode] = useState('login'); // login | register
+      const [step,setStep] = useState(0);
+      const [form,setForm] = useState({ name:'', email:'', role:ctx.role || 'customer', aadhaar:'', pan:'', udyamId:'', password:'' });
+      const [loading,setLoading] = useState(false);
+      const [msg,setMsg] = useState('');
+
+      async function handleLogin(e){
+        e.preventDefault();
+        setLoading(true); setMsg('');
+        try{
+          const user = await mockAPI.login({ email: form.email, password: form.password });
+          localStorage.setItem('msme_user', JSON.stringify(user));
+          ctx.setCurrentUser(user);
+          ctx.setRole(user.role);
+          onLogin && onLogin(user);
+        }catch(err){ setMsg(err.message); }
+        setLoading(false);
+      }
+
+      async function handleRegister(e){
+        e.preventDefault();
+        setLoading(true); setMsg('');
+        try{
+          const user = await mockAPI.register(form);
+          localStorage.setItem('msme_user', JSON.stringify(user));
+          ctx.setCurrentUser(user);
+          ctx.setRole(user.role);
+          onLogin && onLogin(user);
+        }catch(err){ setMsg(err.message); }
+        setLoading(false);
+      }
+
+      async function doVerifyAadhaar(){
+        setLoading(true);
+        const res = await mockAPI.verifyAadhaar(form.aadhaar);
+        setLoading(false);
+        if (res.ok) { setStep(1); setMsg('Aadhaar verified (mock)'); }
+        else setMsg('Invalid Aadhaar format (12 digits)');
+      }
+
+      async function doOtpVerify(){
+        setLoading(true);
+        const res = await mockAPI.otpVerify('123456');
+        setLoading(false);
+        if (res.ok) { setStep(2); setMsg('OTP verified'); }
+        else setMsg('Invalid OTP');
+      }
+
+      return (
+        <div className="fixed inset-0 z-50 flex items-start justify-center p-4">
+          <div className="absolute inset-0 bg-black/40" onClick={onClose} aria-hidden></div>
+          <div role="dialog" aria-modal="true" className="relative max-w-2xl w-full bg-white dark:bg-slate-800 rounded-lg shadow-lg p-6 slide-up">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold">{mode==='login' ? t('login') : t('register')}</h3>
+              <button aria-label="Close" onClick={onClose} className="text-gray-500 hover:text-gray-700 dark:text-gray-300">✕</button>
+            </div>
+
+            {mode==='login' ? (
+              <form onSubmit={handleLogin} className="mt-4 grid gap-3">
+                <input aria-label="Email" required className="px-3 py-2 border rounded focus-ring" placeholder="Email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} />
+                <input aria-label="Password" required type="password" className="px-3 py-2 border rounded focus-ring" placeholder="Password" value={form.password} onChange={e=>setForm({...form,password:e.target.value})} />
+                <div className="flex justify-between items-center">
+                  <div className="text-sm text-red-600">{msg}</div>
+                  <div className="flex gap-2">
+                    <button type="button" className="px-3 py-1 border rounded" onClick={()=>setMode('register')}>{t('register')}</button>
+                    <button type="submit" className="px-4 py-1 bg-sky-500 text-white rounded" disabled={loading}>{loading ? '...' : t('login')}</button>
+                  </div>
+                </div>
+              </form>
+            ) : (
+              <div className="mt-4 grid gap-3">
+                {step===0 && (
+                  <>
+                    <input aria-label="Name" required className="px-3 py-2 border rounded focus-ring" placeholder="Full Name" value={form.name} onChange={e=>setForm({...form,name:e.target.value})} />
+                    <input aria-label="Email" required className="px-3 py-2 border rounded focus-ring" placeholder="Email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} />
+                    <div className="flex gap-2">
+                      <select aria-label="Role select" value={form.role} onChange={e=>setForm({...form,role:e.target.value})} className="px-3 py-2 border rounded focus-ring">
+                        <option value="customer">Customer</option>
+                        <option value="agent">Agent</option>
+                        <option value="insurer">Insurer</option>
+                        <option value="admin">Admin</option>
+                      </select>
+                      <input aria-label="Password" required type="password" className="flex-1 px-3 py-2 border rounded focus-ring" placeholder="Password" value={form.password} onChange={e=>setForm({...form,password:e.target.value})} />
+                    </div>
+                    <input aria-label="Aadhaar" required className="px-3 py-2 border rounded focus-ring" placeholder="Aadhaar (12 digits)" value={form.aadhaar} onChange={e=>setForm({...form,aadhaar:e.target.value})} />
+                    <div className="flex justify-end gap-2">
+                      <button className="px-3 py-1 rounded border" onClick={()=>setMode('login')}>Back</button>
+                      <button className="px-4 py-1 bg-sky-500 text-white rounded" onClick={doVerifyAadhaar}>Verify Aadhaar</button>
+                    </div>
+                    <div className="text-sm text-gray-500">{msg}</div>
+                  </>
+                )}
+
+                {step===1 && (
+                  <>
+                    <div className="text-sm">Enter 6-digit OTP sent to mocked mobile</div>
+                    <input aria-label="OTP" maxLength="6" className="px-3 py-2 border rounded focus-ring" placeholder="Enter OTP (any 6 digits)" />
+                    <div className="flex justify-between">
+                      <button className="px-3 py-1 rounded border" onClick={()=>setStep(0)}>Back</button>
+                      <button className="px-4 py-1 bg-sky-500 text-white rounded" onClick={doOtpVerify}>Verify OTP</button>
+                    </div>
+                    <div className="text-sm text-gray-500">{msg}</div>
+                  </>
+                )}
+
+                {step===2 && (
+                  <>
+                    <input aria-label="PAN" className="px-3 py-2 border rounded focus-ring" placeholder="PAN" value={form.pan} onChange={e=>setForm({...form,pan:e.target.value})} />
+                    {form.role==='customer' && <input aria-label="Udyam ID" className="px-3 py-2 border rounded focus-ring" placeholder="Udyam Registration ID" value={form.udyamId} onChange={e=>setForm({...form,udyamId:e.target.value})} />}
+                    <div className="flex justify-end gap-2">
+                      <button className="px-3 py-1 rounded border" onClick={()=>setStep(1)}>Back</button>
+                      <button className="px-4 py-1 bg-sky-500 text-white rounded" onClick={handleRegister}>Complete Registration</button>
+                    </div>
+                    <div className="text-sm text-gray-500">{msg}</div>
+                  </>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    // ----------------------------
+    // Landing and Product Cards
+    // ----------------------------
+    function Landing({ onSelect }) {
+      const t = (k)=>i18next.t(k);
+      const [products, setProducts] = useState([]);
+      useEffect(()=> { let mounted=true; mockAPI.getProducts().then(p=>mounted&&setProducts(p)); return ()=> mounted=false; },[]);
+      return (
+        <main className="max-w-7xl mx-auto px-4 py-10">
+          <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 items-start">
+            <div className="col-span-1 sm:col-span-2 lg:col-span-1 bg-white dark:bg-slate-800 rounded-lg p-6 shadow">
+              <h1 className="text-2xl font-bold">{i18next.t('appTitle')}</h1>
+              <p className="mt-2 text-gray-600 dark:text-gray-300">{i18next.t('tagline')}</p>
+              <div className="mt-4">
+                <button className="px-4 py-2 bg-sky-500 text-white rounded" onClick={()=> window.scrollTo({top:500, behavior:'smooth'})}>{i18next.t('viewProducts')}</button>
+              </div>
+            </div>
+
+            {products.map(p => (
+              <div key={p.id} className="bg-white dark:bg-slate-800 rounded-lg p-6 shadow hover:shadow-lg transition cursor-pointer" role="button" tabIndex="0" onClick={()=>onSelect(p.id)}>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-lg font-semibold">{p.title}</div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400">{p.target}</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="font-semibold">{p.coreProtection.premiumRange}</div>
+                    <div className="text-xs text-gray-500">Indicative</div>
+                  </div>
+                </div>
+                <div className="mt-4 text-sm text-gray-600 dark:text-gray-300">{p.coreProtection.description}</div>
+                <div className="mt-4 flex gap-2">
+                  <button className="px-3 py-1 border rounded" onClick={(e)=>{ e.stopPropagation(); onSelect(p.id); }}>{i18next.t('viewProducts')}</button>
+                  <button className="px-3 py-1 bg-emerald-500 text-white rounded" onClick={(e)=>{ e.stopPropagation(); onSelect(p.id, { buy:true }); }}>{i18next.t('buyNow')}</button>
+                </div>
+              </div>
+            ))}
+          </section>
+        </main>
+      );
+    }
+
+    // ----------------------------
+    // ProductShowcase & Purchase Flow
+    // ----------------------------
+    function ProductShowcase({ productId, onBack }) {
+      const ctx = useContext(AppContext);
+      const [product, setProduct] = useState(null);
+      const [selectedAddOns, setSelectedAddOns] = useState([]);
+      const [estimatedPremium, setEstimatedPremium] = useState(0);
+      const [showPurchase, setShowPurchase] = useState(false);
+      useEffect(()=> { if(!productId) return; mockAPI.getProducts().then(list=>setProduct(list.find(p=>p.id===productId))); },[productId]);
+
+      useEffect(()=> {
+        if (!product) return;
+        // naive calc: base = mid of range, add addOn sums
+        const r = product.coreProtection.premiumRange;
+        let base=0;
+        const digits = r.replace(/[^\d\-]/g,'').split('-').map(s=>Number(s)).filter(Boolean);
+        if (digits.length===2) base=(digits[0]+digits[1])/2; else base = digits[0] || 10000;
+        const addonsTotal = (selectedAddOns.map(id => product.addOns.find(a=>a.id===id)).filter(Boolean).reduce((s,a)=> s + (a.additionalPremium||0), 0));
+        setEstimatedPremium(Math.round(base + addonsTotal));
+      },[product, selectedAddOns]);
+
+      if (!product) return <div className="p-6">Loading...</div>;
+
+      return (
+        <main className="max-w-6xl mx-auto p-6">
+          <div className="flex items-start gap-4">
+            <button className="px-3 py-1 border rounded" onClick={onBack} aria-label="Back">← Back</button>
+            <div>
+              <h2 className="text-2xl font-semibold">{product.title}</h2>
+              <div className="text-sm text-gray-500">{product.target}</div>
+            </div>
+          </div>
+
+          <div className="mt-6 grid gap-6 lg:grid-cols-3">
+            <div className="lg:col-span-2 bg-white dark:bg-slate-800 rounded-lg p-6 shadow">
+              <h3 className="font-semibold">Core Protection</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">{product.coreProtection.description}</p>
+              <ul className="mt-3 grid gap-2">
+                {product.coreProtection.subComponents.map((s,i)=>(
+                  <li key={i} className="flex items-start gap-3">
+                    <div className="w-2 h-2 rounded-full bg-sky-400 mt-2"></div>
+                    <div>
+                      <div className="font-medium">{s.name}</div>
+                      <div className="text-sm text-gray-500">{s.desc}</div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="mt-6">
+                <h4 className="font-semibold">Optional Add-Ons</h4>
+                <div className="mt-2 grid gap-2">
+                  {product.addOns.map(a=>(
+                    <label key={a.id} className="flex items-center justify-between p-3 border rounded">
+                      <div>
+                        <div className="font-medium">{a.name}</div>
+                        <div className="text-sm text-gray-500">{a.description}</div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="text-sm">{currency(a.additionalPremium)}</div>
+                        <input aria-label={`select ${a.name}`} type="checkbox" checked={selectedAddOns.includes(a.id)} onChange={(e)=> {
+                          setSelectedAddOns(prev => e.target.checked ? [...prev, a.id] : prev.filter(x=>x!==a.id));
+                        }} />
+                      </div>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+            </div>
+
+            <aside className="bg-white dark:bg-slate-800 rounded-lg p-6 shadow">
+              <div>
+                <div className="text-sm text-gray-500">Estimated Annual Premium</div>
+                <div className="text-2xl font-semibold mt-2">{currency(estimatedPremium || product.coreProtection.premiumRange.replace(/[^\d\-]/g,''))}</div>
+                <div className="mt-4">
+                  <button className="w-full px-4 py-2 bg-emerald-500 text-white rounded" onClick={()=>{
+                    if (!ctx.currentUser) { ctx.showAuthModal && ctx.showAuthModal(); alert('Please login/register to purchase (demo)'); return; }
+                    setShowPurchase(true);
+                  }}>{i18next.t('buyNow')}</button>
+                </div>
+
+                <div className="mt-3 text-sm text-gray-500">Value-added services included:</div>
+                <ul className="mt-2 text-sm">
+                  {product.valueAddedServices.map((s,i)=> <li key={i}>• {s.name} ({s.cost})</li>)}
+                </ul>
+              </div>
+            </aside>
+          </div>
+
+          {showPurchase && <PurchaseModal product={product} addOns={selectedAddOns} onClose={()=>setShowPurchase(false)} estimatedPremium={estimatedPremium} />}
+        </main>
+      );
+    }
+
+    // ----------------------------
+    // Purchase Modal (multi-step)
+    // ----------------------------
+    function PurchaseModal({ product, addOns, onClose, estimatedPremium }) {
+      const ctx = useContext(AppContext);
+      const [step, setStep] = useState(0);
+      const [form, setForm] = useState({ businessName: '', udyamId: ctx.currentUser?.udyamId || '', address:'', nominee:'', sumInsured: 1000000 });
+      const [loading, setLoading] = useState(false);
+      const [policy, setPolicy] = useState(null);
+
+      async function confirmPayment(){
+        setLoading(true);
+        // simulate payment
+        await new Promise(r=>setTimeout(r, 2000));
+        // issue policy
+        const payload = { productId: product.id, userId: ctx.currentUser.id, premiumPaid: estimatedPremium || 5000, sumInsured: form.sumInsured, details: { addOns } };
+        const pol = await mockAPI.issuePolicy(payload);
+        setPolicy(pol);
+        setLoading(false);
+        // confetti
+        confetti({ particleCount: 200, spread: 70, origin: { y: 0.6 } });
+        // redirect or close after short delay
+      }
+
+      return (
+        <div className="fixed inset-0 z-50 flex items-start justify-center p-4">
+          <div className="absolute inset-0 bg-black/40" onClick={onClose} aria-hidden></div>
+          <div role="dialog" aria-modal="true" className="relative max-w-3xl w-full bg-white dark:bg-slate-800 rounded-lg shadow-lg p-6 slide-up">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold">Buy {product.title}</h3>
+              <button aria-label="Close" onClick={onClose}>✕</button>
+            </div>
+
+            {!policy ? (
+              <>
+                <div className="mt-4">
+                  <div className="h-2 bg-gray-200 dark:bg-slate-700 rounded overflow-hidden">
+                    <div style={{width: `${(step+1)/3*100}%`}} className="h-full bg-sky-500"></div>
+                  </div>
+                </div>
+
+                <div className="mt-4">
+                  {step===0 && (
+                    <div className="grid gap-3">
+                      <input aria-label="Business Name" className="px-3 py-2 border rounded" placeholder="Business name" value={form.businessName} onChange={e=>setForm({...form,businessName:e.target.value})} />
+                      <input aria-label="Udyam ID" className="px-3 py-2 border rounded" placeholder="Udyam ID" value={form.udyamId} onChange={e=>setForm({...form,udyamId:e.target.value})} />
+                      <input aria-label="Address" className="px-3 py-2 border rounded" placeholder="Business address" value={form.address} onChange={e=>setForm({...form,address:e.target.value})} />
+                      <div className="flex justify-end gap-2">
+                        <button className="px-3 py-1 border rounded" onClick={onClose}>Cancel</button>
+                        <button className="px-3 py-1 bg-sky-500 text-white rounded" onClick={()=>setStep(1)}>Continue</button>
+                      </div>
+                    </div>
+                  )}
+
+                  {step===1 && (
+                    <div className="grid gap-3">
+                      <input aria-label="Nominee" className="px-3 py-2 border rounded" placeholder="Nominee name" value={form.nominee} onChange={e=>setForm({...form,nominee:e.target.value})} />
+                      <input aria-label="Sum Insured" type="number" className="px-3 py-2 border rounded" placeholder="Sum Insured" value={form.sumInsured} onChange={e=>setForm({...form,sumInsured:Number(e.target.value)})} />
+                      <div className="flex justify-end gap-2">
+                        <button className="px-3 py-1 border rounded" onClick={()=>setStep(0)}>Back</button>
+                        <button className="px-3 py-1 bg-sky-500 text-white rounded" onClick={()=>setStep(2)}>Proceed to Payment</button>
+                      </div>
+                    </div>
+                  )}
+
+                  {step===2 && (
+                    <div className="grid gap-3">
+                      <div className="text-sm text-gray-600">Payment Amount</div>
+                      <div className="text-2xl font-semibold">{currency(estimatedPremium)}</div>
+                      <div className="text-sm text-gray-500">Choose payment method (mock)</div>
+                      <div className="flex gap-2">
+                        <button className="px-3 py-2 border rounded">UPI</button>
+                        <button className="px-3 py-2 border rounded">Card</button>
+                        <button className="px-3 py-2 border rounded">Netbanking</button>
+                      </div>
+                      <div className="flex justify-end gap-2">
+                        <button className="px-3 py-1 border rounded" onClick={()=>setStep(1)}>Back</button>
+                        <button className="px-4 py-1 bg-emerald-500 text-white rounded" onClick={confirmPayment} disabled={loading}>{loading ? 'Processing...' : 'Pay Now'}</button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </>
+            ) : (
+              <div className="mt-6 text-center">
+                <div className="text-2xl font-semibold text-emerald-600">Payment Successful</div>
+                <div className="mt-2">Policy Number: <span className="font-mono">{policy.policyNumber}</span></div>
+                <div className="mt-4">
+                  <button className="px-4 py-2 bg-sky-500 text-white rounded" onClick={()=>{
+                    onClose();
+                    // refresh user policies in context
+                    ctx.refreshUserData && ctx.refreshUserData();
+                  }}>Go to My Policies</button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    // ----------------------------
+    // Customer Dashboard: Policies & Claims
+    // ----------------------------
+    function CustomerDashboard(){
+      const ctx = useContext(AppContext);
+      const [policies, setPolicies] = useState([]);
+      const [claims, setClaims] = useState([]);
+      const [selectedPolicy, setSelectedPolicy] = useState(null);
+      const [claimDesc, setClaimDesc] = useState('');
+      useEffect(()=> {
+        if(!ctx.currentUser) return;
+        mockAPI.getUserPolicies(ctx.currentUser.id).then(setPolicies);
+        mockAPI.getClaimsForUser(ctx.currentUser.id).then(setClaims);
+      },[ctx.currentUser]);
+
+      async function fileClaim(){
+        if(!selectedPolicy) return alert('Select policy');
+        const cl = await mockAPI.submitClaim({ policyNumber: selectedPolicy.policyNumber, userId: ctx.currentUser.id, details: claimDesc });
+        setClaims(prev=>[cl,...prev]);
+        setClaimDesc('');
+        alert('Claim submitted (mock)');
+      }
+
+      return (
+        <main className="max-w-6xl mx-auto p-6">
+          <h2 className="text-xl font-semibold">Policy Locker</h2>
+          <div className="mt-4 grid gap-4 lg:grid-cols-3">
+            {policies.length === 0 && <div className="col-span-3 p-6 bg-white dark:bg-slate-800 rounded">No policies yet. Buy from the marketplace.</div>}
+            {policies.map(p => (
+              <div key={p.policyNumber} className="bg-white dark:bg-slate-800 rounded p-4 shadow">
+                <div className="flex justify-between">
+                  <div>
+                    <div className="font-semibold">{p.policyNumber}</div>
+                    <div className="text-sm text-gray-500">{p.productId} • {shortDate(p.issueDate)}</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="font-medium">{currency(p.premiumPaid)}</div>
+                    <div className={`text-xs ${p.status==='Active' ? 'text-emerald-500' : 'text-gray-500'}`}>{p.status}</div>
+                  </div>
+                </div>
+                <div className="mt-3 text-sm text-gray-600">{p.details && p.details.addOns && p.details.addOns.length ? 'Add-Ons: ' + p.details.addOns.join(', ') : ''}</div>
+                <div className="mt-3 flex gap-2">
+                  <button className="px-3 py-1 border rounded" onClick={()=> setSelectedPolicy(p)}>Select</button>
+                  <button className="px-3 py-1 border rounded" onClick={async ()=>{
+                    const content = await mockAPI.downloadPolicyPDF(p.policyNumber);
+                    const blob = new Blob([content], { type: 'text/plain' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a'); a.href = url; a.download = `${p.policyNumber}.txt`; a.click();
+                    URL.revokeObjectURL(url);
+                  }}>Download</button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <section className="mt-8 bg-white dark:bg-slate-800 rounded p-4 shadow">
+            <h3 className="font-semibold">File a Claim</h3>
+            <div className="mt-3 grid gap-3">
+              <div>
+                <label className="text-sm text-gray-600">Selected Policy</label>
+                <div className="mt-1">
+                  <select className="px-3 py-2 border rounded w-full" value={selectedPolicy ? selectedPolicy.policyNumber : ''} onChange={(e)=> setSelectedPolicy(policies.find(p=>p.policyNumber===e.target.value))}>
+                    <option value="">-- Select Policy --</option>
+                    {policies.map(p => <option key={p.policyNumber} value={p.policyNumber}>{p.policyNumber} • {p.productId}</option>)}
+                  </select>
+                </div>
+              </div>
+
+              <textarea aria-label="claim details" placeholder="Describe the incident" value={claimDesc} onChange={e=>setClaimDesc(e.target.value)} className="px-3 py-2 border rounded h-28"></textarea>
+              <div className="flex justify-end gap-2">
+                <button className="px-3 py-1 border rounded" onClick={()=>{ setSelectedPolicy(null); setClaimDesc(''); }}>Reset</button>
+                <button className="px-4 py-1 bg-sky-500 text-white rounded" onClick={fileClaim}>{i18next.t('submit')}</button>
+              </div>
+            </div>
+          </section>
+
+          <section className="mt-6 bg-white dark:bg-slate-800 rounded p-4 shadow">
+            <h3 className="font-semibold">My Claims</h3>
+            <div className="mt-3 overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="text-left text-gray-500">
+                    <th className="py-2">Claim ID</th><th>Policy</th><th>Date Filed</th><th>Status</th><th>Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {claims.map(c => (
+                    <tr key={c.claimId} className="border-t">
+                      <td className="py-2 font-mono">{c.claimId}</td>
+                      <td>{c.policyNumber}</td>
+                      <td>{shortDate(c.dateFiled)}</td>
+                      <td>
+                        <span className={`px-2 py-1 rounded text-xs ${c.status==='Pending' ? 'bg-yellow-100 text-yellow-800' : c.status==='Approved' ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}`}>{c.status}</span>
+                      </td>
+                      <td>{c.details}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </main>
+      );
+    }
+
+    // ----------------------------
+    // Agent View (simplified)
+    // ----------------------------
+    function AgentView(){
+      const [clients, setClients] = useState([]);
+      useEffect(()=> {
+        // show all customers as sample
+        setClients(mockData.users.filter(u=>u.role==='customer'));
+      },[]);
+      return (
+        <main className="max-w-6xl mx-auto p-6">
+          <h2 className="text-xl font-semibold">Agent Portal</h2>
+          <div className="mt-4 grid gap-4 lg:grid-cols-3">
+            {clients.map(c=>(
+              <div key={c.id} className="bg-white dark:bg-slate-800 p-4 rounded shadow">
+                <div className="font-medium">{c.name}</div>
+                <div className="text-sm text-gray-500">{c.udyamId || 'No Udyam'}</div>
+                <div className="mt-3 text-sm">Policies: {mockData.policies.filter(p=>p.userId===c.id).length}</div>
+                <div className="mt-3 flex gap-2">
+                  <button className="px-3 py-1 border rounded">Contact</button>
+                  <button className="px-3 py-1 bg-sky-500 text-white rounded">Assist Customer</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </main>
+      );
+    }
+
+    // ----------------------------
+    // Admin Dashboard with Chart.js
+    // ----------------------------
+    function AdminView(){
+      const [metrics, setMetrics] = useState(null);
+      const inflowRef = useRef(null);
+      const distRef = useRef(null);
+      const claimRef = useRef(null);
+
+      async function load(){
+        const m = await mockAPI.getMetrics();
+        setMetrics(m);
+      }
+
+      useEffect(()=> { load(); }, []);
+
+      useEffect(()=> {
+        if (!metrics) return;
+        // line chart for inflows
+        const ctx = inflowRef.current.getContext('2d');
+        if (inflowRef.current._chart) inflowRef.current._chart.destroy();
+        inflowRef.current._chart = new Chart(ctx, {
+          type: 'line',
+          data: { labels: metrics.inflows.map((_,i)=>`M${i+1}`), datasets: [{ label: 'Premium inflow', data: metrics.inflows.map(x=>x.amount), tension:0.4 }] },
+          options: { responsive:true, plugins:{ legend:{display:false} } }
+        });
+
+        // doughnut distribution
+        const ctx2 = distRef.current.getContext('2d');
+        if (distRef.current._chart) distRef.current._chart.destroy();
+        distRef.current._chart = new Chart(ctx2, {
+          type: 'doughnut',
+          data: { labels: Object.keys(metrics.distribution), datasets: [{ data: Object.values(metrics.distribution) }] },
+          options: { responsive:true }
+        });
+
+        // claims bar
+        const ctx3 = claimRef.current.getContext('2d');
+        if (claimRef.current._chart) claimRef.current._chart.destroy();
+        claimRef.current._chart = new Chart(ctx3, {
+          type: 'bar',
+          data: { labels: Object.keys(metrics.claimsStatus), datasets: [{ label:'Claims', data: Object.values(metrics.claimsStatus) }] },
+          options: { responsive:true }
+        });
+
+      }, [metrics]);
+
+      return (
+        <main className="max-w-7xl mx-auto p-6">
+          <h2 className="text-xl font-semibold">Admin Dashboard</h2>
+          <div className="mt-4 grid gap-4 lg:grid-cols-3">
+            <div className="bg-white dark:bg-slate-800 p-4 rounded shadow">
+              <div className="text-sm text-gray-500">Total Policies</div>
+              <div className="text-2xl font-semibold">{metrics ? metrics.totalPolicies : '—'}</div>
+            </div>
+            <div className="bg-white dark:bg-slate-800 p-4 rounded shadow">
+              <div className="text-sm text-gray-500">Total Claims</div>
+              <div className="text-2xl font-semibold">{metrics ? metrics.totalClaims : '—'}</div>
+            </div>
+            <div className="bg-white dark:bg-slate-800 p-4 rounded shadow">
+              <div className="text-sm text-gray-500">Recent Inflows (sample)</div>
+              <div className="text-2xl font-semibold">₹{mockData.transactions.reduce((s,t)=>s+t.amount,0)}</div>
+            </div>
+          </div>
+
+          <div className="mt-6 grid gap-4 lg:grid-cols-3">
+            <div className="bg-white dark:bg-slate-800 p-4 rounded shadow">
+              <canvas ref={inflowRef} width="400" height="240" aria-label="Premium inflow chart"></canvas>
+            </div>
+            <div className="bg-white dark:bg-slate-800 p-4 rounded shadow">
+              <canvas ref={distRef} width="400" height="240" aria-label="Policy distribution chart"></canvas>
+            </div>
+            <div className="bg-white dark:bg-slate-800 p-4 rounded shadow">
+              <canvas ref={claimRef} width="400" height="240" aria-label="Claims status chart"></canvas>
+            </div>
+          </div>
+
+          <div className="mt-6 bg-white dark:bg-slate-800 p-4 rounded shadow">
+            <h3 className="font-semibold">Product Management</h3>
+            <ProductAdmin />
+          </div>
+
+          <div className="mt-6 bg-white dark:bg-slate-800 p-4 rounded shadow">
+            <h3 className="font-semibold">API Documentation (Mock)</h3>
+            <MockAPIDocs />
+          </div>
+        </main>
+      );
+    }
+
+    // ----------------------------
+    // Product Admin (add/edit)
+    // ----------------------------
+    function ProductAdmin(){
+      const [products, setProducts] = useState([]);
+      const [editing, setEditing] = useState(null);
+      useEffect(()=> { setProducts(Object.values(mockData.msmeProductBouquets)); },[]);
+
+      async function save(p){
+        await mockAPI.addOrEditProduct(p);
+        setProducts(Object.values(mockData.msmeProductBouquets));
+        alert('Saved (mock)');
+      }
+
+      return (
+        <div className="grid gap-3">
+          <div className="grid gap-2">
+            {products.map(p=>(
+              <div key={p.id} className="flex items-start justify-between p-3 border rounded">
+                <div>
+                  <div className="font-medium">{p.title}</div>
+                  <div className="text-sm text-gray-500">{p.target}</div>
+                </div>
+                <div className="flex gap-2">
+                  <button className="px-3 py-1 border rounded" onClick={()=> setEditing(p)}>Edit</button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {editing && <div className="mt-3 p-3 border rounded">
+            <div className="text-sm">Edit product title</div>
+            <input className="px-3 py-2 border rounded w-full mt-2" value={editing.title} onChange={(e)=> setEditing({...editing, title: e.target.value})} />
+            <div className="flex justify-end gap-2 mt-2">
+              <button className="px-3 py-1 border rounded" onClick={()=> setEditing(null)}>Cancel</button>
+              <button className="px-3 py-1 bg-sky-500 text-white rounded" onClick={()=> { save(editing); setEditing(null); }}>Save</button>
+            </div>
+          </div>}
+        </div>
+      );
+    }
+
+    // ----------------------------
+    // Mock API Docs
+    // ----------------------------
+    function MockAPIDocs(){
+      const endpoints = [
+        { method: 'GET', path: '/api/products', desc: 'List all product bouquets' },
+        { method: 'POST', path: '/api/auth/login', desc: 'Login user (email/password)' },
+        { method: 'POST', path: '/api/auth/register', desc: 'Register user' },
+        { method: 'POST', path: '/api/policies', desc: 'Issue new policy' },
+        { method: 'GET', path: '/api/policies?userId=', desc: 'Get policies for a user' },
+        { method: 'POST', path: '/api/claims', desc: 'Submit a claim' },
+      ];
+      return (
+        <div>
+          {endpoints.map(e=>(
+            <div key={e.path} className="p-3 border-b">
+              <div className="font-mono">{e.method} <span className="text-sky-600">{e.path}</span></div>
+              <div className="text-sm text-gray-600">{e.desc}</div>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    // ----------------------------
+    // Floating Chatbot
+    // ----------------------------
+    function FloatingChat(){
+      const [open, setOpen] = useState(false);
+      const [messages, setMessages] = useState([{ from:'bot', text:'How can I help you with MSME insurance today?' }]);
+      const [input, setInput] = useState('');
+      function send(){ if(!input) return; setMessages(prev=>[...prev,{from:'user', text:input}]); setInput(''); setTimeout(()=> setMessages(prev=>[...prev,{from:'bot', text:'Thanks — this is a demo bot. For assistance, contact support@suraksha.com'}]), 800); }
+      return (
+        <div className="fixed right-4 bottom-4 z-50">
+          {open && (
+            <div className="w-80 bg-white dark:bg-slate-800 rounded-lg shadow flex flex-col overflow-hidden" role="dialog" aria-label="Chat">
+              <div className="px-3 py-2 bg-sky-500 text-white">MSME Helper</div>
+              <div className="p-2 h-56 overflow-y-auto">
+                {messages.map((m,i)=> <div key={i} className={`mb-2 ${m.from==='bot' ? 'text-sm text-gray-700 dark:text-gray-200' : 'text-sm text-right'}`}>{m.text}</div>)}
+              </div>
+              <div className="p-2 border-t">
+                <div className="flex gap-2">
+                  <input aria-label="chat input" value={input} onChange={e=>setInput(e.target.value)} className="flex-1 px-2 py-1 border rounded" />
+                  <button className="px-3 py-1 bg-sky-500 text-white rounded" onClick={send}>Send</button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <button aria-label="Open chat" onClick={()=>setOpen(o=>!o)} className="w-14 h-14 rounded-full bg-sky-500 text-white shadow-lg flex items-center justify-center focus-ring">
+            💬
+          </button>
+        </div>
+      );
+    }
+
+    // ----------------------------
+    // Project Info (bottom panel)
+    // ----------------------------
+    function ProjectInfoPanel(){
+      const [open, setOpen] = useState(false);
+      return (
+        <div className="fixed left-4 bottom-4 z-40">
+          <div className="flex items-end gap-2">
+            <button className="px-3 py-2 bg-white dark:bg-slate-800 border rounded" onClick={()=>setOpen(o=>!o)} aria-expanded={open}>{open ? 'Hide' : 'Project Info'}</button>
+          </div>
+          {open && (
+            <div className="mt-3 w-96 bg-white dark:bg-slate-800 p-4 rounded shadow">
+              <h4 className="font-semibold">Project Information</h4>
+              <div className="text-sm text-gray-600 mt-2">
+                <p><strong>How to use:</strong> Switch role in header, register/login, view products, buy (mock), file claims, view admin charts.</p>
+                <p className="mt-2"><strong>Architecture:</strong> React front-end, mockAPI (in-memory), localStorage persistence. Single-file demo.</p>
+                <p className="mt-2"><strong>Notes:</strong> All network operations are simulated. No external backend.</p>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    // ----------------------------
+    // Main App
+    // ----------------------------
+    function App(){
+      const [currentUser, setCurrentUser] = useState(() => {
+        try { return JSON.parse(localStorage.getItem('msme_user')); } catch(e){ return null; }
+      });
+      const [role, setRole] = useState(() => currentUser ? currentUser.role : (localStorage.getItem('msme_role') || 'customer'));
+      const [view, setView] = useState('landing'); // landing, product, dashboard, agent, admin
+      const [productId, setProductId] = useState(null);
+      const [theme, setTheme] = useState(localStorage.getItem('msme_theme') || 'light');
+      const [lang, setLang] = useState(i18next.language || 'en');
+      const [showAuthModal, setShowAuthModal] = useState(false);
+      const ctxValue = { currentUser, setCurrentUser, role, setRole, view, setView, theme, setTheme, lang, setLang, showAuthModal, showAuthModalFn: ()=>setShowAuthModal(true), showAuthModal, refreshUserData: ()=>{/* no-op: components call mockAPI directly */} };
+
+      useEffect(()=> { document.documentElement.classList.toggle('dark', theme === 'dark'); localStorage.setItem('msme_theme', theme); }, [theme]);
+      useEffect(()=> { localStorage.setItem('msme_role', role); }, [role]);
+
+      useEffect(()=> { if(currentUser) setRole(currentUser.role); }, [currentUser]);
+
+      const t = (k)=>i18next.t(k);
+
+      function handleSelectProduct(id, opts){ setProductId(id); setView('product'); if (opts && opts.buy) { /* open purchase directly in product view */ } }
+
+      return (
+        <AppContext.Provider value={{ ...ctxValue, showAuthModal: showAuthModal, showAuthModalFn: ()=>setShowAuthModal(true), refreshUserData: ()=>{} }}>
+          <div className="min-h-screen flex flex-col">
+            <Header />
+            <div className="flex-1">
+              {view === 'landing' && <Landing onSelect={handleSelectProduct} />}
+              {view === 'product' && <ProductShowcase productId={productId} onBack={()=>setView('landing')} />}
+              {view === 'dashboard' && currentUser && currentUser.role==='customer' && <CustomerDashboard />}
+              {view === 'dashboard' && currentUser && currentUser.role==='agent' && <AgentView />}
+              {view === 'admin' && currentUser && currentUser.role==='admin' && <AdminView />}
+              {/* fallback small navigation shortcuts */}
+              <div className="max-w-7xl mx-auto px-4 py-8">
+                <div className="flex gap-2">
+                  <button className="px-3 py-1 border rounded" onClick={()=>{ setView('landing'); }}>Marketplace</button>
+                  <button className="px-3 py-1 border rounded" onClick={()=>{
+                    if (!currentUser) { setShowAuthModal(true); return; }
+                    if (currentUser.role === 'customer') setView('dashboard');
+                    else if (currentUser.role === 'agent') setView('dashboard');
+                    else if (currentUser.role === 'admin') setView('admin');
+                    else setView('landing');
+                  }}>My Area</button>
+                </div>
+              </div>
+            </div>
+
+            <footer className="bg-white dark:bg-slate-800 border-t dark:border-slate-700 p-4">
+              <div className="max-w-7xl mx-auto text-sm text-gray-600 dark:text-gray-300">© MSME Suraksha — Prototype</div>
+            </footer>
+
+            {showAuthModal && <AuthModal onClose={()=>setShowAuthModal(false)} onLogin={(u)=>{ setCurrentUser(u); setShowAuthModal(false); }} />}
+
+            <FloatingChat />
+            <ProjectInfoPanel />
+          </div>
+        </AppContext.Provider>
+      );
+    }
+
+    // ----------------------------
+    // Render
+    // ----------------------------
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+
+  </script>
+</body>
+</html>

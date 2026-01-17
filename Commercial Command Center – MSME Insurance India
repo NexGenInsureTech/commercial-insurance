@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Commercial Command Center | MSME Insurance India</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="bg-slate-100 text-slate-900">
+
+<!-- HEADER -->
+<header class="bg-slate-900 text-white px-8 py-6">
+  <h1 class="text-2xl font-bold tracking-wide">
+    Commercial Command Center
+  </h1>
+  <p class="text-sm opacity-80">
+    Internal Strategic Intelligence Platform — MSME & Commercial Insurance (India)
+  </p>
+</header>
+
+<!-- MAIN -->
+<main class="p-8 space-y-8">
+
+  <!-- EXEC KPIs -->
+  <section class="grid grid-cols-1 md:grid-cols-4 gap-6">
+    <div class="bg-white p-5 rounded shadow">
+      <p class="text-xs text-slate-500">Registered MSMEs</p>
+      <p class="text-2xl font-bold">68.2 M</p>
+    </div>
+
+    <div class="bg-white p-5 rounded shadow">
+      <p class="text-xs text-slate-500">Employment Supported</p>
+      <p class="text-2xl font-bold">297.7 M</p>
+    </div>
+
+    <div class="bg-white p-5 rounded shadow">
+      <p class="text-xs text-slate-500">Export-Led Clusters</p>
+      <p class="text-2xl font-bold">180+</p>
+    </div>
+
+    <div class="bg-white p-5 rounded shadow">
+      <p class="text-xs text-slate-500">Priority Focus (12–18 mo)</p>
+      <p class="text-2xl font-bold">Tier 1 & 2</p>
+    </div>
+  </section>
+
+  <!-- MARKET & INSURANCE GAP -->
+  <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+    <!-- Growth vs Insurance Gap -->
+    <div class="bg-white p-6 rounded shadow lg:col-span-2">
+      <h2 class="font-semibold mb-4">
+        Growth Momentum vs Insurance Penetration Gap
+      </h2>
+      <canvas id="gapChart"></canvas>
+    </div>
+
+    <!-- Strategic Focus -->
+    <div class="bg-white p-6 rounded shadow">
+      <h2 class="font-semibold mb-3">Leadership Focus (Current Quarter)</h2>
+      <ul class="text-sm space-y-3 list-disc ml-4">
+        <li><b>Tiruppur</b> — Textile MSME Package + BI pilot</li>
+        <li><b>Surat</b> — Export Credit & Marine alignment</li>
+        <li><b>Pune</b> — Auto Supply Chain & EV risk covers</li>
+        <li><b>SFURTI Clusters</b> — Livelihood protection rollout</li>
+      </ul>
+    </div>
+
+  </section>
+
+  <!-- SECTOR ATTRACTIVENESS -->
+  <section class="bg-white p-6 rounded shadow">
+    <h2 class="font-semibold mb-4">Sector Attractiveness Snapshot</h2>
+    <canvas id="sectorChart"></canvas>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="text-center text-xs text-slate-500 py-4">
+  Internal Use Only | Strategic Intelligence Platform | Version 1.0
+</footer>
+
+<!-- CHARTS -->
+<script>
+/* Growth vs Insurance Gap */
+new Chart(document.getElementById('gapChart'), {
+  type: 'bubble',
+  data: {
+    datasets: [
+      {
+        label: 'Textiles',
+        data: [{ x: 18, y: 45, r: 25 }],
+      },
+      {
+        label: 'Gems & Jewelry',
+        data: [{ x: 20, y: 55, r: 28 }],
+      },
+      {
+        label: 'Leather',
+        data: [{ x: 15, y: 60, r: 22 }],
+      },
+      {
+        label: 'Auto Components',
+        data: [{ x: 14, y: 35, r: 24 }],
+      },
+      {
+        label: 'Handicrafts',
+        data: [{ x: 25, y: 70, r: 30 }],
+      }
+    ]
+  },
+  options: {
+    scales: {
+      x: {
+        title: { display: true, text: 'Cluster Growth Rate (%)' }
+      },
+      y: {
+        title: { display: true, text: 'Insurance Under-penetration (%)' }
+      }
+    }
+  }
+});
+
+/* Sector Attractiveness */
+new Chart(document.getElementById('sectorChart'), {
+  type: 'radar',
+  data: {
+    labels: [
+      'Market Size',
+      'Growth',
+      'Export Intensity',
+      'Digital Adoption',
+      'Insurance Gap'
+    ],
+    datasets: [
+      {
+        label: 'Textiles',
+        data: [5, 4, 5, 3, 4],
+      },
+      {
+        label: 'Auto Components',
+        data: [4, 4, 4, 4, 3],
+      },
+      {
+        label: 'Handicrafts',
+        data: [3, 5, 3, 2, 5],
+      }
+    ]
+  }
+});
+</script>
+
+</body>
+</html>

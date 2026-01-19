@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Portfolio Intelligence Engine</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+
+  <body class="bg-slate-100 text-slate-900">
+    <header class="bg-slate-900 text-white px-8 py-6">
+      <h1 class="text-xl font-bold">Portfolio & Execution Intelligence</h1>
+      <p class="text-sm opacity-80">
+        Sector × Cluster Performance — Decide. Act. Realign.
+      </p>
+    </header>
+
+    <main class="p-8">
+      <section class="bg-white p-6 rounded shadow">
+        <h2 class="font-semibold mb-4">Strategic Portfolio View</h2>
+
+        <table class="w-full text-sm border">
+          <thead class="bg-slate-200">
+            <tr>
+              <th class="p-2">Sector</th>
+              <th class="p-2">Cluster</th>
+              <th class="p-2">GWP Growth</th>
+              <th class="p-2">Loss Ratio</th>
+              <th class="p-2">UW Friction</th>
+              <th class="p-2">Capacity Use</th>
+              <th class="p-2">Strategic Action</th>
+            </tr>
+          </thead>
+          <tbody id="portfolioTable"></tbody>
+        </table>
+      </section>
+    </main>
+
+    <script src="data/portfolio.js"></script>
+    <script src="js/portfolioEngine.js"></script>
+  </body>
+</html>

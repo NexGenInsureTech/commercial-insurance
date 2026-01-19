@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Cluster Intelligence Engine</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+
+  <body class="bg-slate-100 text-slate-900">
+    <header class="bg-slate-900 text-white px-8 py-6">
+      <h1 class="text-xl font-bold">Cluster Intelligence Engine</h1>
+      <p class="text-sm opacity-80">
+        Strategic Prioritisation of MSME Clusters — Insurance Lens
+      </p>
+    </header>
+
+    <main class="p-8">
+      <!-- FILTERS -->
+      <section class="bg-white p-6 rounded shadow mb-8">
+        <h2 class="font-semibold mb-4">Filters</h2>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <select id="stateFilter" class="border p-2 rounded">
+            <option value="All">All States</option>
+          </select>
+
+          <select id="sectorFilter" class="border p-2 rounded">
+            <option value="All">All Sectors</option>
+          </select>
+
+          <select id="typeFilter" class="border p-2 rounded">
+            <option value="All">All Cluster Types</option>
+          </select>
+
+          <button
+            onclick="renderTable()"
+            class="bg-slate-900 text-white rounded px-4"
+          >
+            Apply
+          </button>
+        </div>
+      </section>
+
+      <!-- TABLE -->
+      <section class="bg-white p-6 rounded shadow">
+        <h2 class="font-semibold mb-4">Ranked Cluster List</h2>
+
+        <table class="w-full text-sm border">
+          <thead class="bg-slate-200">
+            <tr>
+              <th class="p-2">Rank</th>
+              <th class="p-2">Cluster</th>
+              <th class="p-2">State</th>
+              <th class="p-2">Sector</th>
+              <th class="p-2">Type</th>
+              <th class="p-2">Score</th>
+              <th class="p-2">Priority</th>
+            </tr>
+          </thead>
+          <tbody id="clusterTable"></tbody>
+        </table>
+      </section>
+    </main>
+
+    <script src="data/clusters.js"></script>
+    <script src="js/clusterEngine.js"></script>
+  </body>
+</html>

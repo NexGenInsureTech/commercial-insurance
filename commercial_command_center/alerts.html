@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Alerts & Early Warning</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+
+  <body class="bg-slate-100 text-slate-900">
+    <header class="bg-red-700 text-white px-8 py-6">
+      <h1 class="text-xl font-bold">Alerts & Early Warning Center</h1>
+      <p class="text-sm opacity-90">
+        Portfolio Drift • Risk Breach • Strategy Violations
+      </p>
+    </header>
+
+    <main class="p-8">
+      <section class="bg-white p-6 rounded shadow">
+        <h2 class="font-semibold mb-4">Active Alerts</h2>
+
+        <ul id="alertList" class="space-y-4 text-sm"></ul>
+      </section>
+    </main>
+
+    <footer class="text-center text-xs text-slate-500 py-4">
+      Automated Monitoring — Internal Only
+    </footer>
+
+    <script src="data/alertSignals.js"></script>
+    <script src="js/alertEngine.js"></script>
+  </body>
+</html>

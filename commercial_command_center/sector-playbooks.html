@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sector Playbooks Engine</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+
+  <body class="bg-slate-100 text-slate-900">
+    <header class="bg-slate-900 text-white px-8 py-6">
+      <h1 class="text-xl font-bold">Sector Playbooks Engine</h1>
+      <p class="text-sm opacity-80">
+        Insurance Strategy by SME Sector — Risk → Coverage → Execution
+      </p>
+    </header>
+
+    <main class="p-8 grid grid-cols-1 md:grid-cols-4 gap-6">
+      <!-- SECTOR LIST -->
+      <aside class="bg-white p-4 rounded shadow">
+        <h2 class="font-semibold mb-4">Sectors</h2>
+        <ul id="sectorList" class="space-y-2"></ul>
+      </aside>
+
+      <!-- PLAYBOOK -->
+      <section class="md:col-span-3 bg-white p-6 rounded shadow">
+        <div id="playbookContent">
+          <p class="text-slate-500">
+            Select a sector to view its insurance playbook.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <script src="data/sectors.js"></script>
+    <script src="js/sectorEngine.js"></script>
+  </body>
+</html>

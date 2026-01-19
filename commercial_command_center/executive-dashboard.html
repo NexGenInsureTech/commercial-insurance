@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Executive Dashboard — Commercial Insurance</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+
+  <body class="bg-slate-100 text-slate-900">
+    <header class="bg-slate-900 text-white px-8 py-6">
+      <h1 class="text-2xl font-bold">Executive Dashboard</h1>
+      <p class="text-sm opacity-80">
+        Commercial Insurance — Portfolio Health Snapshot
+      </p>
+    </header>
+
+    <main class="p-8 space-y-6">
+      <!-- KPI STRIP -->
+      <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="bg-white p-4 rounded shadow">
+          <p class="text-xs text-slate-500">YTD GWP Growth</p>
+          <p class="text-2xl font-bold" id="gwpGrowth"></p>
+        </div>
+        <div class="bg-white p-4 rounded shadow">
+          <p class="text-xs text-slate-500">Loss Ratio</p>
+          <p class="text-2xl font-bold" id="lossRatio"></p>
+        </div>
+        <div class="bg-white p-4 rounded shadow">
+          <p class="text-xs text-slate-500">Capacity Utilisation</p>
+          <p class="text-2xl font-bold" id="capacityUse"></p>
+        </div>
+        <div class="bg-white p-4 rounded shadow">
+          <p class="text-xs text-slate-500">Active Experiments</p>
+          <p class="text-2xl font-bold" id="experiments"></p>
+        </div>
+      </section>
+
+      <!-- STRATEGIC SIGNALS -->
+      <section class="bg-white p-6 rounded shadow">
+        <h2 class="font-semibold mb-4">Strategic Signals</h2>
+        <ul id="signals" class="space-y-2 text-sm"></ul>
+      </section>
+
+      <!-- DECISION REQUIRED -->
+      <section class="bg-white p-6 rounded shadow border-l-4 border-red-600">
+        <h2 class="font-semibold mb-2">Decisions Required</h2>
+        <ul id="decisions" class="space-y-2 text-sm"></ul>
+      </section>
+    </main>
+
+    <footer class="text-center text-xs text-slate-500 py-4">
+      Board / MD View — Confidential
+    </footer>
+
+    <script src="data/executiveSignals.js"></script>
+    <script src="js/executiveEngine.js"></script>
+  </body>
+</html>

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Data Upload</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+
+  <body class="bg-slate-100 text-slate-900">
+    <header class="bg-slate-800 text-white px-8 py-6">
+      <h1 class="text-xl font-bold">Operational Data Upload</h1>
+    </header>
+
+    <main class="p-8 bg-white m-8 rounded shadow">
+      <label class="text-sm">Upload CSV / Excel</label>
+      <input type="file" id="fileInput" class="border p-2 w-full mb-4" />
+
+      <button
+        onclick="uploadData()"
+        class="bg-slate-900 text-white px-4 py-2 rounded"
+      >
+        Validate & Upload
+      </button>
+
+      <p id="status" class="text-sm mt-4"></p>
+    </main>
+
+    <script src="../js/uploadEngine.js"></script>
+  </body>
+</html>

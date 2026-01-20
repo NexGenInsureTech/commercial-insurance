@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Platform Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+
+  <body class="bg-slate-100 flex items-center justify-center h-screen">
+    <div class="bg-white p-6 rounded shadow w-80">
+      <h2 class="font-semibold mb-4">Login</h2>
+
+      <input
+        id="username"
+        placeholder="Username"
+        class="border p-2 w-full mb-4"
+      />
+
+      <button
+        onclick="login()"
+        class="bg-slate-900 text-white px-4 py-2 rounded w-full"
+      >
+        Enter Platform
+      </button>
+    </div>
+
+    <script src="../data/users.js"></script>
+    <script src="../js/authEngine.js"></script>
+  </body>
+</html>

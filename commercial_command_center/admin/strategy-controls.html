@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Strategy Controls</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+
+  <body class="bg-slate-100 text-slate-900">
+    <header class="bg-slate-800 text-white px-8 py-6">
+      <h1 class="text-xl font-bold">Strategy & Governance Controls</h1>
+    </header>
+
+    <main class="p-8 bg-white m-8 rounded shadow">
+      <label class="text-sm">Portfolio Loss Ratio Cap (%)</label>
+      <input
+        type="number"
+        id="lossCap"
+        value="75"
+        class="border p-2 w-full mb-4"
+      />
+
+      <label class="text-sm">Max Cluster Concentration (%)</label>
+      <input
+        type="number"
+        id="clusterCap"
+        value="30"
+        class="border p-2 w-full mb-4"
+      />
+
+      <button
+        onclick="saveControls()"
+        class="bg-slate-900 text-white px-4 py-2 rounded"
+      >
+        Save Controls
+      </button>
+    </main>
+
+    <script src="../js/governanceEngine.js"></script>
+  </body>
+</html>

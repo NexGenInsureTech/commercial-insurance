@@ -1,3 +1,15 @@
+<script src="js/dataStore.js"></script>;
+
+const portfolio = getPortfolioData();
+
+portfolio.forEach((row) => {
+  const exposure = calculateNetExposure(row);
+
+  // Use exposure.lossRatio
+  // Use exposure.capacityUsed
+  // Use exposure.gwp
+});
+
 function decideAction(p) {
   if (p.gwpGrowth > 15 && p.lossRatio < 65 && p.capacityUse < 85)
     return "🟢 Double Down";

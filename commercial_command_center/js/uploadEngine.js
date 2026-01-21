@@ -12,5 +12,30 @@ function uploadData() {
     return;
   }
 
-  status.innerText = "File accepted. Validation passed. (Parsing simulated)";
+  Papa.parse(file, {
+    header: true,
+    skipEmptyLines: true,
+    complete: function (results) {
+      if (!results.data || results.data.length === 0) {
+        status.innerText = "CSV parsed but no data found.";
+        return;
+      }
+
+      // Store parsed data centrally
+      localStorage.setItem("portfolioData", JSON.stringify(results.data));
+
+      // Audit log (if auditEngine.js is loaded)
+      if (typeof audit === "function") {
+        audit(
+          "UPLOAD_OPERATIONAL_DATA",
+          `Uploaded ${file.name} with ${results.data.length} rows`,
+        );
+      }
+
+      status.innerText = `Upload successful. ${results.data.length} records ingested.`;
+    },
+    error: function () {
+      status.innerText = "Error parsing CSV file.";
+    },
+  });
 }

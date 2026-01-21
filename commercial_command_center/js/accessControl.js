@@ -1,8 +1,13 @@
-const role = sessionStorage.getItem("role");
-
 function restrict(allowedRoles) {
+  const role = sessionStorage.getItem("role");
+
+  if (!role) {
+    window.location.href = "auth/login.html";
+    return;
+  }
+
   if (!allowedRoles.includes(role)) {
-    alert("Access denied");
-    window.location.href = "/auth/login.html";
+    alert("Access denied: insufficient permissions");
+    return;
   }
 }

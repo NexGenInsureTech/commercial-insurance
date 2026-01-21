@@ -4,129 +4,149 @@
     <meta charset="UTF-8" />
     <title>Commercial Insurance Intelligence Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Access Control -->
+    <script src="js/accessControl.js"></script>
+    <script>
+      restrict([
+        "platformOwner",
+        "strategy",
+        "underwriting",
+        "executive",
+        "dataSteward",
+      ]);
+    </script>
   </head>
 
   <body class="bg-slate-100 text-slate-900">
     <!-- HEADER -->
-    <header class="bg-slate-900 text-white px-8 py-6">
-      <h1 class="text-2xl font-bold">
-        Commercial Insurance Intelligence Platform
-      </h1>
-      <p class="text-sm opacity-80">
-        Strategy • Portfolio • Execution • Innovation
-      </p>
+    <header class="bg-slate-900 text-white px-8 py-6 flex justify-between">
+      <div>
+        <h1 class="text-xl font-bold">
+          Commercial Insurance Intelligence Platform
+        </h1>
+        <p class="text-sm opacity-80">
+          Strategy • Portfolio • Governance • Early Warning
+        </p>
+      </div>
+
+      <div class="text-right text-sm">
+        <p id="userInfo"></p>
+        <a href="auth/login.html" class="underline opacity-80"> Switch User </a>
+      </div>
     </header>
 
     <!-- MAIN -->
-    <main class="p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-      <!-- STRATEGIC MODULES -->
-      <section class="bg-white p-6 rounded shadow">
-        <h2 class="font-semibold mb-4">Strategic Engines</h2>
-
-        <a
-          href="alerts.html"
-          class="block p-4 border rounded bg-red-50 hover:bg-red-100"
-        >
-          <h3 class="font-semibold text-red-700">Alerts & Early Warning</h3>
-          <p class="text-sm text-slate-600">
-            Strategy drift & risk breach monitoring
-          </p>
-        </a>
-
-        <a
-          href="executive-dashboard.html"
-          class="block p-4 border rounded hover:bg-slate-100 bg-slate-50"
-        >
-          <h3 class="font-semibold">Executive / MD Dashboard</h3>
-          <p class="text-sm text-slate-600">
-            One-page strategic truth for leadership
-          </p>
-        </a>
-
-        <div class="space-y-3">
-          <a
-            href="clusters.html"
-            class="block p-4 border rounded hover:bg-slate-100"
-          >
-            <h3 class="font-semibold">Cluster Intelligence</h3>
-            <p class="text-sm text-slate-600">
-              Where to play — MSME cluster prioritisation
-            </p>
-          </a>
-
-          <a
-            href="sector-playbooks.html"
-            class="block p-4 border rounded hover:bg-slate-100"
-          >
-            <h3 class="font-semibold">Sector Playbooks</h3>
-            <p class="text-sm text-slate-600">
-              How to win — risk, coverage & underwriting logic
-            </p>
-          </a>
-
-          <a
-            href="underwriting.html"
-            class="block p-4 border rounded hover:bg-slate-100"
-          >
-            <h3 class="font-semibold">Underwriting Decision Support</h3>
-            <p class="text-sm text-slate-600">
-              Strategy-aligned bind / refer / decline engine
-            </p>
-          </a>
-
-          <a
-            href="distribution.html"
-            class="block p-4 border rounded hover:bg-slate-100"
-          >
-            <h3 class="font-semibold">Distribution Enablement</h3>
-            <p class="text-sm text-slate-600">
-              Contextual sales guidance & cross-sell logic
-            </p>
-          </a>
-
-          <a
-            href="portfolio.html"
-            class="block p-4 border rounded hover:bg-slate-100"
-          >
-            <h3 class="font-semibold">Portfolio Intelligence</h3>
-            <p class="text-sm text-slate-600">
-              Are we winning — double down, hold or exit
-            </p>
-          </a>
-
-          <a
-            href="innovation-lab.html"
-            class="block p-4 border rounded hover:bg-slate-100"
-          >
-            <h3 class="font-semibold">Innovation & Product Lab</h3>
-            <p class="text-sm text-slate-600">
-              What’s next — controlled experimentation
-            </p>
-          </a>
-        </div>
-      </section>
-
-      <!-- LEADERSHIP SNAPSHOT -->
-      <section class="bg-white p-6 rounded shadow">
-        <h2 class="font-semibold mb-4">Leadership Snapshot</h2>
-
-        <ul class="space-y-2 text-sm">
-          <li>
-            🟢 High-performing clusters: <strong>Textiles, Handicrafts</strong>
-          </li>
-          <li>🟡 Watchlist sectors: <strong>Auto Components</strong></li>
-          <li>🔴 Stress signals: <strong>High recall exposure</strong></li>
-          <li>🚀 Active experiments: <strong>2 pilots live</strong></li>
-        </ul>
-
-        <p class="text-xs text-slate-500 mt-4">
-          *Signals auto-derived from underlying engines
+    <main class="p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- PORTFOLIO -->
+      <a
+        href="portfolio.html"
+        class="bg-white p-6 rounded shadow hover:bg-slate-100"
+      >
+        <h3 class="font-semibold">Portfolio</h3>
+        <p class="text-sm text-slate-600">
+          Portfolio health & performance overview
         </p>
-      </section>
+      </a>
+      <!-- EXECUTIVE DASHBOARD -->
+      <a
+        href="executive-dashboard.html"
+        class="bg-white p-6 rounded shadow hover:bg-slate-100"
+      >
+        <h3 class="font-semibold">Executive Dashboard</h3>
+        <p class="text-sm text-slate-600">
+          Portfolio health & performance overview
+        </p>
+      </a>
+
+      <!-- SECTOR PLAYBOOK -->
+      <a
+        href="sector-playbooks.html"
+        class="bg-white p-6 rounded shadow hover:bg-slate-100"
+      >
+        <h3 class="font-semibold">Sector Playbook</h3>
+        <p class="text-sm text-slate-600">
+          Portfolio health & performance overview
+        </p>
+      </a>
+
+      <!-- UNDERWRITING -->
+      <a
+        href="underwriting.html"
+        class="bg-white p-6 rounded shadow hover:bg-slate-100"
+      >
+        <h3 class="font-semibold">Underwriting</h3>
+        <p class="text-sm text-slate-600">
+          Portfolio health & performance overview
+        </p>
+      </a>
+
+      <!-- PORTFOLIO & CLUSTERS -->
+      <a
+        href="clusters.html"
+        class="bg-white p-6 rounded shadow hover:bg-slate-100"
+      >
+        <h3 class="font-semibold">Cluster & Sector Intelligence</h3>
+        <p class="text-sm text-slate-600">
+          MSME clusters, exposure & opportunity mapping
+        </p>
+      </a>
+
+      <!-- UNDERWRITING -->
+      <a
+        href="underwriting.html"
+        class="bg-white p-6 rounded shadow hover:bg-slate-100"
+      >
+        <h3 class="font-semibold">Underwriting Governance</h3>
+        <p class="text-sm text-slate-600">Rules, overrides & risk discipline</p>
+      </a>
+
+      <!-- ALERTS -->
+      <a
+        href="alerts.html"
+        class="bg-red-50 p-6 rounded shadow hover:bg-red-100"
+      >
+        <h3 class="font-semibold text-red-700">Alerts & Early Warning</h3>
+        <p class="text-sm text-slate-600">
+          Drift, breaches & intervention signals
+        </p>
+      </a>
+
+      <!-- ADMIN (ROLE-RESTRICTED VISIBILITY) -->
+      <div id="adminBlock" class="bg-white p-6 rounded shadow hidden">
+        <h3 class="font-semibold">Admin & Governance</h3>
+        <p class="text-sm text-slate-600 mb-3">
+          Data ingestion & strategy controls
+        </p>
+        <a
+          href="admin/admin-dashboard.html"
+          class="text-blue-600 underline text-sm"
+        >
+          Go to Admin
+        </a>
+      </div>
     </main>
 
     <footer class="text-center text-xs text-slate-500 py-4">
-      Internal Strategic Platform — Confidential
+      Internal System • Governed • Auditable
     </footer>
+
+    <!-- ROLE-AWARE UI LOGIC -->
+    <script>
+      const user = sessionStorage.getItem("user");
+      const role = sessionStorage.getItem("role");
+
+      document.getElementById("userInfo").innerText =
+        user && role ? `User: ${user} | Role: ${role}` : "Authenticated User";
+
+      if (["platformOwner", "strategy", "dataSteward"].includes(role)) {
+        document.getElementById("adminBlock").classList.remove("hidden");
+      }
+
+      function logout() {
+        sessionStorage.clear();
+        window.location.href = "auth/login.html";
+      }
+    </script>
   </body>
 </html>

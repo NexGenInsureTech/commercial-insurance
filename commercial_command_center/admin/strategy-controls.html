@@ -10,7 +10,7 @@
     <header class="bg-slate-800 text-white px-8 py-6">
       <h1 class="text-xl font-bold">Strategy & Governance Controls</h1>
     </header>
-
+    <!-- Appetite ceiling -->
     <main class="p-8 bg-white m-8 rounded shadow">
       <label class="text-sm">Portfolio Loss Ratio Cap (%)</label>
       <input
@@ -19,12 +19,20 @@
         value="75"
         class="border p-2 w-full mb-4"
       />
-
+      <!-- Max exposure per cluster -->
       <label class="text-sm">Max Cluster Concentration (%)</label>
       <input
         type="number"
         id="clusterCap"
         value="30"
+        class="border p-2 w-full mb-4"
+      />
+      <!-- Pilot guardrail -->
+      <label class="text-sm">Innovation Loss Cap (%)</label>
+      <input
+        type="number"
+        id="innovationLossCap"
+        value="65"
         class="border p-2 w-full mb-4"
       />
 

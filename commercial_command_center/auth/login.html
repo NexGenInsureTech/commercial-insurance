@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>Platform Login</title>
+    <title>Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
 
@@ -17,13 +17,28 @@
 
       <button
         onclick="login()"
-        class="bg-slate-900 text-white px-4 py-2 rounded w-full"
+        class="bg-slate-900 text-white p-2 w-full rounded"
       >
-        Enter Platform
+        Enter
       </button>
     </div>
 
     <script src="../data/users.js"></script>
-    <script src="../js/authEngine.js"></script>
+    <script>
+      function login() {
+        const uname = document.getElementById("username").value;
+        const user = users.find((u) => u.username === uname);
+
+        if (!user) {
+          alert("Invalid user");
+          return;
+        }
+
+        sessionStorage.setItem("user", user.username);
+        sessionStorage.setItem("role", user.role);
+
+        window.location.href = "../index.html";
+      }
+    </script>
   </body>
 </html>

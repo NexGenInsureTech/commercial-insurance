@@ -7,6 +7,12 @@
     <script>
       restrict(["platformOwner", "strategy", "executive"]);
     </script>
+    <script>
+      console.log(
+        "Portfolio data:",
+        JSON.parse(localStorage.getItem("portfolioData")),
+      );
+    </script>
   </head>
 
   <body class="p-8 bg-slate-100">
@@ -29,12 +35,23 @@
       const tbody = document.getElementById("rows");
 
       data.forEach((r) => {
+        // ✅ DEBUG LOG — THIS IS THE RIGHT PLACE
+        console.log(
+          "Raw GWP:",
+          r.GWP,
+          "| toNumber:",
+          toNumber(r.GWP),
+          "| LossRatio:",
+          calculateLossRatio(r).toFixed(2),
+          "| Type:",
+          typeof r.GWP,
+        );
         const tr = document.createElement("tr");
         tr.innerHTML = `
-      <td class="p-2">${r.Sector}</td>
-      <td class="p-2">${r.Cluster}</td>
-      <td class="p-2">${calculateLossRatio(r).toFixed(1)}%</td>
-    `;
+          <td class="p-2">${r.Sector}</td>
+          <td class="p-2">${r.Cluster}</td>
+          <td class="p-2">${calculateLossRatio(r).toFixed(1)}%</td>
+        `;
         tbody.appendChild(tr);
       });
     </script>

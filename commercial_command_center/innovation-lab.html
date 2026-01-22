@@ -2,34 +2,118 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Innovation & Product Lab</title>
+    <title>Innovation Lab</title>
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="js/accessControl.js"></script>
+    <script>
+      restrict(["platformOwner", "strategy", "executive", "underwriting"]);
+    </script>
   </head>
 
-  <body class="bg-slate-100 text-slate-900">
-    <header class="bg-slate-900 text-white px-8 py-6">
-      <h1 class="text-xl font-bold">Innovation, Product & Pricing Lab</h1>
-      <p class="text-sm opacity-80">
-        Controlled Experiments — Faster Learning, Lower Risk
-      </p>
-    </header>
+  <body class="bg-slate-100 text-slate-900 p-8">
+    <h2 class="text-xl font-semibold mb-6">
+      Innovation Lab — Pilot Performance & Scale Decisions
+    </h2>
 
-    <main class="p-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-      <!-- EXPERIMENT LIST -->
-      <aside class="bg-white p-4 rounded shadow">
-        <h2 class="font-semibold mb-4">Active Experiments</h2>
-        <ul id="experimentList" class="space-y-2"></ul>
-      </aside>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div class="bg-white p-4 rounded shadow">
+        <p class="text-sm text-slate-500">Pilot GWP</p>
+        <p id="pilotGWP" class="text-2xl font-bold"></p>
+      </div>
 
-      <!-- EXPERIMENT DETAIL -->
-      <section class="md:col-span-2 bg-white p-6 rounded shadow">
-        <div id="experimentDetail">
-          <p class="text-slate-500">Select an experiment to view details.</p>
-        </div>
-      </section>
-    </main>
+      <div class="bg-white p-4 rounded shadow">
+        <p class="text-sm text-slate-500">Pilot Loss Ratio</p>
+        <p id="pilotLR" class="text-2xl font-bold"></p>
+      </div>
 
-    <script src="data/experiments.js"></script>
-    <script src="js/innovationEngine.js"></script>
+      <div class="bg-white p-4 rounded shadow">
+        <p class="text-sm text-slate-500">Decision Signal</p>
+        <p id="pilotDecision" class="text-2xl font-bold"></p>
+      </div>
+    </div>
+
+    <table class="bg-white w-full border rounded shadow">
+      <thead>
+        <tr class="border-b bg-slate-50">
+          <th class="p-3 text-left">Cluster</th>
+          <th class="p-3 text-left">Sector</th>
+          <th class="p-3 text-right">GWP</th>
+          <th class="p-3 text-right">Loss Ratio</th>
+          <th class="p-3 text-center">Signal</th>
+        </tr>
+      </thead>
+      <tbody id="pilotRows"></tbody>
+    </table>
+
+    <script src="js/dataStore.js"></script>
+    <script>
+      const data = getPortfolioData();
+
+      // --- STEP 1: FILTER PILOT DATA ---
+      const pilots = data.filter(
+        (r) => String(r.ExperimentFlag || "").toUpperCase() === "YES",
+      );
+
+      let pilotGWP = 0;
+      let pilotClaims = 0;
+
+      pilots.forEach((r) => {
+        pilotGWP += toNumber(r.GWP);
+        pilotClaims += toNumber(r.ClaimsPaid) + toNumber(r.ClaimsOutstanding);
+      });
+
+      const pilotLR = pilotGWP === 0 ? 0 : (pilotClaims / pilotGWP) * 100;
+
+      // --- STEP 2: DECISION LOGIC ---
+      let decision = "🟢 Scale";
+      let decisionClass = "text-green-600";
+
+      if (pilotLR > 80) {
+        decision = "🔴 Stop";
+        decisionClass = "text-red-600";
+      } else if (pilotLR > 65) {
+        decision = "🟡 Watch";
+        decisionClass = "text-orange-600";
+      }
+
+      document.getElementById("pilotGWP").innerText = pilotGWP.toLocaleString();
+      document.getElementById("pilotLR").innerText = pilotLR.toFixed(1) + "%";
+      document.getElementById("pilotDecision").innerText = decision;
+      document.getElementById("pilotDecision").className =
+        "text-2xl font-bold " + decisionClass;
+
+      // --- STEP 3: TABLE VIEW ---
+      const tbody = document.getElementById("pilotRows");
+
+      if (pilots.length === 0) {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+      <td colspan="5" class="p-4 text-center text-slate-500">
+        No experimental / pilot data tagged in uploaded CSV.
+      </td>
+    `;
+        tbody.appendChild(tr);
+      } else {
+        pilots.forEach((r) => {
+          const lr = calculateLossRatio(r);
+
+          let signal = "🟢 Healthy";
+          if (lr > 80) signal = "🔴 Critical";
+          else if (lr > 65) signal = "🟡 Elevated";
+
+          const tr = document.createElement("tr");
+          tr.className = "border-b";
+          tr.innerHTML = `
+        <td class="p-3">${r.Cluster}</td>
+        <td class="p-3">${r.Sector}</td>
+        <td class="p-3 text-right">${toNumber(r.GWP).toLocaleString()}</td>
+        <td class="p-3 text-right">${lr.toFixed(1)}%</td>
+        <td class="p-3 text-center font-semibold">${signal}</td>
+      `;
+          tbody.appendChild(tr);
+        });
+      }
+    </script>
   </body>
 </html>

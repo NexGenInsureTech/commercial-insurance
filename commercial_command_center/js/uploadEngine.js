@@ -39,3 +39,5 @@ function uploadData() {
     },
   });
 }
+
+alert("Upload complete. Please refresh dashboard pages.");

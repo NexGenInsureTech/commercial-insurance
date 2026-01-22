@@ -2,66 +2,95 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Cluster Intelligence Engine</title>
+    <title>Cluster Intelligence</title>
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="js/accessControl.js"></script>
+    <script>
+      restrict(["platformOwner", "strategy", "executive", "underwriting"]);
+    </script>
   </head>
 
-  <body class="bg-slate-100 text-slate-900">
-    <header class="bg-slate-900 text-white px-8 py-6">
-      <h1 class="text-xl font-bold">Cluster Intelligence Engine</h1>
-      <p class="text-sm opacity-80">
-        Strategic Prioritisation of MSME Clusters — Insurance Lens
-      </p>
-    </header>
+  <body class="bg-slate-100 text-slate-900 p-8">
+    <h2 class="text-xl font-semibold mb-6">
+      Cluster Intelligence & Portfolio Signals
+    </h2>
 
-    <main class="p-8">
-      <!-- FILTERS -->
-      <section class="bg-white p-6 rounded shadow mb-8">
-        <h2 class="font-semibold mb-4">Filters</h2>
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <select id="stateFilter" class="border p-2 rounded">
-            <option value="All">All States</option>
-          </select>
+    <table class="bg-white w-full border rounded shadow">
+      <thead>
+        <tr class="border-b bg-slate-50">
+          <th class="p-3 text-left">Cluster</th>
+          <th class="p-3 text-left">Sector</th>
+          <th class="p-3 text-right">Total GWP</th>
+          <th class="p-3 text-right">Avg Loss Ratio</th>
+          <th class="p-3 text-right">Avg Capacity Used</th>
+          <th class="p-3 text-center">Signal</th>
+        </tr>
+      </thead>
+      <tbody id="clusterRows"></tbody>
+    </table>
 
-          <select id="sectorFilter" class="border p-2 rounded">
-            <option value="All">All Sectors</option>
-          </select>
+    <script src="js/dataStore.js"></script>
+    <script>
+      const data = getPortfolioData();
+      const tbody = document.getElementById("clusterRows");
 
-          <select id="typeFilter" class="border p-2 rounded">
-            <option value="All">All Cluster Types</option>
-          </select>
+      // --- STEP 1: GROUP DATA BY CLUSTER ---
+      const clusters = {};
 
-          <button
-            onclick="renderTable()"
-            class="bg-slate-900 text-white rounded px-4"
-          >
-            Apply
-          </button>
-        </div>
-      </section>
+      data.forEach((r) => {
+        const cluster = r.Cluster || "Unknown";
+        const sector = r.Sector || "Unknown";
 
-      <!-- TABLE -->
-      <section class="bg-white p-6 rounded shadow">
-        <h2 class="font-semibold mb-4">Ranked Cluster List</h2>
+        if (!clusters[cluster]) {
+          clusters[cluster] = {
+            cluster,
+            sector,
+            totalGWP: 0,
+            totalClaims: 0,
+            totalCapacity: 0,
+            count: 0,
+          };
+        }
 
-        <table class="w-full text-sm border">
-          <thead class="bg-slate-200">
-            <tr>
-              <th class="p-2">Rank</th>
-              <th class="p-2">Cluster</th>
-              <th class="p-2">State</th>
-              <th class="p-2">Sector</th>
-              <th class="p-2">Type</th>
-              <th class="p-2">Score</th>
-              <th class="p-2">Priority</th>
-            </tr>
-          </thead>
-          <tbody id="clusterTable"></tbody>
-        </table>
-      </section>
-    </main>
+        clusters[cluster].totalGWP += toNumber(r.GWP);
+        clusters[cluster].totalClaims +=
+          toNumber(r.ClaimsPaid) + toNumber(r.ClaimsOutstanding);
+        clusters[cluster].totalCapacity += toNumber(r.CapacityUsed);
+        clusters[cluster].count += 1;
+      });
 
-    <script src="data/clusters.js"></script>
-    <script src="js/clusterEngine.js"></script>
+      // --- STEP 2: RENDER TABLE ---
+      Object.values(clusters).forEach((c) => {
+        const avgLossRatio =
+          c.totalGWP === 0 ? 0 : (c.totalClaims / c.totalGWP) * 100;
+        const avgCapacity = c.count === 0 ? 0 : c.totalCapacity / c.count;
+
+        let signal = "🟢 Expand";
+        let signalClass = "text-green-600";
+
+        if (avgLossRatio > 80 || avgCapacity > 90) {
+          signal = "🔴 Exit / Restrict";
+          signalClass = "text-red-600";
+        } else if (avgLossRatio > 65 || avgCapacity > 80) {
+          signal = "🟡 Hold / Tighten";
+          signalClass = "text-orange-600";
+        }
+
+        const tr = document.createElement("tr");
+        tr.className = "border-b hover:bg-slate-50";
+        tr.innerHTML = `
+      <td class="p-3">${c.cluster}</td>
+      <td class="p-3">${c.sector}</td>
+      <td class="p-3 text-right">${c.totalGWP.toLocaleString()}</td>
+      <td class="p-3 text-right">${avgLossRatio.toFixed(1)}%</td>
+      <td class="p-3 text-right">${avgCapacity.toFixed(0)}%</td>
+      <td class="p-3 text-center font-semibold ${signalClass}">
+        ${signal}
+      </td>
+    `;
+        tbody.appendChild(tr);
+      });
+    </script>
   </body>
 </html>

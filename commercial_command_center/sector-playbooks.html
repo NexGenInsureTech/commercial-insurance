@@ -2,36 +2,92 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Sector Playbooks Engine</title>
+    <title>Sector Risk Playbooks</title>
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="js/accessControl.js"></script>
+    <script>
+      restrict(["platformOwner", "strategy", "executive", "underwriting"]);
+    </script>
   </head>
 
-  <body class="bg-slate-100 text-slate-900">
-    <header class="bg-slate-900 text-white px-8 py-6">
-      <h1 class="text-xl font-bold">Sector Playbooks Engine</h1>
-      <p class="text-sm opacity-80">
-        Insurance Strategy by SME Sector — Risk → Coverage → Execution
-      </p>
-    </header>
+  <body class="bg-slate-100 text-slate-900 p-8">
+    <h2 class="text-xl font-semibold mb-6">
+      Sector Risk Playbooks & Appetite Signals
+    </h2>
 
-    <main class="p-8 grid grid-cols-1 md:grid-cols-4 gap-6">
-      <!-- SECTOR LIST -->
-      <aside class="bg-white p-4 rounded shadow">
-        <h2 class="font-semibold mb-4">Sectors</h2>
-        <ul id="sectorList" class="space-y-2"></ul>
-      </aside>
+    <table class="bg-white w-full border rounded shadow">
+      <thead>
+        <tr class="border-b bg-slate-50">
+          <th class="p-3 text-left">Sector</th>
+          <th class="p-3 text-right">Total GWP</th>
+          <th class="p-3 text-right">Avg Loss Ratio</th>
+          <th class="p-3 text-center">Appetite</th>
+          <th class="p-3 text-left">Playbook Guidance</th>
+        </tr>
+      </thead>
+      <tbody id="sectorRows"></tbody>
+    </table>
 
-      <!-- PLAYBOOK -->
-      <section class="md:col-span-3 bg-white p-6 rounded shadow">
-        <div id="playbookContent">
-          <p class="text-slate-500">
-            Select a sector to view its insurance playbook.
-          </p>
-        </div>
-      </section>
-    </main>
+    <script src="js/dataStore.js"></script>
+    <script>
+      const data = getPortfolioData();
+      const tbody = document.getElementById("sectorRows");
 
-    <script src="data/sectors.js"></script>
-    <script src="js/sectorEngine.js"></script>
+      // --- STEP 1: GROUP BY SECTOR ---
+      const sectors = {};
+
+      data.forEach((r) => {
+        const sector = r.Sector || "Unknown";
+
+        if (!sectors[sector]) {
+          sectors[sector] = {
+            sector,
+            totalGWP: 0,
+            totalClaims: 0,
+            count: 0,
+          };
+        }
+
+        sectors[sector].totalGWP += toNumber(r.GWP);
+        sectors[sector].totalClaims +=
+          toNumber(r.ClaimsPaid) + toNumber(r.ClaimsOutstanding);
+        sectors[sector].count += 1;
+      });
+
+      // --- STEP 2: RENDER PLAYBOOKS ---
+      Object.values(sectors).forEach((s) => {
+        const avgLossRatio =
+          s.totalGWP === 0 ? 0 : (s.totalClaims / s.totalGWP) * 100;
+
+        let appetite = "🟢 Growth";
+        let playbook =
+          "Expand cautiously. Standard terms. Focus on profitable sub-segments.";
+        let rowClass = "bg-green-50";
+
+        if (avgLossRatio > 80) {
+          appetite = "🔴 Defensive";
+          playbook =
+            "Restrict exposure. Tighten underwriting. Higher deductibles and pricing discipline required.";
+          rowClass = "bg-red-50";
+        } else if (avgLossRatio > 65) {
+          appetite = "🟡 Cautious";
+          playbook =
+            "Selective growth. Tighten wordings. Prefer experienced insureds and risk-mitigated accounts.";
+          rowClass = "bg-orange-50";
+        }
+
+        const tr = document.createElement("tr");
+        tr.className = `border-b ${rowClass}`;
+        tr.innerHTML = `
+      <td class="p-3 font-medium">${s.sector}</td>
+      <td class="p-3 text-right">${s.totalGWP.toLocaleString()}</td>
+      <td class="p-3 text-right">${avgLossRatio.toFixed(1)}%</td>
+      <td class="p-3 text-center font-semibold">${appetite}</td>
+      <td class="p-3">${playbook}</td>
+    `;
+        tbody.appendChild(tr);
+      });
+    </script>
   </body>
 </html>

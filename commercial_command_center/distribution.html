@@ -2,59 +2,100 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Distribution Enablement</title>
+    <title>Distribution Guidance</title>
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="js/accessControl.js"></script>
+    <script>
+      restrict([
+        "platformOwner",
+        "strategy",
+        "executive",
+        "underwriting",
+        "distribution",
+      ]);
+    </script>
   </head>
 
-  <body class="bg-slate-100 text-slate-900">
-    <header class="bg-slate-900 text-white px-8 py-6">
-      <h1 class="text-xl font-bold">Distribution & Sales Enablement</h1>
-      <p class="text-sm opacity-80">
-        What to sell • How to position • What to avoid
-      </p>
-    </header>
+  <body class="bg-slate-100 text-slate-900 p-8">
+    <h2 class="text-xl font-semibold mb-6">
+      Distribution Guidance — Where to Push, Hold, or Pause
+    </h2>
 
-    <main class="p-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-      <!-- INPUT -->
-      <section class="bg-white p-6 rounded shadow">
-        <h2 class="font-semibold mb-4">Client Context</h2>
+    <table class="bg-white w-full border rounded shadow">
+      <thead>
+        <tr class="border-b bg-slate-50">
+          <th class="p-3 text-left">Cluster</th>
+          <th class="p-3 text-left">Sector</th>
+          <th class="p-3 text-center">Signal</th>
+          <th class="p-3 text-left">Distribution Instruction</th>
+        </tr>
+      </thead>
+      <tbody id="distRows"></tbody>
+    </table>
 
-        <label class="text-sm">Sector</label>
-        <select id="sector" class="w-full border p-2 mb-3">
-          <option>Textiles & Garments</option>
-          <option>Auto Components</option>
-        </select>
+    <script src="js/dataStore.js"></script>
+    <script>
+      const data = getPortfolioData();
+      const tbody = document.getElementById("distRows");
 
-        <label class="text-sm">Cluster</label>
-        <select id="cluster" class="w-full border p-2 mb-3">
-          <option>Tiruppur Textile Cluster</option>
-          <option>Pune Auto Components Cluster</option>
-        </select>
+      // --- REBUILD CLUSTER SIGNALS (SAME LOGIC AS clusters.html) ---
+      const clusters = {};
 
-        <label class="text-sm">Client Maturity</label>
-        <select id="maturity" class="w-full border p-2 mb-3">
-          <option value="micro">Micro / Informal</option>
-          <option value="sme">Formal SME</option>
-          <option value="mid">Mid-Market</option>
-        </select>
+      data.forEach((r) => {
+        const cluster = r.Cluster || "Unknown";
+        const sector = r.Sector || "Unknown";
 
-        <button
-          onclick="recommend()"
-          class="w-full bg-slate-900 text-white p-2 rounded"
-        >
-          Get Sales Guidance
-        </button>
-      </section>
+        if (!clusters[cluster]) {
+          clusters[cluster] = {
+            cluster,
+            sector,
+            totalGWP: 0,
+            totalClaims: 0,
+            totalCapacity: 0,
+            count: 0,
+          };
+        }
 
-      <!-- OUTPUT -->
-      <section class="md:col-span-2 bg-white p-6 rounded shadow">
-        <h2 class="font-semibold mb-4">Sales Guidance</h2>
+        clusters[cluster].totalGWP += toNumber(r.GWP);
+        clusters[cluster].totalClaims +=
+          toNumber(r.ClaimsPaid) + toNumber(r.ClaimsOutstanding);
+        clusters[cluster].totalCapacity += toNumber(r.CapacityUsed);
+        clusters[cluster].count += 1;
+      });
 
-        <div id="salesOutput" class="space-y-4 text-sm">Awaiting input…</div>
-      </section>
-    </main>
+      Object.values(clusters).forEach((c) => {
+        const avgLossRatio =
+          c.totalGWP === 0 ? 0 : (c.totalClaims / c.totalGWP) * 100;
+        const avgCapacity = c.count === 0 ? 0 : c.totalCapacity / c.count;
+
+        let signal = "🟢 Expand";
+        let instruction =
+          "Push aggressively. Increase outreach and broker focus.";
+        let rowClass = "bg-green-50";
+
+        if (avgLossRatio > 80 || avgCapacity > 90) {
+          signal = "🔴 Restrict";
+          instruction =
+            "Pause new business. Allow renewals only with underwriting approval.";
+          rowClass = "bg-red-50";
+        } else if (avgLossRatio > 65 || avgCapacity > 80) {
+          signal = "🟡 Hold";
+          instruction =
+            "Sell selectively. Tighten terms and pricing discipline.";
+          rowClass = "bg-orange-50";
+        }
+
+        const tr = document.createElement("tr");
+        tr.className = `border-b ${rowClass}`;
+        tr.innerHTML = `
+      <td class="p-3">${c.cluster}</td>
+      <td class="p-3">${c.sector}</td>
+      <td class="p-3 text-center font-semibold">${signal}</td>
+      <td class="p-3">${instruction}</td>
+    `;
+        tbody.appendChild(tr);
+      });
+    </script>
   </body>
-
-  <script src="data/salesPlaybooks.js"></script>
-  <script src="js/distributionEngine.js"></script>
 </html>

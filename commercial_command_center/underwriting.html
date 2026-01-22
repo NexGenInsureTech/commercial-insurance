@@ -4,29 +4,55 @@
     <meta charset="UTF-8" />
     <title>Underwriting Decision Support</title>
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="js/accessControl.js"></script>
+    <script>
+      restrict(["platformOwner", "underwriting", "strategy", "executive"]);
+    </script>
   </head>
 
   <body class="bg-slate-100 text-slate-900">
     <header class="bg-slate-900 text-white px-8 py-6">
       <h1 class="text-xl font-bold">Underwriting Decision Support</h1>
       <p class="text-sm opacity-80">
-        Strategy-aligned risk decisions — Bind • Refer • Decline
+        Portfolio-aware guidance — Underwriter remains in control
       </p>
     </header>
 
     <main class="p-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- PORTFOLIO CONTEXT -->
+      <section
+        class="md:col-span-3 bg-blue-50 border border-blue-200 p-4 rounded"
+      >
+        <h3 class="font-semibold mb-2 text-blue-800">
+          Portfolio Context (Advisory)
+        </h3>
+
+        <div id="portfolioContext" class="text-sm text-slate-700">
+          Select sector and cluster to view portfolio guidance.
+        </div>
+      </section>
+
       <!-- INPUT -->
       <section class="bg-white p-6 rounded shadow">
         <h2 class="font-semibold mb-4">Risk Inputs</h2>
 
         <label class="text-sm">Sector</label>
-        <select id="sector" class="w-full border p-2 mb-3">
+        <select
+          id="sector"
+          class="w-full border p-2 mb-3"
+          onchange="updateContext()"
+        >
           <option>Textiles & Garments</option>
           <option>Auto Components</option>
         </select>
 
         <label class="text-sm">Cluster</label>
-        <select id="cluster" class="w-full border p-2 mb-3">
+        <select
+          id="cluster"
+          class="w-full border p-2 mb-3"
+          onchange="updateContext()"
+        >
           <option>Tiruppur Textile Cluster</option>
           <option>Pune Auto Components Cluster</option>
         </select>
@@ -59,12 +85,56 @@
         <div id="decisionResult" class="text-lg font-bold text-slate-600">
           Awaiting evaluation…
         </div>
-
         <ul id="decisionRationale" class="mt-4 text-sm space-y-1"></ul>
       </section>
     </main>
-  </body>
 
-  <script src="data/underwritingRules.js"></script>
-  <script src="js/underwritingEngine.js"></script>
+    <script src="js/dataStore.js"></script>
+    <script src="data/underwritingRules.js"></script>
+    <script src="js/underwritingEngine.js"></script>
+
+    <script>
+      function updateContext() {
+        const sector = document.getElementById("sector").value;
+        const cluster = document.getElementById("cluster").value;
+        const data = getPortfolioData();
+
+        const filtered = data.filter(
+          (r) => r.Cluster === cluster && r.Sector === sector,
+        );
+
+        if (filtered.length === 0) {
+          document.getElementById("portfolioContext").innerHTML =
+            "No portfolio history for selected sector / cluster.";
+          return;
+        }
+
+        let totalGWP = 0;
+        let totalClaims = 0;
+        let totalCapacity = 0;
+
+        filtered.forEach((r) => {
+          totalGWP += toNumber(r.GWP);
+          totalClaims += toNumber(r.ClaimsPaid) + toNumber(r.ClaimsOutstanding);
+          totalCapacity += toNumber(r.CapacityUsed);
+        });
+
+        const lossRatio = totalGWP === 0 ? 0 : (totalClaims / totalGWP) * 100;
+        const avgCapacity = totalCapacity / filtered.length;
+
+        let signal = "🟢 Portfolio supportive";
+        if (lossRatio > 80 || avgCapacity > 90) {
+          signal = "🔴 Portfolio stressed — caution advised";
+        } else if (lossRatio > 65 || avgCapacity > 80) {
+          signal = "🟡 Portfolio cautious — tighten terms";
+        }
+
+        document.getElementById("portfolioContext").innerHTML = `
+      <strong>Cluster Signal:</strong> ${signal}<br/>
+      <strong>Loss Ratio:</strong> ${lossRatio.toFixed(1)}% |
+      <strong>Capacity Used:</strong> ${avgCapacity.toFixed(0)}%
+    `;
+      }
+    </script>
+  </body>
 </html>

@@ -4,6 +4,11 @@
     <meta charset="UTF-8" />
     <title>Executive Dashboard — Commercial Insurance</title>
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="js/accessControl.js"></script>
+    <script>
+      restrict(["platformOwner", "executive", "strategy"]);
+    </script>
   </head>
 
   <body class="bg-slate-100 text-slate-900">
@@ -18,17 +23,20 @@
       <!-- KPI STRIP -->
       <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div class="bg-white p-4 rounded shadow">
-          <p class="text-xs text-slate-500">YTD GWP Growth</p>
-          <p class="text-2xl font-bold" id="gwpGrowth"></p>
+          <p class="text-xs text-slate-500">Total GWP</p>
+          <p class="text-2xl font-bold" id="gwp"></p>
         </div>
+
         <div class="bg-white p-4 rounded shadow">
           <p class="text-xs text-slate-500">Loss Ratio</p>
           <p class="text-2xl font-bold" id="lossRatio"></p>
         </div>
+
         <div class="bg-white p-4 rounded shadow">
           <p class="text-xs text-slate-500">Capacity Utilisation</p>
           <p class="text-2xl font-bold" id="capacityUse"></p>
         </div>
+
         <div class="bg-white p-4 rounded shadow">
           <p class="text-xs text-slate-500">Active Experiments</p>
           <p class="text-2xl font-bold" id="experiments"></p>
@@ -41,7 +49,7 @@
         <ul id="signals" class="space-y-2 text-sm"></ul>
       </section>
 
-      <!-- DECISION REQUIRED -->
+      <!-- DECISIONS REQUIRED -->
       <section class="bg-white p-6 rounded shadow border-l-4 border-red-600">
         <h2 class="font-semibold mb-2">Decisions Required</h2>
         <ul id="decisions" class="space-y-2 text-sm"></ul>
@@ -52,7 +60,60 @@
       Board / MD View — Confidential
     </footer>
 
-    <script src="data/executiveSignals.js"></script>
-    <script src="js/executiveEngine.js"></script>
+    <script src="js/dataStore.js"></script>
+    <script>
+      const data = getPortfolioData();
+
+      let totalGWP = 0;
+      let totalClaims = 0;
+      let totalCapacity = 0;
+      let experiments = 0;
+
+      data.forEach((r) => {
+        totalGWP += toNumber(r.GWP);
+        totalClaims += toNumber(r.ClaimsPaid) + toNumber(r.ClaimsOutstanding);
+        totalCapacity += toNumber(r.CapacityUsed);
+
+        if (String(r.ExperimentFlag || "").toUpperCase() === "YES") {
+          experiments++;
+        }
+      });
+
+      const lossRatio = totalGWP === 0 ? 0 : (totalClaims / totalGWP) * 100;
+      const avgCapacity = data.length === 0 ? 0 : totalCapacity / data.length;
+
+      document.getElementById("gwp").innerText = totalGWP.toLocaleString();
+      document.getElementById("lossRatio").innerText =
+        lossRatio.toFixed(1) + "%";
+      document.getElementById("capacityUse").innerText =
+        avgCapacity.toFixed(0) + "%";
+      document.getElementById("experiments").innerText = experiments;
+
+      // --- STRATEGIC SIGNALS ---
+      const signals = document.getElementById("signals");
+      const decisions = document.getElementById("decisions");
+
+      if (lossRatio > 75) {
+        signals.innerHTML +=
+          "<li>⚠️ Portfolio loss ratio above comfort zone</li>";
+        decisions.innerHTML +=
+          "<li>Review underwriting discipline and pricing adequacy</li>";
+      }
+
+      if (avgCapacity > 85) {
+        signals.innerHTML += "<li>⚠️ Capacity utilisation nearing limits</li>";
+        decisions.innerHTML +=
+          "<li>Decide on capacity expansion or growth moderation</li>";
+      }
+
+      if (experiments > 0) {
+        signals.innerHTML += `<li>🧪 ${experiments} active innovation experiment(s)</li>`;
+      }
+
+      if (signals.innerHTML === "") {
+        signals.innerHTML =
+          "<li>✅ Portfolio operating within defined thresholds</li>";
+      }
+    </script>
   </body>
 </html>

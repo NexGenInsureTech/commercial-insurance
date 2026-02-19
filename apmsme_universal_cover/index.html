@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgroSME QuickQuote</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-green-50 to-orange-50 min-h-screen">
+    
+<div class="container mx-auto px-4 py-8 max-w-4xl">
+    <!-- Header -->
+    <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold bg-gradient-to-r from-green-600 to-orange-600 bg-clip-text text-transparent mb-4">
+            AgroSME QuickQuote
+        </h1>
+        <p class="text-xl text-gray-700">Get your insurance quote in 30 seconds</p>
+    </div>
+
+    <!-- Unit Type Selector -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+        <div class="unit-card p-6 bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all border-2 border-green-100 cursor-pointer" data-type="chilli">
+            <h3 class="font-bold text-lg mb-2">🌶️ Chilli Processing</h3>
+            <p class="text-sm text-gray-600 mb-4">Avg Premium: ₹2.4L</p>
+            <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs">Most Popular</span>
+        </div>
+        <!-- 9 more unit cards... -->
+    </div>
+
+    <!-- Quote Calculator -->
+    <div class="bg-white rounded-3xl shadow-xl p-8 mb-8">
+        <h2 class="text-2xl font-bold mb-6 text-gray-800">Enter Your Details</h2>
+        
+        <div class="grid md:grid-cols-2 gap-6">
+            <div>
+                <label class="block text-sm font-medium mb-2">Building Value (₹ Cr)</label>
+                <input type="number" id="building" class="w-full p-4 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-2 focus:ring-green-200" value="25">
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-2">Stock Value (₹ Cr)</label>
+                <input type="number" id="stock" class="w-full p-4 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-2 focus:ring-green-200" value="20">
+            </div>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-4 mt-6">
+            <label class="flex items-center">
+                <input type="checkbox" id="sprinkler" class="mr-2"> Sprinkler System (-15%)
+            </label>
+            <label class="flex items-center">
+                <input type="checkbox" id="fireaudit" class="mr-2"> Fire Audit (-10%)
+            </label>
+            <label class="flex items-center">
+                <input type="checkbox" id="fssai" class="mr-2"> FSSAI Certified (-8%)
+            </label>
+        </div>
+
+        <div class="mt-8 p-6 bg-gradient-to-r from-green-50 to-orange-50 rounded-2xl">
+            <div class="text-center">
+                <div class="text-4xl font-bold text-green-600 mb-2" id="quote">₹2,15,430</div>
+                <div class="text-lg text-gray-600 mb-4">Annual Premium (incl. 18% GST)</div>
+                <div class="space-x-2">
+                    <button onclick="generatePDF()" class="px-8 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 font-semibold">📄 Download Quote</button>
+                    <button onclick="shareWhatsApp()" class="px-8 py-3 bg-green-800 text-white rounded-xl hover:bg-green-900 font-semibold">📱 WhatsApp</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Premium Breakdown -->
+    <div class="bg-white rounded-3xl shadow-xl p-8">
+        <h3 class="text-xl font-bold mb-6">Premium Breakdown</h3>
+        <div class="grid md:grid-cols-3 gap-6 text-center">
+            <div>
+                <div class="text-2xl font-bold text-green-600" id="fire-premium">₹1,24,500</div>
+                <div class="text-sm text-gray-500">Fire Coverage</div>
+            </div>
+            <div>
+                <div class="text-2xl font-bold text-blue-600" id="bi-premium">₹67,200</div>
+                <div class="text-sm text-gray-500">Business Interruption</div>
+            </div>
+            <div>
+                <div class="text-2xl font-bold text-orange-600" id="tax">₹38,730</div>
+                <div class="text-sm text-gray-500">GST (18%)</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Live quote calculation
+    function calculateQuote() {
+        const building = parseFloat(document.getElementById('building').value) || 0;
+        const stock = parseFloat(document.getElementById('stock').value) || 0;
+        const totalSI = building + stock;
+        
+        let rate = 2.35; // Base rate per mille
+        if (document.getElementById('sprinkler').checked) rate *= 0.85;
+        if (document.getElementById('fireaudit').checked) rate *= 0.90;
+        if (document.getElementById('fssai').checked) rate *= 0.92;
+        
+        const firePremium = (totalSI * rate / 1000);
+        const biPremium = firePremium * 0.55;
+        const tax = (firePremium + biPremium) * 0.18;
+        const total = firePremium + biPremium + tax;
+        
+        document.getElementById('quote').textContent = `₹${total.toLocaleString('en-IN', {maximumFractionDigits: 0})}`;
+        document.getElementById('fire-premium').textContent = `₹${firePremium.toLocaleString('en-IN', {maximumFractionDigits: 0})}`;
+        document.getElementById('bi-premium').textContent = `₹${biPremium.toLocaleString('en-IN', {maximumFractionDigits: 0})}`;
+        document.getElementById('tax').textContent = `₹${tax.toLocaleString('en-IN', {maximumFractionDigits: 0})}`;
+    }
+
+    // Event listeners
+    document.querySelectorAll('input').forEach(input => {
+        input.addEventListener('input', calculateQuote);
+    });
+    document.querySelectorAll('.unit-card').forEach(card => {
+        card.addEventListener('click', function() {
+            // Load unit-specific rates
+            console.log('Selected:', this.dataset.type);
+        });
+    });
+
+    function generatePDF() {
+        window.print();
+    }
+
+    function shareWhatsApp() {
+        const message = `AgroSME Insurance Quote: ₹2,15,430 annual premium\n\nTap to get your custom quote!`;
+        window.open(`https://wa.me/?text=${encodeURIComponent(message)}`);
+    }
+
+    // Initial calculation
+    calculateQuote();
+</script>
+</body>
+</html>

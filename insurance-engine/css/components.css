@@ -1,0 +1,6 @@
+
+.product-card{display:block;background:#fff;padding:20px;border-radius:8px;text-decoration:none;color:#000;}
+#variantContainer,#siContainer{display:flex;gap:15px;margin:15px 0;flex-wrap:wrap;}
+.variant-btn,.si-btn{padding:12px 24px;border:none;background:#007bff;color:#fff;border-radius:6px;cursor:pointer;}
+.variant-btn.active,.si-btn.active{background:#0b5ed7;box-shadow:0 0 0 2px rgba(13,110,253,0.3);}
+.summary-box{background:#fff;padding:15px;border-radius:6px;margin-bottom:20px;}

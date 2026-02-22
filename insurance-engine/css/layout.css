@@ -1,0 +1,4 @@
+
+.container{max-width:1200px;margin:auto;padding:20px;}
+.two-col{display:flex;gap:40px;}
+@media(max-width:768px){.two-col{flex-direction:column;}}

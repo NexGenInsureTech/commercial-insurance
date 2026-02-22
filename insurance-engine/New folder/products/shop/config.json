@@ -1,0 +1,49 @@
+{
+  "variants": [
+    {
+      "id": "basic",
+      "name": "Basic",
+      "rates": {
+        "building": 0.438,
+        "contents": 0.438,
+        "terrorism": 0.15,
+        "burglary": 1,
+        "mbd": 3,
+        "eeip": 3,
+        "allrisk": 3,
+        "baggage": 20,
+        "money": 20,
+        "pa": 1,
+        "tpl": 1
+      }
+    }
+  ],
+  "coverageGroups": [
+    {
+      "group": "Core Property Covers",
+      "items": [
+        { "code": "building", "label": "Building" },
+        { "code": "contents", "label": "Contents" },
+        { "code": "terrorism", "label": "Terrorism" }
+      ]
+    },
+    {
+      "group": "Crime & Asset Covers",
+      "items": [
+        { "code": "burglary", "label": "Burglary" },
+        { "code": "money", "label": "Money" }
+      ]
+    },
+    {
+      "group": "Additional Covers",
+      "items": [
+        { "code": "mbd", "label": "MBD" },
+        { "code": "eeip", "label": "EEIP" },
+        { "code": "allrisk", "label": "All Risk" },
+        { "code": "baggage", "label": "Baggage" },
+        { "code": "pa", "label": "PA" },
+        { "code": "tpl", "label": "TP Liability" }
+      ]
+    }
+  ]
+}

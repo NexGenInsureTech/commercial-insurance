@@ -1,0 +1,94 @@
+.product-card {
+  display: block;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #000;
+}
+/* Variant buttons in horizontal row */
+#variantContainer {
+  display: flex;
+  gap: 15px;
+  margin: 15px 0;
+  flex-wrap: wrap;
+}
+
+.variant-btn,
+.si-btn {
+  padding: 12px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  min-width: 100px;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .variant-btn,
+  .si-btn {
+    flex: 1 1 45%;
+    text-align: center;
+  }
+
+  .summary-box h2 {
+    font-size: 22px;
+  }
+
+  h1 {
+    font-size: 26px;
+  }
+}
+/* .variant-btn {
+  padding: 12px 24px;
+  border: none;
+  background: #007bff;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  min-width: 120px;
+  font-weight: 600;
+} */
+
+/* SI buttons also in row */
+#siContainer {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.si-btn {
+  padding: 10px 20px;
+  border: none;
+  background: #1c7ed6;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.si-btn.active {
+  background: #0b5ed7;
+  box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.35);
+  transform: translateY(-1px);
+}
+.variant-btn.active {
+  background: #0b5ed7;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.4);
+}
+.summary-box {
+  background: #fff;
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+@media (max-width: 768px) {
+  .summary-box {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+}
+.coverage-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}

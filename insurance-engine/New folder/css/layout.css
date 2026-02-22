@@ -1,0 +1,29 @@
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+}
+.two-col {
+  display: flex;
+  gap: 40px;
+}
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 768px) {
+  .two-col {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .left-panel,
+  .right-panel {
+    width: 100%;
+  }
+}
+
+.left-panel {
+  flex: 1;
+}
+.right-panel {
+  flex: 1;
+}

@@ -1,0 +1,167 @@
+{
+  "variants": [
+    {
+      "id": "basic",
+      "name": "Basic",
+      "rates": {
+        "building": 0.438,
+        "contents": 0.438,
+        "terrorism": 0.15,
+        "burglary": 1,
+        "mbd": 3,
+        "eeip": 3,
+        "allrisk": 3,
+        "baggage": 20,
+        "money": 20,
+        "pa": 1,
+        "tpl": 1
+      },
+      "siOptions": [
+        {
+          "label": "5L",
+          "building": 500000
+        },
+        {
+          "label": "10L",
+          "building": 1000000
+        },
+        {
+          "label": "15L",
+          "building": 1500000
+        },
+        {
+          "label": "25L",
+          "building": 2500000
+        }
+      ]
+    },
+    {
+      "id": "advanced",
+      "name": "Advanced",
+      "rates": {
+        "building": 0.29,
+        "contents": 0.29,
+        "terrorism": 0.15,
+        "burglary": 1,
+        "mbd": 2.5,
+        "eeip": 2.5,
+        "allrisk": 2.5,
+        "baggage": 15,
+        "money": 15,
+        "pa": 0.8,
+        "tpl": 0.8
+      },
+      "siOptions": [
+        {
+          "label": "35L",
+          "building": 3500000
+        },
+        {
+          "label": "45L",
+          "building": 4500000
+        },
+        {
+          "label": "55L",
+          "building": 5500000
+        },
+        {
+          "label": "75L",
+          "building": 7500000
+        }
+      ]
+    },
+    {
+      "id": "elite",
+      "name": "Elite",
+      "rates": {
+        "building": 0.23,
+        "contents": 0.23,
+        "terrorism": 0.15,
+        "burglary": 0.8,
+        "mbd": 1.5,
+        "eeip": 2,
+        "allrisk": 2.5,
+        "baggage": 10,
+        "money": 10,
+        "pa": 0.6,
+        "tpl": 0.6
+      },
+      "siOptions": [
+        {
+          "label": "1Cr",
+          "building": 10000000
+        },
+
+        {
+          "label": "1.5Cr",
+          "building": 15000000
+        },
+        {
+          "label": "2Cr",
+          "building": 20000000
+        }
+      ]
+    }
+  ],
+  "coverageGroups": [
+    {
+      "group": "Core Property Covers",
+      "items": [
+        {
+          "code": "building",
+          "label": "Building"
+        },
+        {
+          "code": "contents",
+          "label": "Contents"
+        },
+        {
+          "code": "terrorism",
+          "label": "Terrorism"
+        }
+      ]
+    },
+    {
+      "group": "Crime & Asset Covers",
+      "items": [
+        {
+          "code": "burglary",
+          "label": "Burglary"
+        },
+        {
+          "code": "money",
+          "label": "Money"
+        }
+      ]
+    },
+    {
+      "group": "Additional Covers",
+      "items": [
+        {
+          "code": "mbd",
+          "label": "MBD"
+        },
+        {
+          "code": "eeip",
+          "label": "EEIP"
+        },
+        {
+          "code": "allrisk",
+          "label": "All Risk"
+        },
+        {
+          "code": "baggage",
+          "label": "Baggage"
+        },
+        {
+          "code": "pa",
+          "label": "PA"
+        },
+        {
+          "code": "tpl",
+          "label": "TP Liability"
+        }
+      ]
+    }
+  ]
+}

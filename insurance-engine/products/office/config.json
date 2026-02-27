@@ -1,0 +1,39 @@
+{
+  "productName": "Office Package Policy",
+
+  "variants": [
+    {
+      "id": "standard",
+      "name": "Standard",
+      "rates": {
+        "building": 0.32,
+        "contents": 0.35,
+        "terrorism": 0.15,
+        "burglary": 0.9
+      },
+      "siOptions": [
+        { "label": "10L", "building": 1000000 },
+        { "label": "25L", "building": 2500000 }
+      ]
+    }
+  ],
+
+  "derivedRules": {
+    "contents": "building * 0.25",
+    "terrorism": "building + contents",
+    "burglary": "building * 0.15"
+  },
+
+  "coverageGroups": [
+    {
+      "group": "Core Covers",
+      "items": [
+        { "code": "building", "label": "Building" },
+        { "code": "contents", "label": "Contents" },
+        { "code": "terrorism", "label": "Terrorism" }
+      ]
+    }
+  ],
+
+  "gst": 0.18
+}

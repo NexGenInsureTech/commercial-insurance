@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Shop Keeper Package</title>
+    <link rel="stylesheet" href="../../css/base.css" />
+    <link rel="stylesheet" href="../../css/layout.css" />
+    <link rel="stylesheet" href="../../css/components.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Office Package</h1>
+
+      <div class="two-col">
+        <div class="left-panel">
+          <label
+            ><input type="checkbox" id="customToggle" /> Switch to Custom
+            Mode</label
+          >
+          <div id="variantContainer"></div>
+          <div id="siContainer"></div>
+
+          <div class="controls">
+            <label
+              >Loading / Discount (%):
+              <input type="number" id="loadingInput" value="0" />
+            </label>
+          </div>
+
+          <div id="customContainer" style="display: none"></div>
+        </div>
+
+        <div class="right-panel">
+          <div class="summary-box">
+            <h2>
+              Total Premium (Incl GST): ₹ <span id="totalPremium">0</span>
+            </h2>
+            <button id="techToggle" style="display: none">
+              View Technical Breakdown
+            </button>
+          </div>
+          <div id="summaryContainer"></div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      import { loadConfig } from "../../core/config-loader.js";
+      import { initEngine } from "../../core/engine.js";
+      loadConfig("./config.json").then((cfg) => initEngine(cfg));
+    </script>
+  </body>
+</html>

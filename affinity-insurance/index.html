@@ -1,0 +1,601 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Intermediary PDF Builder — SME & Insurance Inclusion (USGI)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Bootstrap for layout -->
+  <!--   https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css -->
+<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+
+
+  <!-- App styles -->
+  <style>
+    body { background:#f7f9fc; }
+    header { background:#0b5ed7; color:#fff; }
+    .placeholder-chip { font-family:monospace; background:#eef2ff; border:1px dashed #b9c3f0; padding:.2rem .4rem; border-radius:.25rem; margin-right:.25rem;}
+    .file-pill { background:#eaf6ff; border:1px solid #b6e0fe; border-radius: .5rem; padding:.25rem .5rem; }
+    .section-card { background:#fff; border-radius:.75rem; box-shadow:0 6px 18px rgba(20,40,80,.08); }
+    .small-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size:.85rem; }
+    .letter-editor { min-height:220px; white-space:pre-wrap; }
+    .table-sticky-head thead th { position:sticky; top:0; background:#fff; z-index:2; }
+    .footer-note { color:#64748b; }
+    /* Modal fallback preview */
+    #pdfPreviewModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:9999; }
+    #pdfPreviewModal .modal-body {
+      width:90%; height:90%; margin:2rem auto; background:#fff; border-radius:8px;
+      overflow:hidden; position:relative; box-shadow:0 10px 28px rgba(0,0,0,.25);
+    }
+    #pdfPreviewModal .modal-body .close-btn { position:absolute; top:8px; right:8px; }
+  </style>
+
+  <!-- Libraries  
+  <!--https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js</script> -->
+<script src="assets/js/xlsx.full.min.js"></script>
+  <!--https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js</script> -->
+<script src="assets/js/jspdf.umd.min.js"></script>
+  <!--  https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js</script> -->
+<script src="assets/js/jspdf.plugin.autotable.min.js"></script>
+  <!--  https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js</script> -->
+<script src="assets/js/jszip.min.js"></script>
+  <!--  https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js</script> -->
+<script src="assets/js/FileSaver.min.js"></script>
+
+</head>
+<body>
+  <!-- Header -->
+  <header class="py-4 mb-4">
+    <div class="container">
+      <h1 class="h3 mb-1">Intermediary PDF Builder</h1>
+      <p class="mb-0">Upload monthly summary + master register → edit Letter → generate PDFs per Intermediary.</p>
+    </div>
+  </header>
+
+  <main class="container pb-5">
+    <!-- Step 1: Upload -->
+    <section class="section-card p-4 mb-4">
+      <h2 class="h5 mb-3">1) Upload Excel files</h2>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Monthly Summary (Excel)</label>
+          <input type="file" class="form-control" id="monthlyFile" accept=".xlsx,.xls" />
+          <div class="form-text">Required columns: <span class="small-mono">INTERMEDIARY</span>, months (e.g., <span class="small-mono">Apr-25 … Dec-25</span>), and <span class="small-mono">Grand Total</span>.</div>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Master Register (Excel)</label>
+          <input type="file" class="form-control" id="masterFile" accept=".xlsx,.xls" />
+          <div class="form-text">Example: <span class="small-mono">SME_PR_MASTER_FY25-26.xlsx</span></div>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Monthly sheet name/index (optional)</label>
+          <input type="text" class="form-control" id="monthlySheet" placeholder="e.g. 'Apr-Dec-25' or index 0" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Master sheet name/index (optional)</label>
+          <input type="text" class="form-control" id="masterSheet" placeholder="e.g. 'MASTER' or index 0" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Period Label (shown on PDFs)</label>
+          <input type="text" class="form-control" id="periodLabel" placeholder="Apr–Dec 2025" />
+        </div>
+      </div>
+
+      <div class="mt-3 d-flex gap-2">
+        <button class="btn btn-primary" id="validateBtn">Validate & Parse</button>
+        <span id="uploadStatus" class="align-self-center"></span>
+      </div>
+
+      <div class="mt-3 small">
+        <span class="file-pill me-2" id="monthlyMeta">Monthly: —</span>
+        <span class="file-pill" id="masterMeta">Master: —</span>
+      </div>
+    </section>
+
+    <!-- Step 2: Letter -->
+    <section class="section-card p-4 mb-4">
+      <h2 class="h5 mb-2">2) Letter page (fully editable)</h2>
+      <div class="mb-2">
+        <span class="placeholder-chip">{{PartnerName}}</span>
+        <span class="placeholder-chip">{{Category}}</span>
+        <span class="placeholder-chip">{{PeriodLabel}}</span>
+        <span class="placeholder-chip">{{TotalGross}}</span>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-md-8">
+          <label class="form-label">Letter content</label>
+          <textarea id="letterEditor" class="form-control letter-editor" spellcheck="false">**Dear {{PartnerName}},**
+
+Thank you for being a Smartian and helping us build a sustainable, customer‑centric business with USGI. Your commitment to quality and responsible growth inspires our teams every day.
+
+Below is your performance summary for **{{PeriodLabel}}**.
+
+Warm regards,
+SME & Insurance Inclusion — USGI
+          </textarea>
+          <div class="form-text">Markdown-like bold supported for headings; placeholders will be resolved per partner.</div>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Select a partner to preview</label>
+          <select id="partnerSelect" class="form-select" disabled>
+            <option value="">— Upload & Validate first —</option>
+          </select>
+          <div class="mt-2 d-flex gap-2">
+            <button class="btn btn-outline-secondary" id="previewBtn" disabled>Preview PDF (single partner)</button>
+            <a id="downloadPreview" class="btn btn-outline-success disabled" download>Download Preview</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Step 3: Generate -->
+    <section class="section-card p-4">
+      <h2 class="h5 mb-3">3) Generate PDFs</h2>
+      <div class="row g-3">
+        <div class="col-md-3 form-check">
+          <input class="form-check-input" type="checkbox" id="optLOB" checked>
+          <label class="form-check-label" for="optLOB">Include LOB split</label>
+        </div>
+        <div class="col-md-3 form-check">
+          <input class="form-check-input" type="checkbox" id="optProduct" checked>
+          <label class="form-check-label" for="optProduct">Include Product mix (Intermediary & Channel)</label>
+        </div>
+        <div class="col-md-3 form-check">
+          <input class="form-check-input" type="checkbox" id="optGeo" checked>
+          <label class="form-check-label" for="optGeo">Include Geography (States & Branches)</label>
+        </div>
+      </div>
+
+      <div class="mt-3 d-flex gap-2">
+        <button class="btn btn-primary" id="generateAllBtn" disabled>Generate All PDFs (ZIP)</button>
+        <span id="genStatus" class="align-self-center"></span>
+      </div>
+
+      <div class="mt-3 footer-note">© USGI — SME & Insurance Inclusion</div>
+    </section>
+
+    <!-- Data peek -->
+    <section class="section-card p-4 mt-4">
+      <h2 class="h6">Parsed Monthly Summary (first 20 rows)</h2>
+      <div class="table-responsive table-sticky-head" style="max-height:280px;">
+        <table class="table table-sm table-hover" id="peekMonthly">
+          <thead></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <h2 class="h6 mt-3">Master Register (first 20 rows)</h2>
+      <div class="table-responsive table-sticky-head" style="max-height:280px;">
+        <table class="table table-sm table-hover" id="peekMaster">
+          <thead></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- Inline PDF Preview Modal (fallback when popup is blocked) -->
+  <div id="pdfPreviewModal">
+    <div class="modal-body">
+      <button id="closePreview" class="btn btn-sm btn-light close-btn">Close</button>
+      <iframe id="pdfPreviewFrame" style="width:100%; height:100%;" frameborder="0"></iframe>
+    </div>
+  </div>
+
+  <script>
+    // -----------------------------
+    // App State
+    // -----------------------------
+    const state = {
+      monthly: { rows: [], columns: [] },
+      master: { rows: [], columns: [] },
+      periodLabel: '',
+      partnerIndex: {},
+      options: { LOB: true, Product: true, Geo: true },
+      previewUrl: null // Blob URL for current preview (cleanup on close)
+    };
+
+    // -----------------------------
+    // Utilities
+    // -----------------------------
+    function textOrIndexToSheet(workbook, input) {
+      // Accepts sheet name or numeric index (string "0" OK)
+      if (input === undefined || input === null || input === '') return workbook.SheetNames[0];
+      const idx = Number.isInteger(+input) ? +input : null;
+      if (idx !== null && idx >= 0 && idx < workbook.SheetNames.length) return workbook.SheetNames[idx];
+      return workbook.SheetNames.includes(input) ? input : workbook.SheetNames[0];
+    }
+
+    function readExcel(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = e => {
+          try {
+            const data = new Uint8Array(e.target.result);
+            const wb = XLSX.read(data, { type: 'array' });
+            resolve(wb);
+          } catch(err) { reject(err); }
+        };
+        reader.onerror = reject;
+        reader.readAsArrayBuffer(file);
+      });
+    }
+
+    function sheetToRows(wb, sheetName) {
+      const ws = wb.Sheets[sheetName];
+      const json = XLSX.utils.sheet_to_json(ws, { defval: '', raw: false });
+      const columns = Object.keys(json[0] || {});
+      return { rows: json, columns };
+    }
+
+    function renderPeek(tableId, data, limit=20) {
+      const table = document.getElementById(tableId);
+      const thead = table.querySelector('thead'); const tbody = table.querySelector('tbody');
+      thead.innerHTML = ''; tbody.innerHTML = '';
+      if (!data.columns.length) return;
+      const tr = document.createElement('tr');
+      data.columns.forEach(c => {
+        const th = document.createElement('th'); th.textContent = c; tr.appendChild(th);
+      });
+      thead.appendChild(tr);
+      data.rows.slice(0, limit).forEach(r => {
+        const trb = document.createElement('tr');
+        data.columns.forEach(c => {
+          const td = document.createElement('td'); td.textContent = r[c]; trb.appendChild(td);
+        });
+        tbody.appendChild(trb);
+      });
+    }
+
+    function setStatus(el, msg, kind='info') {
+      const node = document.getElementById(el);
+      node.innerHTML = msg ? `<span class="badge text-bg-${kind}">${msg}</span>` : '';
+    }
+
+    // Simple bold markdown (**text**) support
+    function boldMarkdownToPDF(doc, text, x, y, lineHeight=6.2, maxWidth=182) {
+      // jsPDF units are in mm (based on doc config)
+      const lines = doc.splitTextToSize(text, maxWidth);
+      let cursorY = y;
+      lines.forEach(line => {
+        const parts = [];
+        let current = '';
+        let bold = false;
+        for (let i = 0; i < line.length; i++) {
+          if (line[i] === '*' && line[i+1] === '*') {
+            if (current) parts.push({ text: current, bold });
+            bold = !bold; current = ''; i++;
+          } else {
+            current += line[i];
+          }
+        }
+        if (current) parts.push({ text: current, bold });
+
+        let cursorX = x;
+        parts.forEach(p => {
+          doc.setFont('helvetica', p.bold ? 'bold' : 'normal');
+          doc.text(p.text, cursorX, cursorY);
+          const w = doc.getTextWidth(p.text);
+          cursorX += w;
+        });
+        cursorY += lineHeight;
+      });
+      return cursorY;
+    }
+
+    function substitutePlaceholders(template, data) {
+      return template
+        .replaceAll('{{PartnerName}}', data.PartnerName ?? '')
+        .replaceAll('{{Category}}', data.Category ?? '')
+        .replaceAll('{{PeriodLabel}}', state.periodLabel ?? '')
+        .replaceAll('{{TotalGross}}', (data.TotalGross ?? '').toString());
+    }
+
+    function buildPartnerIndex() {
+      // Build index mapping by INTERMEDIARY name
+      state.partnerIndex = {};
+      state.monthly.rows.forEach(r => {
+        const key = (r['INTERMEDIARY'] ?? '').toString().trim();
+        if (!key) return;
+        // Find additional info from master
+        const masterRow = state.master.rows.find(m => (m['INTERMEDIARY'] ?? '').toString().trim() === key);
+        const category = masterRow ? (masterRow['Category'] ?? masterRow['CATEGORY'] ?? '') : '';
+        const total = r['Grand Total'] ?? r['TOTAL'] ?? r['GrandTotal'] ?? '';
+        state.partnerIndex[key] = {
+          PartnerName: key,
+          Category: category,
+          TotalGross: total,
+          monthlyRow: r,
+          masterRow
+        };
+      });
+    }
+
+    function fillPartnerDropdown() {
+      const sel = document.getElementById('partnerSelect');
+      sel.innerHTML = '';
+      Object.keys(state.partnerIndex).sort().forEach(k => {
+        const opt = document.createElement('option');
+        opt.value = k; opt.textContent = k;
+        sel.appendChild(opt);
+      });
+      const disabled = Object.keys(state.partnerIndex).length === 0;
+      sel.disabled = disabled;
+      document.getElementById('previewBtn').disabled = disabled;
+      document.getElementById('generateAllBtn').disabled = disabled;
+
+      // Reset download preview link
+      const link = document.getElementById('downloadPreview');
+      link.classList.add('disabled');
+      link.removeAttribute('href');
+      link.removeAttribute('download');
+    }
+
+    function sanitizeFileName(name) {
+      return name.replace(/[\\/:*?"<>|]+/g, '-').trim();
+    }
+
+    // -----------------------------
+    // PDF Generation (Refactored)
+    // -----------------------------
+    async function generatePDFForPartner(key, opts = { LOB:true, Product:true, Geo:true }) {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ unit:'mm', format:'a4' });
+
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const marginLeft = 14, marginRight = 14, marginTop = 14, marginBottom = 14;
+      const usableWidth = pageWidth - marginLeft - marginRight;
+
+      // Header
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(14);
+      doc.text('USGI — SME & Insurance Inclusion', marginLeft, marginTop + 4);
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`Performance Summary: ${state.periodLabel}`, marginLeft, marginTop + 12);
+
+      // Letter body
+      doc.setFontSize(11);
+      const body = substitutePlaceholders(document.getElementById('letterEditor').value, state.partnerIndex[key]);
+      let cursorY = marginTop + 22;
+      cursorY = boldMarkdownToPDF(doc, body, marginLeft, cursorY, 6.2, usableWidth);
+      cursorY += 2;
+
+      // Monthly row → key–value pairs (Parameter, Value) in 2 columns
+      const monthlyRow = state.partnerIndex[key].monthlyRow;
+      const cols = state.monthly.columns.filter(c => c.toUpperCase() !== 'INTERMEDIARY');
+      const kvRows = cols.map(c => [c, monthlyRow[c] ?? '']);
+
+      // Section title
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(12);
+      doc.text('Monthly Summary (Parameter → Value)', marginLeft, cursorY);
+      cursorY += 6;
+
+      // Two-column using autoTable
+      const gutter = 6;
+      const colWidth = (usableWidth - gutter) / 2;
+
+      const splitIdx = Math.ceil(kvRows.length / 2);
+      const leftRows = kvRows.slice(0, splitIdx);
+      const rightRows = kvRows.slice(splitIdx);
+
+      // Left column
+      doc.autoTable({
+        startY: cursorY,
+        head: [['Parameter', 'Value']],
+        body: leftRows,
+        margin: { left: marginLeft, right: pageWidth - marginLeft - colWidth },
+        styles: { fontSize: 9, cellPadding: 2, overflow: 'linebreak' },
+        headStyles: { fillColor: [245, 245, 245], fontStyle: 'bold' },
+        columnStyles: {
+          0: { cellWidth: colWidth * 0.40 }, // label
+          1: { cellWidth: colWidth * 0.60 }  // value
+        },
+        theme: 'grid',
+        pageBreak: 'auto'
+      });
+      const leftFinalY = doc.lastAutoTable?.finalY ?? cursorY;
+
+      // Right column (same startY)
+      doc.autoTable({
+        startY: cursorY,
+        head: [['Parameter', 'Value']],
+        body: rightRows,
+        margin: { left: marginLeft + colWidth + gutter, right: marginRight },
+        styles: { fontSize: 9, cellPadding: 2, overflow: 'linebreak' },
+        headStyles: { fillColor: [245, 245, 245], fontStyle: 'bold' },
+        columnStyles: {
+          0: { cellWidth: colWidth * 0.40 },
+          1: { cellWidth: colWidth * 0.60 }
+        },
+        theme: 'grid',
+        pageBreak: 'auto'
+      });
+      const rightFinalY = doc.lastAutoTable?.finalY ?? cursorY;
+
+      cursorY = Math.max(leftFinalY, rightFinalY) + 6;
+
+      // Optional sections (placeholders for now)
+      if (opts.LOB) {
+        doc.setFont('helvetica', 'bold'); doc.setFontSize(12);
+        doc.text('Line of Business Split', marginLeft, cursorY);
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
+        doc.text('• LOB data from Master/Monthly (customize mapping as needed)', marginLeft, cursorY + 6);
+        cursorY += 12;
+      }
+      if (opts.Product) {
+        doc.setFont('helvetica', 'bold'); doc.setFontSize(12);
+        doc.text('Product Mix (Intermediary & Channel)', marginLeft, cursorY);
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
+        doc.text('• Product mix derived per available columns', marginLeft, cursorY + 6);
+        cursorY += 12;
+      }
+      if (opts.Geo) {
+        doc.setFont('helvetica', 'bold'); doc.setFontSize(12);
+        doc.text('Geography (States & Branches)', marginLeft, cursorY);
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
+        doc.text('• Geography from Master Register fields', marginLeft, cursorY + 6);
+        cursorY += 12;
+      }
+
+      // Footer
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(9);
+      doc.text('© USGI — SME & Insurance Inclusion', marginLeft, pageHeight - marginBottom);
+
+      const blob = doc.output('blob'); // proper PDF Blob
+      return { blob, filename: `${sanitizeFileName(key)}.pdf` };
+    }
+
+    // -----------------------------
+    // Event Handlers
+    // -----------------------------
+    document.getElementById('validateBtn').addEventListener('click', async () => {
+      const monthlyFile = document.getElementById('monthlyFile').files[0];
+      const masterFile  = document.getElementById('masterFile').files[0];
+      state.periodLabel = document.getElementById('periodLabel').value?.trim() || '';
+
+      if (!monthlyFile || !masterFile) {
+        setStatus('uploadStatus', 'Please upload both files', 'warning');
+        return;
+      }
+      setStatus('uploadStatus', 'Parsing…', 'info');
+
+      try {
+        const [wbMonthly, wbMaster] = await Promise.all([readExcel(monthlyFile), readExcel(masterFile)]);
+        const monthlySheetName = textOrIndexToSheet(wbMonthly, document.getElementById('monthlySheet').value.trim());
+        const masterSheetName  = textOrIndexToSheet(wbMaster, document.getElementById('masterSheet').value.trim());
+
+        const monthlyData = sheetToRows(wbMonthly, monthlySheetName);
+        const masterData  = sheetToRows(wbMaster, masterSheetName);
+
+        // Basic validations
+        const hasIntermediary = monthlyData.columns.some(c => c.toUpperCase() === 'INTERMEDIARY');
+        const hasGrandTotal  = monthlyData.columns.some(c => c.toUpperCase().includes('GRAND') && c.toUpperCase().includes('TOTAL'));
+
+        if (!hasIntermediary || !hasGrandTotal) {
+          setStatus('uploadStatus', 'Monthly file missing columns: INTERMEDIARY / Grand Total', 'danger');
+          return;
+        }
+
+        state.monthly = monthlyData;
+        state.master  = masterData;
+        renderPeek('peekMonthly', state.monthly);
+        renderPeek('peekMaster', state.master);
+
+        // Metadata display
+        document.getElementById('monthlyMeta').textContent = `Monthly: ${monthlyFile.name} | sheet "${monthlySheetName}" | ${monthlyData.rows.length} rows`;
+        document.getElementById('masterMeta').textContent  = `Master: ${masterFile.name} | sheet "${masterSheetName}" | ${masterData.rows.length} rows`;
+
+        buildPartnerIndex();
+        fillPartnerDropdown();
+
+        setStatus('uploadStatus', 'Validated ✓', 'success');
+      } catch(err) {
+        console.error(err);
+        setStatus('uploadStatus', 'Error parsing files', 'danger');
+      }
+    });
+
+    // Robust preview handler (new tab + modal fallback)
+    document.getElementById('previewBtn').addEventListener('click', async (e) => {
+      e.preventDefault();
+
+      const key = document.getElementById('partnerSelect').value;
+      if (!key) return;
+
+      const opts = {
+        LOB: document.getElementById('optLOB').checked,
+        Product: document.getElementById('optProduct').checked,
+        Geo: document.getElementById('optGeo').checked
+      };
+
+      setStatus('genStatus', 'Generating preview…', 'info');
+
+      // Open a blank tab synchronously to avoid popup blocking
+      const newTab = window.open('about:blank');
+
+      try {
+        const { blob, filename } = await generatePDFForPartner(key, opts);
+        const url = URL.createObjectURL(blob);
+        state.previewUrl = url;
+
+        // Update the Download link (still useful)
+        const link = document.getElementById('downloadPreview');
+        link.href = url;
+        link.download = filename;
+        link.classList.remove('disabled');
+
+        // Use the new tab if available
+        if (newTab) {
+          newTab.location = url;
+        } else {
+          // Fallback: show inline modal
+          const frame = document.getElementById('pdfPreviewFrame');
+          frame.src = url;
+          document.getElementById('pdfPreviewModal').style.display = 'block';
+        }
+
+        setStatus('genStatus', 'Preview ready', 'success');
+      } catch (err) {
+        console.error('Preview failed:', err);
+        setStatus('genStatus', 'Preview failed — check console', 'danger');
+        if (newTab && !newTab.closed) newTab.close();
+      }
+    });
+
+    // Modal close cleanup
+    document.getElementById('closePreview').addEventListener('click', () => {
+      const frame = document.getElementById('pdfPreviewFrame');
+      frame.src = 'about:blank';
+      document.getElementById('pdfPreviewModal').style.display = 'none';
+      if (state.previewUrl) {
+        URL.revokeObjectURL(state.previewUrl);
+        state.previewUrl = null;
+      }
+    });
+
+    // Generate all as ZIP
+    document.getElementById('generateAllBtn').addEventListener('click', async () => {
+      const opts = {
+        LOB: document.getElementById('optLOB').checked,
+        Product: document.getElementById('optProduct').checked,
+        Geo: document.getElementById('optGeo').checked
+      };
+      const zip = new JSZip();
+      const keys = Object.keys(state.partnerIndex);
+      if (!keys.length) return;
+      setStatus('genStatus', `Generating PDFs… (0/${keys.length})`, 'info');
+
+      let i = 0;
+      for (const key of keys) {
+        const { blob, filename } = await generatePDFForPartner(key, opts);
+        zip.file(filename, blob);
+        i++;
+        setStatus('genStatus', `Generating PDFs… (${i}/${keys.length})`, 'info');
+        await new Promise(r => setTimeout(r, 0)); // yield
+      }
+
+      const zipBlob = await zip.generateAsync({ type:'blob' });
+      saveAs(zipBlob, `USGI_SME_Intermediary_PDFs_${Date.now()}.zip`);
+      setStatus('genStatus', `ZIP ready — ${keys.length} PDFs`, 'success');
+    });
+
+    // Options checkboxes -> state
+    ['optLOB','optProduct','optGeo'].forEach(id => {
+      document.getElementById(id).addEventListener('change', () => {
+        state.options.LOB = document.getElementById('optLOB').checked;
+        state.options.Product = document.getElementById('optProduct').checked;
+        state.options.Geo = document.getElementById('optGeo').checked;
+      });
+    });
+
+    // Cleanup preview URL on window unload
+    window.addEventListener('beforeunload', () => {
+      if (state.previewUrl) URL.revokeObjectURL(state.previewUrl);
+    });
+  </script>
+</body>
+</html>

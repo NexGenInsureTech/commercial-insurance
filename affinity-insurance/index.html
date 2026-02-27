@@ -1,601 +1,708 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Intermediary PDF Builder — SME & Insurance Inclusion (USGI)</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <!-- Bootstrap for layout -->
-  <!--   https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css -->
-<link rel="stylesheet" href="assets/css/bootstrap.min.css">
-
-
-  <!-- App styles -->
-  <style>
-    body { background:#f7f9fc; }
-    header { background:#0b5ed7; color:#fff; }
-    .placeholder-chip { font-family:monospace; background:#eef2ff; border:1px dashed #b9c3f0; padding:.2rem .4rem; border-radius:.25rem; margin-right:.25rem;}
-    .file-pill { background:#eaf6ff; border:1px solid #b6e0fe; border-radius: .5rem; padding:.25rem .5rem; }
-    .section-card { background:#fff; border-radius:.75rem; box-shadow:0 6px 18px rgba(20,40,80,.08); }
-    .small-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size:.85rem; }
-    .letter-editor { min-height:220px; white-space:pre-wrap; }
-    .table-sticky-head thead th { position:sticky; top:0; background:#fff; z-index:2; }
-    .footer-note { color:#64748b; }
-    /* Modal fallback preview */
-    #pdfPreviewModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:9999; }
-    #pdfPreviewModal .modal-body {
-      width:90%; height:90%; margin:2rem auto; background:#fff; border-radius:8px;
-      overflow:hidden; position:relative; box-shadow:0 10px 28px rgba(0,0,0,.25);
-    }
-    #pdfPreviewModal .modal-body .close-btn { position:absolute; top:8px; right:8px; }
-  </style>
-
-  <!-- Libraries  
-  <!--https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js</script> -->
-<script src="assets/js/xlsx.full.min.js"></script>
-  <!--https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js</script> -->
-<script src="assets/js/jspdf.umd.min.js"></script>
-  <!--  https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js</script> -->
-<script src="assets/js/jspdf.plugin.autotable.min.js"></script>
-  <!--  https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js</script> -->
-<script src="assets/js/jszip.min.js"></script>
-  <!--  https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js</script> -->
-<script src="assets/js/FileSaver.min.js"></script>
-
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Affinity Insurance – Local Microsite (Admin-enabled + Property Structure)</title>
+<meta name="description" content="Local-only SPA with editable pricing parameters (Admin Panel) incl. Property Structure (Fire+STFI+EQ). No installs, no servers, no CDNs." />
+<meta name="theme-color" content="#0d3b66" />
+<style>
+  :root{ --bg:#0b0f14; --panel:#11161d; --soft:#1a222d; --text:#e6edf3; --muted:#9fb0c2; --primary:#2bb673; --accent:#0d6efd; --warn:#da9f00; --danger:#c0392b; --ok:#16a085; --ring:rgba(13,110,253,.35); --shadow:rgba(0,0,0,.35); --border:#243140; --card:#0f141b; }
+  [data-theme="light"]{ --bg:#f6f9fc; --panel:#ffffff; --soft:#eef2f7; --text:#0f1720; --muted:#41576f; --primary:#2bb673; --accent:#0d6efd; --warn:#a87405; --danger:#b33428; --ok:#0f7c66; --ring:rgba(13,110,253,.35); --shadow:rgba(0,0,0,.08); --border:#d9e1ea; --card:#ffffff; }
+  *{box-sizing:border-box} html,body{height:100%}
+  body{margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Noto Sans, Arial; background:var(--bg); color:var(--text); line-height:1.5;}
+  a{color:var(--accent); text-decoration:none}
+  a:focus, button:focus, input:focus, select:focus, textarea:focus{outline:2px solid var(--ring); outline-offset:2px}
+  h1,h2,h3{line-height:1.2;margin:0 0 .5rem} p{margin:.5rem 0 1rem}
+  .container{max-width:1180px; margin-inline:auto; padding:0 1rem}
+  header{position:sticky; top:0; z-index:20; background:var(--panel); border-bottom:1px solid var(--border); box-shadow:0 4px 18px var(--shadow);}  
+  .nav{display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:.75rem 0;}
+  .brand{display:flex; align-items:center; gap:.6rem; font-weight:700}
+  .brand svg{width:28px;height:28px}
+  .nav-links{display:flex; flex-wrap:wrap; gap:.75rem}
+  .nav-links a{padding:.5rem .75rem; border-radius:8px; color:var(--text)} .nav-links a:hover{background:var(--soft)}
+  .actions{display:flex; gap:.5rem; align-items:center}
+  .btn{appearance:none; border:none; border-radius:10px; padding:.6rem .9rem; font-weight:600; cursor:pointer; color:#fff; background:var(--accent); box-shadow:0 8px 22px var(--shadow);}  
+  .btn.secondary{background:var(--primary)} .btn.ghost{background:transparent; color:var(--text); border:1px solid var(--border)}
+  .btn.warn{background:var(--warn)} .btn.ok{background:var(--ok)} .btn.danger{background:var(--danger)} .btn:disabled{opacity:.5; cursor:not-allowed}
+  .hero{background: radial-gradient(1200px 500px at 20% -10%, rgba(13,110,253,.25), transparent), radial-gradient(800px 400px at 90% 10%, rgba(43,182,115,.25), transparent); padding:3rem 0 2rem; border-bottom:1px solid var(--border);}  
+  .hero-grid{display:grid; grid-template-columns:1.1fr .9fr; gap:2rem; align-items:center}
+  @media (max-width: 900px){ .hero-grid{grid-template-columns:1fr} }
+  .card{background:var(--card); border:1px solid var(--border); border-radius:14px; padding:1rem .9rem; box-shadow:0 10px 28px var(--shadow)}
+  .badge{font-size:.75rem; padding:.25rem .5rem; border-radius:999px; border:1px solid var(--border); background:var(--soft)}
+  .hero h1 span{color:var(--primary)}
+  .grid{display:grid; gap:1rem} .grid.cols-3{grid-template-columns:repeat(3, 1fr)} .grid.cols-2{grid-template-columns:repeat(2, 1fr)}
+  @media (max-width: 800px){ .grid.cols-3,.grid.cols-2{grid-template-columns:1fr} }
+  section{padding:2rem 0}
+  .section-title{display:flex; align-items:baseline; justify-content:space-between; gap:1rem; margin-bottom:1rem}
+  .muted{color:var(--muted)} .small{font-size:.9rem}
+  .product{display:flex; gap:1rem}
+  .product .icon{width:46px;height:46px; border-radius:10px; background:var(--soft); display:grid; place-items:center; flex:0 0 46px}
+  .kv{display:flex; align-items:center; gap:.75rem; flex-wrap:wrap} .kv span{padding:.2rem .45rem; font-size:.85rem; border:1px dashed var(--border); border-radius:8px;}
+  .form{display:grid; gap:1rem} .row{display:grid; grid-template-columns:1fr 1fr; gap:1rem}
+  .row3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem}
+  @media (max-width: 800px){ .row,.row3{grid-template-columns:1fr} }
+  label{display:block; font-weight:600; margin-bottom:.3rem}
+  input[type="text"], input[type="number"], textarea, select{ width:100%; padding:.65rem .7rem; border-radius:10px; border:1px solid var(--border); background:var(--panel); color:var(--text) }
+  input[type="checkbox"], input[type="radio"]{transform:scale(1.2); margin-right:.45rem}
+  .calc-output{overflow:auto}
+  table{width:100%; border-collapse:collapse; border:1px solid var(--border)} th, td{padding:.6rem .6rem; border-bottom:1px solid var(--border); text-align:left} th{background:var(--soft)}
+  tr:hover td{background:color-mix(in lab, var(--soft) 60%, transparent)}
+  .totals{display:flex; gap:1rem; flex-wrap:wrap}
+  .kpi{flex: 1 1 240px; background:var(--soft); border:1px solid var(--border); border-radius:12px; padding:1rem}
+  .accordion .item{border:1px solid var(--border); border-radius:10px; margin-bottom:.6rem; overflow:hidden}
+  .accordion button{width:100%; text-align:left; background:var(--panel); border:none; padding:.8rem 1rem; font-weight:600; cursor:pointer}
+  .accordion button[aria-expanded="true"]{background:var(--soft)}
+  .accordion .content{display:none; padding:1rem}
+  .accordion .content[aria-hidden="false"]{display:block}
+  dialog{border:none; border-radius:14px; padding:0; width:min(860px, 96vw); background:var(--panel); box-shadow:0 30px 80px var(--shadow); color:var(--text)}
+  dialog::backdrop{background:rgba(0,0,0,.45)}
+  .modal-head{display:flex; justify-content:space-between; align-items:center; gap:.75rem; padding:1rem; border-bottom:1px solid var(--border)}
+  .modal-body{padding:1rem; max-height:70vh; overflow:auto}
+  .modal-actions{display:flex; gap:.5rem; justify-content:flex-end; padding:1rem; border-top:1px solid var(--border)}
+  footer{border-top:1px solid var(--border); padding:1.2rem 0; background:var(--panel); color:var(--muted)}
+  .right{margin-left:auto}
+  .toast{position:fixed; bottom:1rem; right:1rem; background:var(--card); border:1px solid var(--border); padding:.75rem 1rem; border-radius:10px; box-shadow:0 8px 22px var(--shadow); z-index:50; opacity:0; transform:translateY(8px); transition:.25s ease; max-width:min(90vw, 520px)}
+  .toast.show{opacity:1; transform:translateY(0)}
+  .sep{height:1px; background:var(--border); margin:1rem 0}
+  .grid-form{display:grid; gap:1rem; grid-template-columns:repeat(2,1fr)}
+  @media (max-width: 880px){ .grid-form{grid-template-columns:1fr} }
+  .field{display:flex; gap:.5rem; align-items:center}
+  .field label{min-width:240px}
+  small.muted{display:block; margin-top:.25rem}
+  @media print{ header, .hero .actions, .faq, .contact, .theme-toggle, .modal-actions, .toast, #adminBtn { display:none !important } body{background:#fff; color:#000} .card{border:1px solid #000} a:link:after{content:" (" attr(href) ")"} }
+</style>
 </head>
-<body>
-  <!-- Header -->
-  <header class="py-4 mb-4">
-    <div class="container">
-      <h1 class="h3 mb-1">Intermediary PDF Builder</h1>
-      <p class="mb-0">Upload monthly summary + master register → edit Letter → generate PDFs per Intermediary.</p>
+<body data-theme="dark">
+<header role="banner" aria-label="Main header">
+  <div class="container nav">
+    <div class="brand" aria-label="Brand">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 12C3 7.03 7.03 3 12 3c4.97 0 9 4.03 9 9s-4.03 9-9 9S3 16.97 3 12Z" stroke="currentColor" stroke-width="1.5"/><path d="M7.5 12l3 3 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Affinity Insurance</span>
+      <span class="badge" title="Local-only">Local</span>
     </div>
-  </header>
+    <nav class="nav-links" aria-label="Primary navigation">
+      <a href="#products">Products</a>
+      <a href="#calculator">Pricing</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="actions">
+      <button class="btn ghost theme-toggle" aria-pressed="false" title="Toggle theme">🌗 Theme</button>
+      <button class="btn warn" id="adminBtn" title="Open Admin Panel">🛠 Admin</button>
+      <button class="btn secondary" id="printBtn" title="Print Quote">🖨 Print</button>
+    </div>
+  </div>
+</header>
 
-  <main class="container pb-5">
-    <!-- Step 1: Upload -->
-    <section class="section-card p-4 mb-4">
-      <h2 class="h5 mb-3">1) Upload Excel files</h2>
-      <div class="row g-3">
-        <div class="col-md-6">
-          <label class="form-label">Monthly Summary (Excel)</label>
-          <input type="file" class="form-control" id="monthlyFile" accept=".xlsx,.xls" />
-          <div class="form-text">Required columns: <span class="small-mono">INTERMEDIARY</span>, months (e.g., <span class="small-mono">Apr-25 … Dec-25</span>), and <span class="small-mono">Grand Total</span>.</div>
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Master Register (Excel)</label>
-          <input type="file" class="form-control" id="masterFile" accept=".xlsx,.xls" />
-          <div class="form-text">Example: <span class="small-mono">SME_PR_MASTER_FY25-26.xlsx</span></div>
-        </div>
-
-        <div class="col-md-4">
-          <label class="form-label">Monthly sheet name/index (optional)</label>
-          <input type="text" class="form-control" id="monthlySheet" placeholder="e.g. 'Apr-Dec-25' or index 0" />
-        </div>
-        <div class="col-md-4">
-          <label class="form-label">Master sheet name/index (optional)</label>
-          <input type="text" class="form-control" id="masterSheet" placeholder="e.g. 'MASTER' or index 0" />
-        </div>
-        <div class="col-md-4">
-          <label class="form-label">Period Label (shown on PDFs)</label>
-          <input type="text" class="form-control" id="periodLabel" placeholder="Apr–Dec 2025" />
+<main id="main" class="container" role="main">
+  <section class="hero">
+    <div class="hero-grid">
+      <div class="card">
+        <div class="badge">Local | Group | Parametric (No Install)</div>
+        <h1 style="margin-top:.6rem">Protect <span>Stock, Cash, Structure & Ops</span> with bite‑sized embedded covers.</h1>
+        <p class="muted">Designed for kiranas, micro‑HORECA & delivery pilots. Single file. No servers. No CDNs. Works over <code>file://</code>.</p>
+        <div class="actions" style="margin-top:1rem">
+          <a class="btn" href="#calculator">Start Pricing</a>
+          <a class="btn ghost" href="#products">See Coverage</a>
         </div>
       </div>
-
-      <div class="mt-3 d-flex gap-2">
-        <button class="btn btn-primary" id="validateBtn">Validate & Parse</button>
-        <span id="uploadStatus" class="align-self-center"></span>
-      </div>
-
-      <div class="mt-3 small">
-        <span class="file-pill me-2" id="monthlyMeta">Monthly: —</span>
-        <span class="file-pill" id="masterMeta">Master: —</span>
-      </div>
-    </section>
-
-    <!-- Step 2: Letter -->
-    <section class="section-card p-4 mb-4">
-      <h2 class="h5 mb-2">2) Letter page (fully editable)</h2>
-      <div class="mb-2">
-        <span class="placeholder-chip">{{PartnerName}}</span>
-        <span class="placeholder-chip">{{Category}}</span>
-        <span class="placeholder-chip">{{PeriodLabel}}</span>
-        <span class="placeholder-chip">{{TotalGross}}</span>
-      </div>
-
-      <div class="row g-3">
-        <div class="col-md-8">
-          <label class="form-label">Letter content</label>
-          <textarea id="letterEditor" class="form-control letter-editor" spellcheck="false">**Dear {{PartnerName}},**
-
-Thank you for being a Smartian and helping us build a sustainable, customer‑centric business with USGI. Your commitment to quality and responsible growth inspires our teams every day.
-
-Below is your performance summary for **{{PeriodLabel}}**.
-
-Warm regards,
-SME & Insurance Inclusion — USGI
-          </textarea>
-          <div class="form-text">Markdown-like bold supported for headings; placeholders will be resolved per partner.</div>
+      <div class="grid cols-1">
+        <div class="card">
+          <strong>Highlights</strong>
+          <ul>
+            <li>Group master policy design; e‑cert concept locally</li>
+            <li>Admin Panel to edit pricing parameters live</li>
+            <li>Now includes Property Structure (Fire + STFI + EQ)</li>
+          </ul>
         </div>
-        <div class="col-md-4">
-          <label class="form-label">Select a partner to preview</label>
-          <select id="partnerSelect" class="form-select" disabled>
-            <option value="">— Upload & Validate first —</option>
-          </select>
-          <div class="mt-2 d-flex gap-2">
-            <button class="btn btn-outline-secondary" id="previewBtn" disabled>Preview PDF (single partner)</button>
-            <a id="downloadPreview" class="btn btn-outline-success disabled" download>Download Preview</a>
+        <div class="card">
+          <strong>Policy-Compliance Friendly</strong>
+          <ul>
+            <li>No installation, no background processes</li>
+            <li>Local storage only; delete via browser settings</li>
+            <li>Print‑friendly quote for PDF saves</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="products" aria-labelledby="products-title">
+    <div class="section-title"><h2 id="products-title">Product Lineup</h2><span class="muted small">Modular. Rolling monthly.</span></div>
+    <div class="grid cols-3">
+      <div class="card product"><div class="icon">📦</div><div><h3>StockShield</h3><p class="muted small">Stock: Fire + Burglary (+DoS/RSMD/fidelity variants).</p></div></div>
+      <div class="card product"><div class="icon">🏢</div><div><h3>Property Structure</h3><p class="muted small">Building: Fire + STFI + EQ (add-on).</p></div></div>
+      <div class="card product"><div class="icon">💰</div><div><h3>MoneyGuard</h3><p class="muted small">Cash in safe & money‑in‑transit tiers.</p></div></div>
+      <div class="card product"><div class="icon">📱</div><div><h3>DeviceCare</h3><p class="muted small">Accidental damage & screen protection.</p></div></div>
+      <div class="card product"><div class="icon">🛵</div><div><h3>Pilot PA+</h3><p class="muted small">AD, PTD/PPD, medical, hospital cash.</p></div></div>
+      <div class="card product"><div class="icon">⏱</div><div><h3>OrderShield</h3><p class="muted small">Parametric credits on SLA breach.</p></div></div>
+      <div class="card product"><div class="icon">🛡️</div><div><h3>Cyber Lite</h3><p class="muted small">UPI/wallet fraud & data restoration (lite).</p></div></div>
+    </div>
+  </section>
+
+  <section id="calculator" aria-labelledby="calc-title">
+    <div class="section-title"><h2 id="calc-title">Pricing Calculator (Local Only)</h2><span class="muted small">Illustrative; plug partner rates when ready.</span></div>
+    <div class="card">
+      <form class="form" id="quoteForm" novalidate>
+        <div class="row3">
+          <div><label for="monthlyGMV">Avg Monthly GMV (₹)</label><input id="monthlyGMV" type="number" min="0" step="100" placeholder="e.g., 240000" required></div>
+          <div><label for="delayRate">&gt;90 min Delay Rate (%)</label><input id="delayRate" type="number" min="0" max="100" step="0.1" placeholder="e.g., 2"></div>
+          <div><label for="coldShare">Cold SKU Share (%)</label><input id="coldShare" type="number" min="0" max="100" step="1" placeholder="e.g., 25"></div>
+        </div>
+        <div class="row3">
+          <div><label for="cashShare">Cash Share (%)</label><input id="cashShare" type="number" min="0" max="100" step="1" placeholder="e.g., 35"></div>
+          <div><label for="claimFree">Claim‑free Tenure (months)</label><input id="claimFree" type="number" min="0" max="120" step="1" placeholder="e.g., 6"></div>
+          <div>
+            <label>Security</label>
+            <label class="inline"><input type="checkbox" id="hasCCTV"> CCTV/Locks</label>
+            <label class="inline"><input type="checkbox" id="highTheft"> High‑theft Pincode</label>
+          </div>
+        </div>
+
+        <div class="row3">
+          <div><label for="deviceCost">Device Cost (₹)</label><input id="deviceCost" type="number" min="0" step="500" placeholder="e.g., 15000"></div>
+          <div><label for="pilots">Pilots Covered (count)</label><input id="pilots" type="number" min="0" step="1" placeholder="e.g., 50"></div>
+          <div><label for="siDays">Stock SI Days (default <span id="lblSiDays">20</span>)</label><input id="siDays" type="number" min="1" max="60" step="1" value="20"></div>
+        </div>
+
+        <div class="row3">
+          <div><label for="structureSI">Property Structure SI (₹) – Fire + STFI + EQ</label><input id="structureSI" type="number" min="0" step="10000" placeholder="e.g., 1500000"></div>
+          <div style="display:flex; align-items:end"><label class="inline"><input type="checkbox" id="propStruct"> Property Structure Add‑on (<span id="lblPSRate">0.35%</span> p.a.)</label></div>
+          <div></div>
+        </div>
+
+        <div class="sep"></div>
+
+        <strong>Choose Products</strong>
+        <div class="row">
+          <div class="card" style="background:var(--soft)">
+            <label>StockShield Variant</label>
+            <div class="inline">
+              <label><input type="radio" name="stockVariant" value="lite"> Lite (<span id="lblLiteRate">0.65%</span>)</label>
+              <label><input type="radio" name="stockVariant" value="plus"> Plus + DoS (<span id="lblPlusRate">0.90%</span>)</label>
+              <label><input type="radio" name="stockVariant" value="max"> Max (<span id="lblMaxRate">1.10%</span>)</label>
+              <label><input type="radio" name="stockVariant" value="none" checked> None</label>
+            </div>
+            <div class="small muted" style="margin-top:.3rem">Credits/Loads: <span id="lblCredits">−15% (≥12m claim‑free), −5% (CCTV), +15% (High‑theft)</span>.</div>
+          </div>
+          <div class="card" style="background:var(--soft)">
+            <label>Other Covers</label>
+            <div class="inline">
+              <label><input type="checkbox" id="transit"> Transit (<span id="lblTransit">0.20% on GMV×0.2</span>)</label>
+              <label><input type="checkbox" id="money"> MoneyGuard (₹ tiers)</label>
+              <label><input type="checkbox" id="device"> DeviceCare (~<span id="lblDeviceRate">3.00%</span>/yr)</label>
+              <label><input type="checkbox" id="pa"> Pilot PA+ (₹<span id="lblPA">325</span>/pilot/mo)</label>
+              <label><input type="checkbox" id="orderShield"> OrderShield (<span id="lblOSRate">0.15%</span> of GMV)</label>
+              <label><input type="checkbox" id="cyber"> Cyber Lite (₹<span id="lblCyber">399</span>/yr)</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="inline">
+          <button type="button" id="calcBtn" class="btn">Calculate</button>
+          <button type="reset" id="resetBtn" class="btn ghost">Reset</button>
+          <button type="button" id="saveBtn" class="btn ok">Save Quote (Local)</button>
+          <button type="button" id="exportBtn" class="btn secondary">Export JSON</button>
+          <button type="button" id="openSummary" class="btn ghost">Open Summary</button>
+          <span class="muted small right">No internet. Data stays on this device.</span>
+        </div>
+
+        <div id="results" class="calc-output" aria-live="polite" style="margin-top:1rem"></div>
+
+        <div class="totals" style="margin-top:1rem">
+          <div class="kpi"><div class="muted small">Total Monthly Premium</div><div id="kpiMonthly" style="font-weight:800; font-size:1.4rem">—</div></div>
+          <div class="kpi"><div class="muted small">Total Annual Premium</div><div id="kpiAnnual" style="font-weight:800; font-size:1.4rem">—</div></div>
+          <div class="kpi"><div class="muted small">Weighted Expected Loss Ratio</div><div id="kpiLR" style="font-weight:800; font-size:1.4rem">—</div></div>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <section id="faq" aria-labelledby="faq-title" class="faq">
+    <div class="section-title"><h2 id="faq-title">FAQ</h2><span class="muted small">Parametric triggers, claims, operations.</span></div>
+    <div class="accordion" id="faqAcc">
+      <div class="item"><button aria-expanded="false" aria-controls="c1" id="q1">How does OrderShield pay?</button><div id="c1" class="content" aria-hidden="true"><p>Automatic credit when delivery delay exceeds SLA (e.g., &gt;90 min). Slabs: 5%/10% of cart value with caps.</p></div></div>
+      <div class="item"><button aria-expanded="false" aria-controls="c2" id="q2">What’s inside StockShield variants?</button><div id="c2" class="content" aria-hidden="true"><p>Lite: Fire+Burglary. Plus: +Deterioration (cold SKUs). Max: +RSMD & small fidelity.</p></div></div>
+      <div class="item"><button aria-expanded="false" aria-controls="c3" id="q3">Do I need internet for this?</button><div id="c3" class="content" aria-hidden="true"><p>No. Runs from <code>file://</code>, stores data locally, and prints clean PDFs.</p></div></div>
+    </div>
+  </section>
+
+  <section id="contact" aria-labelledby="contact-title" class="contact">
+    <div class="section-title"><h2 id="contact-title">Contact</h2><span class="muted small">Local note pad only (no network).</span></div>
+    <div class="card">
+      <form id="contactForm" class="form" novalidate>
+        <div class="row">
+          <div><label for="name">Name</label><input id="name" required placeholder="Your name"></div>
+          <div><label for="email">Email</label><input id="email" required type="text" inputmode="email" placeholder="you@company.com"></div>
+        </div>
+        <div><label for="msg">Message</label><textarea id="msg" rows="4" placeholder="What do you need?"></textarea></div>
+        <div class="inline"><button class="btn" type="submit">Save (Local)</button><span class="muted small">Stored in this browser only.</span></div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer role="contentinfo"><div class="container" style="display:flex; justify-content:space-between; gap:1rem; flex-wrap:wrap"><div>&copy; <span id="year"></span> Affinity Insurance (Local Demo).</div><div class="muted small">Single file, no installs, no external assets. v0.6‑admin‑prop</div></div></footer>
+
+<!-- SUMMARY MODAL -->
+<dialog id="summaryDlg" aria-label="Quote Summary">
+  <div class="modal-head"><strong>Quote Summary</strong><button class="btn ghost" id="closeDlg" aria-label="Close">✕</button></div>
+  <div class="modal-body"><div id="summaryContent">No calculations yet.</div></div>
+  <div class="modal-actions"><button class="btn secondary" id="printFromDlg">Print</button><button class="btn" id="exportFromDlg">Export JSON</button></div>
+</dialog>
+
+<!-- ADMIN MODAL -->
+<dialog id="adminDlg" aria-label="Admin Panel">
+  <div class="modal-head">
+    <strong>Admin Panel – Pricing Parameters</strong>
+    <div class="inline" style="display:flex; gap:.5rem; align-items:center">
+      <button class="btn danger" id="adminReset">Reset to Defaults</button>
+      <button class="btn" id="adminExport">Export Config</button>
+      <button class="btn" id="adminClose">✕</button>
+    </div>
+  </div>
+  <div class="modal-body">
+    <p class="muted small">Changes are saved locally (this browser only). Rates are decimals (e.g., 0.0065 = 0.65%).</p>
+    <div class="grid-form" id="adminForm">
+      <div class="card">
+        <h3>StockShield Rates</h3><small class="muted">Annual rate as % of SI (decimal inputs).</small>
+        <div class="field"><label>Lite – Base</label><input type="number" step="0.0001" id="cfg_lite_base"></div>
+        <div class="field"><label>Lite – Add-on</label><input type="number" step="0.0001" id="cfg_lite_addon"></div>
+        <div class="field"><label>Plus – Base</label><input type="number" step="0.0001" id="cfg_plus_base"></div>
+        <div class="field"><label>Plus – Add-on (DoS)</label><input type="number" step="0.0001" id="cfg_plus_addon"></div>
+        <div class="field"><label>Max – Base</label><input type="number" step="0.0001" id="cfg_max_base"></div>
+        <div class="field"><label>Max – Add-on (RSMD+Fidelity)</label><input type="number" step="0.0001" id="cfg_max_addon"></div>
+      </div>
+
+      <div class="card">
+        <h3>Credits & Loads</h3><small class="muted">Additive on rate; negative is credit.</small>
+        <div class="field"><label>Claim‑free ≥12m (credit)</label><input type="number" step="0.01" id="cfg_load_claimfree"></div>
+        <div class="field"><label>CCTV/Locks (credit)</label><input type="number" step="0.01" id="cfg_load_cctv"></div>
+        <div class="field"><label>High‑theft pincode (load)</label><input type="number" step="0.01" id="cfg_load_theft"></div>
+        <div class="field"><label>Default SI Days</label><input type="number" step="1" id="cfg_si_days"></div>
+      </div>
+
+      <div class="card">
+        <h3>Transit</h3>
+        <div class="field"><label>Exposure Factor (×GMV)</label><input type="number" step="0.01" id="cfg_transit_expf"></div>
+        <div class="field"><label>Monthly Rate (decimal)</label><input type="number" step="0.0001" id="cfg_transit_rate"></div>
+      </div>
+
+      <div class="card">
+        <h3>MoneyGuard</h3>
+        <div class="field"><label>Tier High (≥ cutHigh) ₹/yr</label><input type="number" step="1" id="cfg_money_high"></div>
+        <div class="field"><label>Tier Mid (≥ cutMid) ₹/yr</label><input type="number" step="1" id="cfg_money_mid"></div>
+        <div class="field"><label>Tier Low ₹/yr</label><input type="number" step="1" id="cfg_money_low"></div>
+        <div class="field"><label>cutHigh (cash share)</label><input type="number" step="0.01" id="cfg_money_cutHigh"></div>
+        <div class="field"><label>cutMid (cash share)</label><input type="number" step="0.01" id="cfg_money_cutMid"></div>
+      </div>
+
+      <div class="card">
+        <h3>DeviceCare & PA</h3>
+        <div class="field"><label>DeviceCare annual rate (decimal)</label><input type="number" step="0.0001" id="cfg_device_rate"></div>
+        <div class="field"><label>PA per pilot ₹/month</label><input type="number" step="1" id="cfg_pa_rate"></div>
+      </div>
+
+      <div class="card">
+        <h3>OrderShield</h3>
+        <div class="field"><label>Rate % of GMV (decimal)</label><input type="number" step="0.0001" id="cfg_os_rate"></div>
+        <div class="field"><label>Avg payout slab (decimal)</label><input type="number" step="0.001" id="cfg_os_slab"></div>
+      </div>
+
+      <div class="card">
+        <h3>Property Structure</h3>
+        <div class="field"><label>Annual rate (decimal)</label><input type="number" step="0.0001" id="cfg_ps_rate"></div>
+        <small class="muted">Applied to the Structure SI input in the calculator. Coverage: Fire + STFI + EQ.</small>
+      </div>
+
+      <div class="card">
+        <h3>Cyber & Reporting LRs</h3>
+        <div class="field"><label>Cyber annual ₹</label><input type="number" step="1" id="cfg_cyber_annual"></div>
+        <div class="field"><label>Stock LR (reporting)</label><input type="number" step="0.01" id="cfg_lr_stock"></div>
+        <div class="field"><label>Transit LR (reporting)</label><input type="number" step="0.01" id="cfg_lr_transit"></div>
+        <div class="field"><label>Money LR (reporting)</label><input type="number" step="0.01" id="cfg_lr_money"></div>
+        <div class="field"><label>Device LR (reporting)</label><input type="number" step="0.01" id="cfg_lr_device"></div>
+        <div class="field"><label>PA LR (reporting)</label><input type="number" step="0.01" id="cfg_lr_pa"></div>
+        <div class="field"><label>Cyber LR (reporting)</label><input type="number" step="0.01" id="cfg_lr_cyber"></div>
+        <div class="field"><label>Property Structure LR (reporting)</label><input type="number" step="0.01" id="cfg_lr_ps"></div>
+      </div>
+
+      <div class="card" style="grid-column:1/-1">
+        <h3>Import Config</h3>
+        <small class="muted">Paste a JSON config exported from this panel and click Apply.</small>
+        <textarea id="cfg_import" rows="5" style="width:100%; background:var(--panel); color:var(--text); border:1px solid var(--border); border-radius:10px"></textarea>
+      </div>
+    </div>
+  </div>
+  <div class="modal-actions">
+    <button class="btn" id="adminApply">Apply & Save</button>
+  </div>
+</dialog>
+
+<!-- Toast -->
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  "use strict";
+  const $ = (s,r=document)=>r.querySelector(s);
+  const $$ = (s,r=document)=>Array.from(r.querySelectorAll(s));
+  const fmtINR = (n)=> isFinite(n) ? n.toLocaleString('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:0}) : '—';
+
+  // Theme
+  const themeBtn = $('.theme-toggle');
+  function setTheme(mode){ document.body.setAttribute('data-theme', mode); themeBtn.setAttribute('aria-pressed', String(mode==='dark')); localStorage.setItem('theme', mode); }
+  setTheme(localStorage.getItem('theme')||'dark');
+  themeBtn.addEventListener('click', ()=> setTheme(document.body.getAttribute('data-theme')==='dark'?'light':'dark'));
+
+  // Year
+  $('#year').textContent = new Date().getFullYear();
+
+  // FAQ accordion
+  $$('#faqAcc button').forEach(btn=>{ const c = $('#'+btn.getAttribute('aria-controls')); btn.addEventListener('click', ()=>{ const ex = btn.getAttribute('aria-expanded')==='true'; btn.setAttribute('aria-expanded', String(!ex)); c.setAttribute('aria-hidden', String(ex)); }); });
+
+  // ---- CONFIG (Admin) ----
+  const defaultConfig = {
+    stockRates: { lite_base:0.0065, lite_addon:0.0, plus_base:0.0065, plus_addon:0.0025, max_base:0.0095, max_addon:0.0015 },
+    loads: { claimFree12m:-0.15, cctv:-0.05, highTheft:0.15 },
+    siDaysDefault: 20,
+    transit: { exposureFactor:0.2, monthlyRate:0.0020 },
+    moneyGuard: { tierHigh:899, tierMid:499, tierLow:299, cutHigh:0.40, cutMid:0.25 },
+    deviceCare: { annualRate:0.03 },
+    pa: { perPilotMonthly:325 },
+    orderShield: { rate:0.0015, slabAvg:0.075 },
+    propertyStructure: { annualRate:0.0035 },
+    cyber: { annual:399 },
+    expectedLR: { stock:0.60, transit:0.50, money:0.55, device:0.65, pa:0.58, cyber:0.60, propStruct:0.60 }
+  };
+
+  function loadConfig(){
+    try{
+      const saved = JSON.parse(localStorage.getItem('pricing_config')||'null');
+      if(!saved) return JSON.parse(JSON.stringify(defaultConfig));
+      // shallow merge
+      const cfg = JSON.parse(JSON.stringify(defaultConfig));
+      Object.keys(saved).forEach(k=>{ if(typeof saved[k]==='object' && saved[k]) Object.assign(cfg[k], saved[k]); else cfg[k]=saved[k]; });
+      return cfg;
+    }catch(e){ return JSON.parse(JSON.stringify(defaultConfig)); }
+  }
+  function saveConfig(cfg){ localStorage.setItem('pricing_config', JSON.stringify(cfg)); }
+
+  let CFG = loadConfig();
+
+  function pct(n){ return (n*100).toFixed(2)+'%'; }
+
+  function applyConfigToUI(){
+    // Update labels reflecting config
+    const liteRate = CFG.stockRates.lite_base + CFG.stockRates.lite_addon;
+    const plusRate = CFG.stockRates.plus_base + CFG.stockRates.plus_addon;
+    const maxRate  = CFG.stockRates.max_base  + CFG.stockRates.max_addon;
+    $('#lblLiteRate').textContent = pct(liteRate);
+    $('#lblPlusRate').textContent = pct(plusRate);
+    $('#lblMaxRate').textContent  = pct(maxRate);
+    $('#lblTransit').textContent  = pct(CFG.transit.monthlyRate)+' on GMV×'+CFG.transit.exposureFactor.toFixed(2);
+    $('#lblDeviceRate').textContent = pct(CFG.deviceCare.annualRate);
+    $('#lblPA').textContent = CFG.pa.perPilotMonthly;
+    $('#lblOSRate').textContent = pct(CFG.orderShield.rate);
+    $('#lblCyber').textContent = CFG.cyber.annual;
+    $('#lblSiDays').textContent = CFG.siDaysDefault;
+    $('#siDays').value = $('#siDays').value || CFG.siDaysDefault; // only set if empty
+    $('#lblPSRate').textContent = pct(CFG.propertyStructure.annualRate);
+    $('#lblCredits').textContent = `${(CFG.loads.claimFree12m*100).toFixed(0)}% (≥12m claim‑free), ${(CFG.loads.cctv*100).toFixed(0)}% (CCTV), ${(CFG.loads.highTheft*100).toFixed(0)}% (High‑theft)`;
+  }
+
+  function populateAdminForm(){
+    $('#cfg_lite_base').value = CFG.stockRates.lite_base;
+    $('#cfg_lite_addon').value = CFG.stockRates.lite_addon;
+    $('#cfg_plus_base').value = CFG.stockRates.plus_base;
+    $('#cfg_plus_addon').value = CFG.stockRates.plus_addon;
+    $('#cfg_max_base').value = CFG.stockRates.max_base;
+    $('#cfg_max_addon').value = CFG.stockRates.max_addon;
+
+    $('#cfg_load_claimfree').value = CFG.loads.claimFree12m;
+    $('#cfg_load_cctv').value = CFG.loads.cctv;
+    $('#cfg_load_theft').value = CFG.loads.highTheft;
+    $('#cfg_si_days').value = CFG.siDaysDefault;
+
+    $('#cfg_transit_expf').value = CFG.transit.exposureFactor;
+    $('#cfg_transit_rate').value = CFG.transit.monthlyRate;
+
+    $('#cfg_money_high').value = CFG.moneyGuard.tierHigh;
+    $('#cfg_money_mid').value = CFG.moneyGuard.tierMid;
+    $('#cfg_money_low').value = CFG.moneyGuard.tierLow;
+    $('#cfg_money_cutHigh').value = CFG.moneyGuard.cutHigh;
+    $('#cfg_money_cutMid').value = CFG.moneyGuard.cutMid;
+
+    $('#cfg_device_rate').value = CFG.deviceCare.annualRate;
+    $('#cfg_pa_rate').value = CFG.pa.perPilotMonthly;
+
+    $('#cfg_os_rate').value = CFG.orderShield.rate;
+    $('#cfg_os_slab').value = CFG.orderShield.slabAvg;
+
+    $('#cfg_ps_rate').value = CFG.propertyStructure.annualRate;
+
+    $('#cfg_cyber_annual').value = CFG.cyber.annual;
+    $('#cfg_lr_stock').value = CFG.expectedLR.stock;
+    $('#cfg_lr_transit').value = CFG.expectedLR.transit;
+    $('#cfg_lr_money').value = CFG.expectedLR.money;
+    $('#cfg_lr_device').value = CFG.expectedLR.device;
+    $('#cfg_lr_pa').value = CFG.expectedLR.pa;
+    $('#cfg_lr_cyber').value = CFG.expectedLR.cyber;
+    $('#cfg_lr_ps').value = CFG.expectedLR.propStruct;
+  }
+
+  function readAdminFormIntoConfig(){
+    const c = JSON.parse(JSON.stringify(CFG));
+    c.stockRates.lite_base = +$('#cfg_lite_base').value || 0;
+    c.stockRates.lite_addon = +$('#cfg_lite_addon').value || 0;
+    c.stockRates.plus_base = +$('#cfg_plus_base').value || 0;
+    c.stockRates.plus_addon = +$('#cfg_plus_addon').value || 0;
+    c.stockRates.max_base = +$('#cfg_max_base').value || 0;
+    c.stockRates.max_addon = +$('#cfg_max_addon').value || 0;
+
+    c.loads.claimFree12m = +$('#cfg_load_claimfree').value || 0;
+    c.loads.cctv = +$('#cfg_load_cctv').value || 0;
+    c.loads.highTheft = +$('#cfg_load_theft').value || 0;
+    c.siDaysDefault = Math.max(1, +$('#cfg_si_days').value || 20);
+
+    c.transit.exposureFactor = +$('#cfg_transit_expf').value || 0;
+    c.transit.monthlyRate = +$('#cfg_transit_rate').value || 0;
+
+    c.moneyGuard.tierHigh = Math.max(0, +$('#cfg_money_high').value || 0);
+    c.moneyGuard.tierMid  = Math.max(0, +$('#cfg_money_mid').value || 0);
+    c.moneyGuard.tierLow  = Math.max(0, +$('#cfg_money_low').value || 0);
+    c.moneyGuard.cutHigh  = Math.min(1, Math.max(0, +$('#cfg_money_cutHigh').value || 0));
+    c.moneyGuard.cutMid   = Math.min(1, Math.max(0, +$('#cfg_money_cutMid').value || 0));
+
+    c.deviceCare.annualRate = +$('#cfg_device_rate').value || 0;
+    c.pa.perPilotMonthly = Math.max(0, +$('#cfg_pa_rate').value || 0);
+
+    c.orderShield.rate = +$('#cfg_os_rate').value || 0;
+    c.orderShield.slabAvg = +$('#cfg_os_slab').value || 0;
+
+    c.propertyStructure.annualRate = +$('#cfg_ps_rate').value || 0;
+
+    c.cyber.annual = Math.max(0, +$('#cfg_cyber_annual').value || 0);
+
+    c.expectedLR.stock = Math.min(1, Math.max(0, +$('#cfg_lr_stock').value || 0));
+    c.expectedLR.transit = Math.min(1, Math.max(0, +$('#cfg_lr_transit').value || 0));
+    c.expectedLR.money = Math.min(1, Math.max(0, +$('#cfg_lr_money').value || 0));
+    c.expectedLR.device = Math.min(1, Math.max(0, +$('#cfg_lr_device').value || 0));
+    c.expectedLR.pa = Math.min(1, Math.max(0, +$('#cfg_lr_pa').value || 0));
+    c.expectedLR.cyber = Math.min(1, Math.max(0, +$('#cfg_lr_cyber').value || 0));
+    c.expectedLR.propStruct = Math.min(1, Math.max(0, +$('#cfg_lr_ps').value || 0));
+
+    // Optional: import JSON from textarea
+    const pasted = $('#cfg_import').value.trim();
+    if(pasted){
+      try{
+        const j = JSON.parse(pasted);
+        Object.keys(j).forEach(k=>{ if(typeof j[k]==='object' && j[k]) Object.assign(c[k], j[k]); else c[k]=j[k]; });
+      }catch(e){ /* ignore invalid JSON */ }
+    }
+
+    return c;
+  }
+
+  // Admin Dialog wiring
+  const adminDlg = $('#adminDlg');
+  $('#adminBtn').addEventListener('click', ()=>{ populateAdminForm(); adminDlg.showModal(); });
+  $('#adminClose').addEventListener('click', ()=> adminDlg.close());
+  $('#adminReset').addEventListener('click', ()=>{
+    CFG = JSON.parse(JSON.stringify(defaultConfig));
+    saveConfig(CFG); populateAdminForm(); applyConfigToUI();
+    toast('Defaults restored.');
+  });
+  $('#adminApply').addEventListener('click', ()=>{
+    CFG = readAdminFormIntoConfig(); saveConfig(CFG); applyConfigToUI(); adminDlg.close();
+    // Recalculate if we have inputs
+    try{ const p = calcQuote(true); if(p) localStorage.setItem('last_quote', JSON.stringify(p)); }catch(e){}
+    toast('Config saved.');
+  });
+  $('#adminExport').addEventListener('click', ()=>{
+    const blob = new Blob([JSON.stringify(CFG, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a=document.createElement('a'); a.href=url; a.download='pricing_config.json'; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url), 500);
+  });
+
+  function toast(t){ const el=$('#toast'); el.textContent=t; el.classList.add('show'); clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove('show'), 2400); }
+
+  // ---- CALCULATOR ----
+  const form = $('#quoteForm'), resWrap = $('#results');
+  const kpiMonthly = $('#kpiMonthly'), kpiAnnual = $('#kpiAnnual'), kpiLR = $('#kpiLR');
+
+  const fields = ['monthlyGMV','delayRate','coldShare','cashShare','claimFree','deviceCost','pilots','siDays','structureSI'];
+  const checks = ['hasCCTV','highTheft','transit','money','device','pa','orderShield','cyber','propStruct'];
+  function loadPersist(){
+    fields.forEach(id=>{ const v=localStorage.getItem('f_'+id); if(v!==null) $('#'+id).value=v; });
+    checks.forEach(id=>{ const v=localStorage.getItem('f_'+id); if(v!==null) $('#'+id).checked=(v==='true'); });
+    const sv = localStorage.getItem('f_stockVariant')||'none'; const el = document.querySelector('input[name="stockVariant"][value="'+sv+'"]'); if(el) el.checked = true;
+  }
+  function savePersist(){
+    fields.forEach(id=> localStorage.setItem('f_'+id, $('#'+id).value));
+    checks.forEach(id=> localStorage.setItem('f_'+id, String($('#'+id).checked)));
+    const sv = (document.querySelector('input[name="stockVariant"]:checked')||{}).value || 'none';
+    localStorage.setItem('f_stockVariant', sv);
+  }
+
+  function calcQuote(silent){
+    const monthlyGMV = +(($('#monthlyGMV').value)||0);
+    if(!silent && (!form.reportValidity())){ toast('Please fill required fields.'); return null; }
+    const delayRate = (+($('#delayRate').value||0))/100;
+    const coldShare = (+($('#coldShare').value||0))/100;
+    const cashShare = (+($('#cashShare').value||0))/100;
+    const claimFree = +(($('#claimFree').value)||0);
+    const hasCCTV = $('#hasCCTV').checked;
+    const highTheft = $('#highTheft').checked;
+    const deviceCost = +(($('#deviceCost').value)||0);
+    const pilots = +(($('#pilots').value)||0);
+    const siDays = +(($('#siDays').value)||CFG.siDaysDefault);
+    const structureSI = +(($('#structureSI').value)||0);
+
+    const stockVariant = (document.querySelector('input[name="stockVariant"]:checked')||{}).value || 'none';
+    const optTransit = $('#transit').checked;
+    const optMoney = $('#money').checked;
+    const optDevice = $('#device').checked;
+    const optPA = $('#pa').checked;
+    const optOrderShield = $('#orderShield').checked;
+    const optCyber = $('#cyber').checked;
+    const optPropStruct = $('#propStruct').checked;
+
+    const dailyGMV = monthlyGMV/30;
+    const stockSI = dailyGMV * siDays;
+
+    const rows=[]; let totalMonthly=0, totalAnnual=0;
+
+    function pushRow(product, variant, monthly, annual, lr, details){ rows.push({product, variant, monthly, annual, lr, details}); totalMonthly += monthly; totalAnnual += annual; }
+
+    // StockShield
+    const rates = CFG.stockRates; const loads = CFG.loads; const ELR = CFG.expectedLR;
+    const sr = { lite: rates.lite_base + rates.lite_addon, plus: rates.plus_base + rates.plus_addon, max:  rates.max_base  + rates.max_addon };
+    if(stockVariant!=='none' && stockSI>0){
+      let load=0; if(claimFree>=12) load += loads.claimFree12m; if(hasCCTV) load += loads.cctv; if(highTheft) load += loads.highTheft;
+      const rate = sr[stockVariant] || 0; const annual = stockSI * rate * (1+load); const monthly = annual/12;
+      const vname = stockVariant==='lite'?'Lite':(stockVariant==='plus'?'Plus (DoS)':'Max (RSMD+Fidelity)');
+      pushRow('StockShield', vname, monthly, annual, ELR.stock, `SI=${fmtINR(stockSI)}, rate=${(rate*100).toFixed(2)}%, load=${(load*100).toFixed(1)}%`);
+    }
+
+    // Property Structure (Fire + STFI + EQ)
+    if(optPropStruct && structureSI>0){
+      const rate = CFG.propertyStructure.annualRate;
+      const annual = structureSI * rate; const monthly = annual/12;
+      pushRow('Property Structure', 'Fire+STFI+EQ', monthly, annual, ELR.propStruct, `SI=${fmtINR(structureSI)}, rate=${(rate*100).toFixed(2)}%`);
+    }
+
+    // Transit
+    if(optTransit && monthlyGMV>0){
+      const exposure = monthlyGMV * CFG.transit.exposureFactor;
+      const monthly = exposure * CFG.transit.monthlyRate; const annual = monthly*12;
+      pushRow('Transit Add‑on', 'Pooled', monthly, annual, ELR.transit, `Exposure=GMV×${CFG.transit.exposureFactor.toFixed(2)} = ${fmtINR(exposure)}, rate=${(CFG.transit.monthlyRate*100).toFixed(2)}%`);
+    }
+
+    // MoneyGuard
+    if(optMoney){
+      const mg = CFG.moneyGuard; const cs=cashShare;
+      const annualFlat = (cs>=mg.cutHigh)? mg.tierHigh : (cs>=mg.cutMid? mg.tierMid : mg.tierLow);
+      const monthly = annualFlat/12; pushRow('MoneyGuard', 'Tiered', monthly, annualFlat, ELR.money, `Cash share ${(cs*100).toFixed(0)}% → ₹${annualFlat}/yr`);
+    }
+
+    // DeviceCare
+    if(optDevice && deviceCost>0){ const annual = deviceCost * CFG.deviceCare.annualRate; const monthly = annual/12; pushRow('DeviceCare', 'Full ADLD', monthly, annual, ELR.device, `${(CFG.deviceCare.annualRate*100).toFixed(2)}% of device (${fmtINR(deviceCost)})`); }
+
+    // PA
+    if(optPA && pilots>0){ const monthly = pilots * CFG.pa.perPilotMonthly; const annual = monthly*12; pushRow('Pilot PA+', '₹10L AD', monthly, annual, ELR.pa, `${pilots} pilots × ₹${CFG.pa.perPilotMonthly}/mo`); }
+
+    // OrderShield
+    if(optOrderShield && monthlyGMV>0){ const monthly = monthlyGMV * CFG.orderShield.rate; const annual = monthly*12; const expLR = Math.min(1, (delayRate * CFG.orderShield.slabAvg) / CFG.orderShield.rate); pushRow('OrderShield', 'Parametric', monthly, annual, expLR, `rate=${(CFG.orderShield.rate*100).toFixed(2)}% of GMV, slabAvg ${(CFG.orderShield.slabAvg*100).toFixed(1)}%`); }
+
+    // Cyber
+    if(optCyber){ const annual = CFG.cyber.annual; const monthly = annual/12; pushRow('Cyber Lite', '₹1L', monthly, annual, ELR.cyber, `Flat ₹${CFG.cyber.annual}/yr`); }
+
+    const sumPrem = rows.reduce((s,r)=> s + r.annual, 0) || 1; const wLR = rows.reduce((s,r)=> s + (r.lr * (r.annual / sumPrem)), 0);
+
+    if(rows.length){
+      rows.sort((a,b)=> a.product.localeCompare(b.product));
+      resWrap.innerHTML = `
+        <table role="table" aria-label="Quote breakdown">
+          <thead><tr><th>Product</th><th>Variant</th><th>Monthly</th><th>Annual</th><th>Exp. LR</th><th>Details</th></tr></thead>
+          <tbody>
+            ${rows.map(r=>`
+              <tr>
+                <td>${escapeHTML(r.product)}</td>
+                <td>${escapeHTML(r.variant)}</td>
+                <td>${fmtINR(r.monthly)}</td>
+                <td>${fmtINR(r.annual)}</td>
+                <td>${(r.lr*100).toFixed(0)}%</td>
+                <td class="muted small">${escapeHTML(r.details)}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+          <tfoot><tr><th colspan="2">TOTAL</th><th>${fmtINR(totalMonthly)}</th><th>${fmtINR(totalAnnual)}</th><th>${(wLR*100).toFixed(0)}%</th><th></th></tr></tfoot>
+        </table>`;
+    } else { resWrap.textContent = 'Select at least one product.'; }
+
+    kpiMonthly.textContent = fmtINR(totalMonthly);
+    kpiAnnual.textContent = fmtINR(totalAnnual);
+    kpiLR.textContent = rows.length ? ((wLR*100).toFixed(0)+'%') : '—';
+
+    return { ts:new Date().toISOString(), inputs:{ monthlyGMV, delayRate, coldShare, cashShare, claimFree, hasCCTV, highTheft, deviceCost, pilots, siDays, structureSI, stockVariant, transit:optTransit, money:optMoney, device:optDevice, pa:optPA, orderShield:optOrderShield, cyber:optCyber, propStruct:optPropStruct }, results:rows, totals:{ monthly:totalMonthly, annual:totalAnnual, expectedLR:wLR } };
+  }
+
+  function escapeHTML(s){ return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#039;'}[m])); }
+
+  // Buttons
+  $('#calcBtn').addEventListener('click', ()=>{ if(!form.reportValidity()){ toast('Please fill required fields.'); return; } savePersist(); const p = calcQuote(true); if(p) localStorage.setItem('last_quote', JSON.stringify(p)); toast('Calculated. Open Summary to review or Print/Export.'); });
+  $('#resetBtn').addEventListener('click', ()=>{ localStorage.removeItem('last_quote'); resWrap.innerHTML=''; kpiMonthly.textContent='—'; kpiAnnual.textContent='—'; kpiLR.textContent='—'; toast('Form reset.'); });
+  $('#saveBtn').addEventListener('click', ()=>{ if(!form.reportValidity()){ toast('Please fill required fields.'); return; } savePersist(); const p = calcQuote(true); const quotes = JSON.parse(localStorage.getItem('quotes')||'[]'); if(p) {quotes.push(p); localStorage.setItem('quotes', JSON.stringify(quotes)); toast('Quote saved locally.'); } });
+  function exportJSON(payload){ try{ const blob = new Blob([JSON.stringify(payload,null,2)], {type:'application/json'}); const url = URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='quote.json'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url), 500); }catch(err){ const dlg = $('#summaryDlg'); $('#summaryContent').textContent = JSON.stringify(payload, null, 2); dlg.showModal(); toast('Download blocked by policy. Showing JSON in dialog.'); } }
+  $('#exportBtn').addEventListener('click', ()=>{ const last = localStorage.getItem('last_quote'); if(!last){ toast('No quote calculated yet.'); return; } exportJSON(JSON.parse(last)); });
+  $('#printBtn').addEventListener('click', ()=> window.print());
+
+  // Summary Modal
+  const dlg = $('#summaryDlg');
+  $('#openSummary').addEventListener('click', ()=>{ const last = localStorage.getItem('last_quote'); if(!last){ toast('No quote calculated yet.'); return; } const p = JSON.parse(last); $('#summaryContent').innerHTML = `
+      <div class="grid cols-2">
+        <div class="card">
+          <strong>Inputs</strong>
+          <div class="small">
+            Monthly GMV: <b>${fmtINR(p.inputs.monthlyGMV)}</b><br/>
+            Delay >90m: <b>${(p.inputs.delayRate*100).toFixed(1)}%</b><br/>
+            Cash share: <b>${(p.inputs.cashShare*100).toFixed(0)}%</b>, Cold share: <b>${(p.inputs.coldShare*100).toFixed(0)}%</b><br/>
+            Claim‑free: <b>${p.inputs.claimFree}m</b>, CCTV: <b>${p.inputs.hasCCTV?'Yes':'No'}</b>, High‑theft: <b>${p.inputs.highTheft?'Yes':'No'}</b><br/>
+            Device: <b>${fmtINR(p.inputs.deviceCost)}</b>, Pilots: <b>${p.inputs.pilots}</b>, SI days: <b>${p.inputs.siDays}</b><br/>
+            Structure SI: <b>${fmtINR(p.inputs.structureSI)}</b><br/>
+            Stock variant: <b>${p.inputs.stockVariant}</b>
+          </div>
+        </div>
+        <div class="card">
+          <strong>Totals</strong>
+          <div class="large">
+            <div class="muted small">Monthly</div><div style="font-weight:800">${fmtINR(p.totals.monthly)}</div>
+            <div class="muted small">Annual</div><div style="font-weight:800">${fmtINR(p.totals.annual)}</div>
+            <div class="muted small">Expected LR</div><div style="font-weight:800">${(p.totals.expectedLR*100).toFixed(0)}%</div>
           </div>
         </div>
       </div>
-    </section>
-
-    <!-- Step 3: Generate -->
-    <section class="section-card p-4">
-      <h2 class="h5 mb-3">3) Generate PDFs</h2>
-      <div class="row g-3">
-        <div class="col-md-3 form-check">
-          <input class="form-check-input" type="checkbox" id="optLOB" checked>
-          <label class="form-check-label" for="optLOB">Include LOB split</label>
-        </div>
-        <div class="col-md-3 form-check">
-          <input class="form-check-input" type="checkbox" id="optProduct" checked>
-          <label class="form-check-label" for="optProduct">Include Product mix (Intermediary & Channel)</label>
-        </div>
-        <div class="col-md-3 form-check">
-          <input class="form-check-input" type="checkbox" id="optGeo" checked>
-          <label class="form-check-label" for="optGeo">Include Geography (States & Branches)</label>
-        </div>
-      </div>
-
-      <div class="mt-3 d-flex gap-2">
-        <button class="btn btn-primary" id="generateAllBtn" disabled>Generate All PDFs (ZIP)</button>
-        <span id="genStatus" class="align-self-center"></span>
-      </div>
-
-      <div class="mt-3 footer-note">© USGI — SME & Insurance Inclusion</div>
-    </section>
-
-    <!-- Data peek -->
-    <section class="section-card p-4 mt-4">
-      <h2 class="h6">Parsed Monthly Summary (first 20 rows)</h2>
-      <div class="table-responsive table-sticky-head" style="max-height:280px;">
-        <table class="table table-sm table-hover" id="peekMonthly">
-          <thead></thead>
-          <tbody></tbody>
+      <div class="sep"></div>
+      <div class="calc-output">
+        <table>
+          <thead><tr><th>Product</th><th>Variant</th><th>Monthly</th><th>Annual</th><th>LR</th><th>Notes</th></tr></thead>
+          <tbody>
+            ${p.results.map(r=>`<tr><td>${escapeHTML(r.product)}</td><td>${escapeHTML(r.variant)}</td><td>${fmtINR(r.monthly)}</td><td>${fmtINR(r.annual)}</td><td>${(r.lr*100).toFixed(0)}%</td><td class="muted small">${escapeHTML(r.details)}</td></tr>`).join('')}
+          </tbody>
         </table>
-      </div>
-      <h2 class="h6 mt-3">Master Register (first 20 rows)</h2>
-      <div class="table-responsive table-sticky-head" style="max-height:280px;">
-        <table class="table table-sm table-hover" id="peekMaster">
-          <thead></thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </section>
-  </main>
+      </div>`; dlg.showModal(); });
+  $('#closeDlg').addEventListener('click', ()=> dlg.close());
+  $('#printFromDlg').addEventListener('click', ()=> window.print());
+  $('#exportFromDlg').addEventListener('click', ()=>{ const last = localStorage.getItem('last_quote'); if(last) exportJSON(JSON.parse(last)); });
 
-  <!-- Inline PDF Preview Modal (fallback when popup is blocked) -->
-  <div id="pdfPreviewModal">
-    <div class="modal-body">
-      <button id="closePreview" class="btn btn-sm btn-light close-btn">Close</button>
-      <iframe id="pdfPreviewFrame" style="width:100%; height:100%;" frameborder="0"></iframe>
-    </div>
-  </div>
+  // Initialization
+  loadPersist(); applyConfigToUI();
+  const last = localStorage.getItem('last_quote'); if(last){ try{ const p = JSON.parse(last); kpiMonthly.textContent = fmtINR(p.totals.monthly); kpiAnnual.textContent = fmtINR(p.totals.annual); kpiLR.textContent = (p.results&&p.results.length)? (p.totals.expectedLR*100).toFixed(0)+'%' : '—'; }catch(e){} }
 
-  <script>
-    // -----------------------------
-    // App State
-    // -----------------------------
-    const state = {
-      monthly: { rows: [], columns: [] },
-      master: { rows: [], columns: [] },
-      periodLabel: '',
-      partnerIndex: {},
-      options: { LOB: true, Product: true, Geo: true },
-      previewUrl: null // Blob URL for current preview (cleanup on close)
-    };
-
-    // -----------------------------
-    // Utilities
-    // -----------------------------
-    function textOrIndexToSheet(workbook, input) {
-      // Accepts sheet name or numeric index (string "0" OK)
-      if (input === undefined || input === null || input === '') return workbook.SheetNames[0];
-      const idx = Number.isInteger(+input) ? +input : null;
-      if (idx !== null && idx >= 0 && idx < workbook.SheetNames.length) return workbook.SheetNames[idx];
-      return workbook.SheetNames.includes(input) ? input : workbook.SheetNames[0];
-    }
-
-    function readExcel(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = e => {
-          try {
-            const data = new Uint8Array(e.target.result);
-            const wb = XLSX.read(data, { type: 'array' });
-            resolve(wb);
-          } catch(err) { reject(err); }
-        };
-        reader.onerror = reject;
-        reader.readAsArrayBuffer(file);
-      });
-    }
-
-    function sheetToRows(wb, sheetName) {
-      const ws = wb.Sheets[sheetName];
-      const json = XLSX.utils.sheet_to_json(ws, { defval: '', raw: false });
-      const columns = Object.keys(json[0] || {});
-      return { rows: json, columns };
-    }
-
-    function renderPeek(tableId, data, limit=20) {
-      const table = document.getElementById(tableId);
-      const thead = table.querySelector('thead'); const tbody = table.querySelector('tbody');
-      thead.innerHTML = ''; tbody.innerHTML = '';
-      if (!data.columns.length) return;
-      const tr = document.createElement('tr');
-      data.columns.forEach(c => {
-        const th = document.createElement('th'); th.textContent = c; tr.appendChild(th);
-      });
-      thead.appendChild(tr);
-      data.rows.slice(0, limit).forEach(r => {
-        const trb = document.createElement('tr');
-        data.columns.forEach(c => {
-          const td = document.createElement('td'); td.textContent = r[c]; trb.appendChild(td);
-        });
-        tbody.appendChild(trb);
-      });
-    }
-
-    function setStatus(el, msg, kind='info') {
-      const node = document.getElementById(el);
-      node.innerHTML = msg ? `<span class="badge text-bg-${kind}">${msg}</span>` : '';
-    }
-
-    // Simple bold markdown (**text**) support
-    function boldMarkdownToPDF(doc, text, x, y, lineHeight=6.2, maxWidth=182) {
-      // jsPDF units are in mm (based on doc config)
-      const lines = doc.splitTextToSize(text, maxWidth);
-      let cursorY = y;
-      lines.forEach(line => {
-        const parts = [];
-        let current = '';
-        let bold = false;
-        for (let i = 0; i < line.length; i++) {
-          if (line[i] === '*' && line[i+1] === '*') {
-            if (current) parts.push({ text: current, bold });
-            bold = !bold; current = ''; i++;
-          } else {
-            current += line[i];
-          }
-        }
-        if (current) parts.push({ text: current, bold });
-
-        let cursorX = x;
-        parts.forEach(p => {
-          doc.setFont('helvetica', p.bold ? 'bold' : 'normal');
-          doc.text(p.text, cursorX, cursorY);
-          const w = doc.getTextWidth(p.text);
-          cursorX += w;
-        });
-        cursorY += lineHeight;
-      });
-      return cursorY;
-    }
-
-    function substitutePlaceholders(template, data) {
-      return template
-        .replaceAll('{{PartnerName}}', data.PartnerName ?? '')
-        .replaceAll('{{Category}}', data.Category ?? '')
-        .replaceAll('{{PeriodLabel}}', state.periodLabel ?? '')
-        .replaceAll('{{TotalGross}}', (data.TotalGross ?? '').toString());
-    }
-
-    function buildPartnerIndex() {
-      // Build index mapping by INTERMEDIARY name
-      state.partnerIndex = {};
-      state.monthly.rows.forEach(r => {
-        const key = (r['INTERMEDIARY'] ?? '').toString().trim();
-        if (!key) return;
-        // Find additional info from master
-        const masterRow = state.master.rows.find(m => (m['INTERMEDIARY'] ?? '').toString().trim() === key);
-        const category = masterRow ? (masterRow['Category'] ?? masterRow['CATEGORY'] ?? '') : '';
-        const total = r['Grand Total'] ?? r['TOTAL'] ?? r['GrandTotal'] ?? '';
-        state.partnerIndex[key] = {
-          PartnerName: key,
-          Category: category,
-          TotalGross: total,
-          monthlyRow: r,
-          masterRow
-        };
-      });
-    }
-
-    function fillPartnerDropdown() {
-      const sel = document.getElementById('partnerSelect');
-      sel.innerHTML = '';
-      Object.keys(state.partnerIndex).sort().forEach(k => {
-        const opt = document.createElement('option');
-        opt.value = k; opt.textContent = k;
-        sel.appendChild(opt);
-      });
-      const disabled = Object.keys(state.partnerIndex).length === 0;
-      sel.disabled = disabled;
-      document.getElementById('previewBtn').disabled = disabled;
-      document.getElementById('generateAllBtn').disabled = disabled;
-
-      // Reset download preview link
-      const link = document.getElementById('downloadPreview');
-      link.classList.add('disabled');
-      link.removeAttribute('href');
-      link.removeAttribute('download');
-    }
-
-    function sanitizeFileName(name) {
-      return name.replace(/[\\/:*?"<>|]+/g, '-').trim();
-    }
-
-    // -----------------------------
-    // PDF Generation (Refactored)
-    // -----------------------------
-    async function generatePDFForPartner(key, opts = { LOB:true, Product:true, Geo:true }) {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({ unit:'mm', format:'a4' });
-
-      const pageWidth = doc.internal.pageSize.getWidth();
-      const pageHeight = doc.internal.pageSize.getHeight();
-      const marginLeft = 14, marginRight = 14, marginTop = 14, marginBottom = 14;
-      const usableWidth = pageWidth - marginLeft - marginRight;
-
-      // Header
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(14);
-      doc.text('USGI — SME & Insurance Inclusion', marginLeft, marginTop + 4);
-      doc.setFontSize(11);
-      doc.setFont('helvetica', 'normal');
-      doc.text(`Performance Summary: ${state.periodLabel}`, marginLeft, marginTop + 12);
-
-      // Letter body
-      doc.setFontSize(11);
-      const body = substitutePlaceholders(document.getElementById('letterEditor').value, state.partnerIndex[key]);
-      let cursorY = marginTop + 22;
-      cursorY = boldMarkdownToPDF(doc, body, marginLeft, cursorY, 6.2, usableWidth);
-      cursorY += 2;
-
-      // Monthly row → key–value pairs (Parameter, Value) in 2 columns
-      const monthlyRow = state.partnerIndex[key].monthlyRow;
-      const cols = state.monthly.columns.filter(c => c.toUpperCase() !== 'INTERMEDIARY');
-      const kvRows = cols.map(c => [c, monthlyRow[c] ?? '']);
-
-      // Section title
-      doc.setFont('helvetica', 'bold'); doc.setFontSize(12);
-      doc.text('Monthly Summary (Parameter → Value)', marginLeft, cursorY);
-      cursorY += 6;
-
-      // Two-column using autoTable
-      const gutter = 6;
-      const colWidth = (usableWidth - gutter) / 2;
-
-      const splitIdx = Math.ceil(kvRows.length / 2);
-      const leftRows = kvRows.slice(0, splitIdx);
-      const rightRows = kvRows.slice(splitIdx);
-
-      // Left column
-      doc.autoTable({
-        startY: cursorY,
-        head: [['Parameter', 'Value']],
-        body: leftRows,
-        margin: { left: marginLeft, right: pageWidth - marginLeft - colWidth },
-        styles: { fontSize: 9, cellPadding: 2, overflow: 'linebreak' },
-        headStyles: { fillColor: [245, 245, 245], fontStyle: 'bold' },
-        columnStyles: {
-          0: { cellWidth: colWidth * 0.40 }, // label
-          1: { cellWidth: colWidth * 0.60 }  // value
-        },
-        theme: 'grid',
-        pageBreak: 'auto'
-      });
-      const leftFinalY = doc.lastAutoTable?.finalY ?? cursorY;
-
-      // Right column (same startY)
-      doc.autoTable({
-        startY: cursorY,
-        head: [['Parameter', 'Value']],
-        body: rightRows,
-        margin: { left: marginLeft + colWidth + gutter, right: marginRight },
-        styles: { fontSize: 9, cellPadding: 2, overflow: 'linebreak' },
-        headStyles: { fillColor: [245, 245, 245], fontStyle: 'bold' },
-        columnStyles: {
-          0: { cellWidth: colWidth * 0.40 },
-          1: { cellWidth: colWidth * 0.60 }
-        },
-        theme: 'grid',
-        pageBreak: 'auto'
-      });
-      const rightFinalY = doc.lastAutoTable?.finalY ?? cursorY;
-
-      cursorY = Math.max(leftFinalY, rightFinalY) + 6;
-
-      // Optional sections (placeholders for now)
-      if (opts.LOB) {
-        doc.setFont('helvetica', 'bold'); doc.setFontSize(12);
-        doc.text('Line of Business Split', marginLeft, cursorY);
-        doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
-        doc.text('• LOB data from Master/Monthly (customize mapping as needed)', marginLeft, cursorY + 6);
-        cursorY += 12;
-      }
-      if (opts.Product) {
-        doc.setFont('helvetica', 'bold'); doc.setFontSize(12);
-        doc.text('Product Mix (Intermediary & Channel)', marginLeft, cursorY);
-        doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
-        doc.text('• Product mix derived per available columns', marginLeft, cursorY + 6);
-        cursorY += 12;
-      }
-      if (opts.Geo) {
-        doc.setFont('helvetica', 'bold'); doc.setFontSize(12);
-        doc.text('Geography (States & Branches)', marginLeft, cursorY);
-        doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
-        doc.text('• Geography from Master Register fields', marginLeft, cursorY + 6);
-        cursorY += 12;
-      }
-
-      // Footer
-      doc.setFont('helvetica', 'normal'); doc.setFontSize(9);
-      doc.text('© USGI — SME & Insurance Inclusion', marginLeft, pageHeight - marginBottom);
-
-      const blob = doc.output('blob'); // proper PDF Blob
-      return { blob, filename: `${sanitizeFileName(key)}.pdf` };
-    }
-
-    // -----------------------------
-    // Event Handlers
-    // -----------------------------
-    document.getElementById('validateBtn').addEventListener('click', async () => {
-      const monthlyFile = document.getElementById('monthlyFile').files[0];
-      const masterFile  = document.getElementById('masterFile').files[0];
-      state.periodLabel = document.getElementById('periodLabel').value?.trim() || '';
-
-      if (!monthlyFile || !masterFile) {
-        setStatus('uploadStatus', 'Please upload both files', 'warning');
-        return;
-      }
-      setStatus('uploadStatus', 'Parsing…', 'info');
-
-      try {
-        const [wbMonthly, wbMaster] = await Promise.all([readExcel(monthlyFile), readExcel(masterFile)]);
-        const monthlySheetName = textOrIndexToSheet(wbMonthly, document.getElementById('monthlySheet').value.trim());
-        const masterSheetName  = textOrIndexToSheet(wbMaster, document.getElementById('masterSheet').value.trim());
-
-        const monthlyData = sheetToRows(wbMonthly, monthlySheetName);
-        const masterData  = sheetToRows(wbMaster, masterSheetName);
-
-        // Basic validations
-        const hasIntermediary = monthlyData.columns.some(c => c.toUpperCase() === 'INTERMEDIARY');
-        const hasGrandTotal  = monthlyData.columns.some(c => c.toUpperCase().includes('GRAND') && c.toUpperCase().includes('TOTAL'));
-
-        if (!hasIntermediary || !hasGrandTotal) {
-          setStatus('uploadStatus', 'Monthly file missing columns: INTERMEDIARY / Grand Total', 'danger');
-          return;
-        }
-
-        state.monthly = monthlyData;
-        state.master  = masterData;
-        renderPeek('peekMonthly', state.monthly);
-        renderPeek('peekMaster', state.master);
-
-        // Metadata display
-        document.getElementById('monthlyMeta').textContent = `Monthly: ${monthlyFile.name} | sheet "${monthlySheetName}" | ${monthlyData.rows.length} rows`;
-        document.getElementById('masterMeta').textContent  = `Master: ${masterFile.name} | sheet "${masterSheetName}" | ${masterData.rows.length} rows`;
-
-        buildPartnerIndex();
-        fillPartnerDropdown();
-
-        setStatus('uploadStatus', 'Validated ✓', 'success');
-      } catch(err) {
-        console.error(err);
-        setStatus('uploadStatus', 'Error parsing files', 'danger');
-      }
-    });
-
-    // Robust preview handler (new tab + modal fallback)
-    document.getElementById('previewBtn').addEventListener('click', async (e) => {
-      e.preventDefault();
-
-      const key = document.getElementById('partnerSelect').value;
-      if (!key) return;
-
-      const opts = {
-        LOB: document.getElementById('optLOB').checked,
-        Product: document.getElementById('optProduct').checked,
-        Geo: document.getElementById('optGeo').checked
-      };
-
-      setStatus('genStatus', 'Generating preview…', 'info');
-
-      // Open a blank tab synchronously to avoid popup blocking
-      const newTab = window.open('about:blank');
-
-      try {
-        const { blob, filename } = await generatePDFForPartner(key, opts);
-        const url = URL.createObjectURL(blob);
-        state.previewUrl = url;
-
-        // Update the Download link (still useful)
-        const link = document.getElementById('downloadPreview');
-        link.href = url;
-        link.download = filename;
-        link.classList.remove('disabled');
-
-        // Use the new tab if available
-        if (newTab) {
-          newTab.location = url;
-        } else {
-          // Fallback: show inline modal
-          const frame = document.getElementById('pdfPreviewFrame');
-          frame.src = url;
-          document.getElementById('pdfPreviewModal').style.display = 'block';
-        }
-
-        setStatus('genStatus', 'Preview ready', 'success');
-      } catch (err) {
-        console.error('Preview failed:', err);
-        setStatus('genStatus', 'Preview failed — check console', 'danger');
-        if (newTab && !newTab.closed) newTab.close();
-      }
-    });
-
-    // Modal close cleanup
-    document.getElementById('closePreview').addEventListener('click', () => {
-      const frame = document.getElementById('pdfPreviewFrame');
-      frame.src = 'about:blank';
-      document.getElementById('pdfPreviewModal').style.display = 'none';
-      if (state.previewUrl) {
-        URL.revokeObjectURL(state.previewUrl);
-        state.previewUrl = null;
-      }
-    });
-
-    // Generate all as ZIP
-    document.getElementById('generateAllBtn').addEventListener('click', async () => {
-      const opts = {
-        LOB: document.getElementById('optLOB').checked,
-        Product: document.getElementById('optProduct').checked,
-        Geo: document.getElementById('optGeo').checked
-      };
-      const zip = new JSZip();
-      const keys = Object.keys(state.partnerIndex);
-      if (!keys.length) return;
-      setStatus('genStatus', `Generating PDFs… (0/${keys.length})`, 'info');
-
-      let i = 0;
-      for (const key of keys) {
-        const { blob, filename } = await generatePDFForPartner(key, opts);
-        zip.file(filename, blob);
-        i++;
-        setStatus('genStatus', `Generating PDFs… (${i}/${keys.length})`, 'info');
-        await new Promise(r => setTimeout(r, 0)); // yield
-      }
-
-      const zipBlob = await zip.generateAsync({ type:'blob' });
-      saveAs(zipBlob, `USGI_SME_Intermediary_PDFs_${Date.now()}.zip`);
-      setStatus('genStatus', `ZIP ready — ${keys.length} PDFs`, 'success');
-    });
-
-    // Options checkboxes -> state
-    ['optLOB','optProduct','optGeo'].forEach(id => {
-      document.getElementById(id).addEventListener('change', () => {
-        state.options.LOB = document.getElementById('optLOB').checked;
-        state.options.Product = document.getElementById('optProduct').checked;
-        state.options.Geo = document.getElementById('optGeo').checked;
-      });
-    });
-
-    // Cleanup preview URL on window unload
-    window.addEventListener('beforeunload', () => {
-      if (state.previewUrl) URL.revokeObjectURL(state.previewUrl);
-    });
-  </script>
+})();
+</script>
 </body>
 </html>

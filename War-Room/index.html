@@ -1,0 +1,397 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Intermediary War Room – Story Mode (No Dependencies)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  :root{
+    --bg:#0b1020; --panel:#121a33; --muted:#8aa0d0; --text:#e8eefc; --accent:#6aa6ff;
+    --ok:#5bd196; --warn:#ffcc66; --danger:#ff7b7b; --grid:#1b254b;
+    --chip:#1a2442; --chip-bd:#233058; --callout:#0f1834; --hi:#f0f6ff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0; font-family: system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Helvetica Neue,Arial,Noto Sans; background: radial-gradient(80% 120% at 50% 0%, #0b1020 0, #0a0e1b 60%, #060913 100%); color:var(--text)}
+  header{padding:16px 20px; border-bottom:1px solid var(--grid); display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap}
+  .title{font-weight:800; letter-spacing:.2px}
+  .actions{display:flex; gap:8px; flex-wrap:wrap}
+  button,select,input,textarea{background:var(--chip); color:var(--text); border:1px solid var(--chip-bd); padding:8px 10px; border-radius:10px; font-size:13px; outline:none}
+  button:hover{background:#233058; cursor:pointer}
+  .container{padding:18px 20px}
+  .grid{display:grid; gap:14px}
+  .kpis{grid-template-columns: repeat(4, minmax(180px,1fr))}
+  .charts{grid-template-columns: repeat(2, minmax(260px,1fr))}
+  .split{display:grid; grid-template-columns: 1fr 1fr; gap:14px}
+  .panel{background: linear-gradient(180deg, rgba(18,26,51,.9), rgba(18,26,51,.7)); border:1px solid var(--grid); border-radius:16px; padding:14px; box-shadow: 0 6px 16px rgba(0,0,0,.25)}
+  .panel h3{margin:0 0 8px 0; font-size:14px; color:#cfe0ff}
+  .mini{font-size:12px; color:var(--muted)}
+  .kpi{display:flex; flex-direction:column; gap:6px}
+  .kpi .val{font-size:22px; font-weight:800}
+  .controls{display:grid; gap:10px; grid-template-columns: repeat(6, minmax(140px,1fr))}
+  .controls-2{display:grid; gap:10px; grid-template-columns: repeat(6, minmax(140px,1fr))}
+  .chips{display:flex; gap:6px; flex-wrap:wrap}
+  .chip{padding:6px 8px; border-radius:999px; background:var(--chip); border:1px solid var(--chip-bd); font-size:12px}
+  .callouts{display:grid; grid-template-columns: 1fr 1fr; gap:12px}
+  .callout{background:var(--callout); border:1px solid #1a2750; border-radius:12px; padding:10px}
+  .callout .h{font-weight:700; margin-bottom:6px; color:#dbe7ff}
+  .callout ul{margin:0 0 0 16px; padding:0}
+  .callout li{margin:4px 0}
+  .hl{color:var(--hi); font-weight:700}
+  canvas{width:100%; height:300px; background:rgba(8,12,24,.45); border-radius:12px}
+  .table-wrap{overflow:auto; max-height:60vh; border-radius:12px; border:1px solid var(--grid)}
+  table{width:100%; border-collapse:collapse; font-size:13px}
+  thead th{position:sticky; top:0; background:#0e152c; color:#cfe0ff; text-align:left; padding:10px; border-bottom:1px solid var(--grid); cursor:pointer; white-space:nowrap}
+  tbody td{padding:8px 10px; border-bottom:1px solid #0f1834; white-space:nowrap}
+  tbody tr:hover{background:#0f1834}
+  .right{text-align:right}
+  .footer-tip{color:var(--muted); font-size:12px; margin-top:6px}
+  .story{display:grid; grid-template-columns: 1.3fr .7fr; gap:14px}
+  .story .left .sec{margin-bottom:12px}
+  .story .sec h4{margin:0 0 6px 0; color:#dbe7ff}
+  .story .sec ul{margin:0 0 0 16px; padding:0}
+  .story .bad{color:var(--danger)} .story .good{color:var(--ok)} .story .warn{color:var(--warn)}
+  .bar{height:8px; background:#15214a; border-radius:6px; overflow:hidden}
+  .bar > div{height:8px; background:linear-gradient(90deg, #6aa6ff, #5bd196); border-radius:6px}
+  .board-only{display:none}
+  .board .analyst-only{display:none}
+  .board .board-only{display:block}
+  @media (max-width: 1200px){ .kpis{grid-template-columns: repeat(2, 1fr)} .charts{grid-template-columns: 1fr} .controls,.controls-2{grid-template-columns: repeat(2, 1fr)} .story{grid-template-columns: 1fr} }
+  @media print{ body{background:#fff; color:#000} header,.analyst-only{display:none} .board-only{display:block} .panel{box-shadow:none} }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">Intermediary War Room • Story Mode (Exec Narrative)</div>
+  <div class="actions">
+    <label class="mini">Unit</label>
+    <select id="unit">
+      <option value="1">₹ (Rupees)</option>
+      <option value="100000" selected>₹ Lakhs</option>
+      <option value="10000000">₹ Crore</option>
+    </select>
+    <label class="mini">Working Days</label>
+    <input id="workDays" type="number" min="1" value="22" style="width:90px" />
+    <button id="toggleBoard">Toggle Board Mode</button>
+    <button id="copyStory">Copy Strategy</button>
+    <button id="exportCsvBtn">Export CSV</button>
+    <button id="printBtn">Print</button>
+  </div>
+</header>
+
+<div class="container">
+  <!-- KPI strip -->
+  <div class="grid kpis">
+    <div class="panel kpi"><h3 id="lblDec">Prior-1</h3><div class="val" id="kpiDec">—</div><small class="mini">Total written premium</small></div>
+    <div class="panel kpi"><h3 id="lblJan">Prior</h3><div class="val" id="kpiJan">—</div><small class="mini">Total written premium</small></div>
+    <div class="panel kpi"><h3 id="lblFeb">Baseline</h3><div class="val" id="kpiFeb">—</div><small class="mini">Used for planning</small></div>
+    <div class="panel kpi"><h3 id="lblMar">Target Month</h3><div class="val" id="kpiMar">—</div><small class="mini">Scaled to match target</small></div>
+  </div>
+
+  <!-- Planning controls -->
+  <div class="panel analyst-only">
+    <h3>Planning Controls</h3>
+    <div class="grid controls">
+      <div><label class="mini">Baseline Month</label><select id="selBaseline"></select></div>
+      <div><label class="mini">Prior Month (for trend)</label><select id="selPrior"></select></div>
+      <div><label class="mini">Prior-1 (KPI only)</label><select id="selPrior1"></select></div>
+      <div><label class="mini">Target Month Label</label><input id="inpTargetLabel" placeholder="e.g., Mar-26" value="Mar-26" /></div>
+      <div><label class="mini">Target (₹)</label><input id="inpTarget" type="text" inputmode="numeric" value="100000000" /></div>
+      <div style="display:flex;align-items:flex-end"><button id="recalc">Recalculate</button></div>
+    </div>
+    <div class="grid controls-2" style="margin-top:12px">
+      <div><label class="mini">Exclude Categories</label><div id="excludeCats" class="chips"></div></div>
+      <div><label class="mini">Exclude Intermediaries</label><textarea id="excludeInters" placeholder="Comma or newline separated"></textarea></div>
+      <div><label class="mini">Exclude BA Names</label><textarea id="excludeBAs" placeholder="Comma or newline separated"></textarea></div>
+      <div><label class="mini">Apply Exclusions To</label><select id="exclScope"><option value="all" selected>All (KPI+Charts+Scaling)</option><option value="view">View only (Table)</option></select></div>
+      <div><label class="mini">Show Excluded Rows</label><select id="showExcluded"><option value="hide" selected>Hide</option><option value="show">Show greyed</option></select></div>
+      <div style="display:flex;align-items:flex-end"><button id="applyExclusions">Apply Exclusions</button></div>
+    </div>
+  </div>
+
+  <!-- Story mode: Strategy, Evidence, Risks/Mitigations -->
+  <div class="panel">
+    <h3>Executive Story</h3>
+    <div class="story">
+      <div class="left">
+        <div class="sec"><h4>Strategy (Crisp)</h4><ul id="storyStrategy"></ul></div>
+        <div class="sec"><h4>Evidence (Data Points)</h4><ul id="storyEvidence"></ul></div>
+        <div class="sec"><h4>Watch‑outs & Fix</h4><ul id="storyRisks"></ul></div>
+      </div>
+      <div class="right">
+        <div class="sec"><h4>Progress to Target</h4>
+          <div class="mini" id="progressLine"></div>
+          <div class="bar"><div id="progressBar" style="width:0%"></div></div>
+          <div class="mini" id="progressMeta"></div>
+        </div>
+        <div class="sec"><h4>BA Daily Ask</h4><div class="mini">Working days: <span id="wdays">22</span>; Ask: <span id="askPerDay">—</span></div>
+          <div class="table-wrap" style="max-height:180px; margin-top:8px">
+            <table id="tblAsk"><thead><tr><th>BA</th><th class="right">Target (₹)</th><th class="right">Daily Ask (₹)</th></tr></thead><tbody></tbody></table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts with callouts -->
+  <div class="grid charts analyst-only">
+    <div class="panel"><h3>Category Mix (Baseline vs Target)</h3><canvas id="donut"></canvas><div class="callouts"><div class="callout"><div class="h">What changed</div><ul id="coCat1"></ul></div><div class="callout"><div class="h">So what</div><ul id="coCat2"></ul></div></div></div>
+    <div class="panel"><h3>Segment Distribution (Baseline vs Target)</h3><canvas id="bar"></canvas><div class="callouts"><div class="callout"><div class="h">Momentum</div><ul id="coSeg1"></ul></div><div class="callout"><div class="h">Next move</div><ul id="coSeg2"></ul></div></div></div>
+  </div>
+
+  <!-- BA / Zone pivots -->
+  <div class="panel analyst-only">
+    <h3>BA / Zone Pivot (Baseline vs Target)</h3>
+    <div class="split">
+      <div>
+        <h4 class="mini" id="lblBAPivot">By BA</h4>
+        <canvas id="barBA"></canvas>
+        <div class="table-wrap" style="max-height:220px; margin-top:8px">
+          <table id="tblBA"><thead><tr><th>Primary BA</th><th>Zone</th><th class="right" id="thBA_B">Baseline</th><th class="right" id="thBA_T">Target</th></tr></thead><tbody></tbody></table>
+        </div>
+      </div>
+      <div>
+        <h4 class="mini" id="lblZonePivot">By Zone</h4>
+        <canvas id="barZone"></canvas>
+        <div class="table-wrap" style="max-height:220px; margin-top:8px">
+          <table id="tblZone"><thead><tr><th>Zone</th><th class="right" id="thZ_B">Baseline</th><th class="right" id="thZ_T">Target</th></tr></thead><tbody></tbody></table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="panel analyst-only">
+    <h3>Filters & Tools</h3>
+    <div class="grid controls" style="margin-top:6px">
+      <input type="text" id="search" placeholder="Search intermediary…" />
+      <select id="filterBA"><option value="">Primary BA (All)</option></select>
+      <select id="filterState"><option value="">State (All)</option></select>
+      <select id="filterCat"><option value="">Category (All)</option></select>
+      <select id="filterTrend"><option value="">Trend (All)</option></select>
+      <select id="filterSeg"><option value="">Segment (All)</option></select>
+    </div>
+    <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap">
+      <button id="resetFilters">Reset filters</button>
+      <span class="chip">Click headers to sort</span>
+      <span class="chip">Unit toggle: ₹ / Lakhs / Cr</span>
+    </div>
+  </div>
+
+  <!-- Intermediary table -->
+  <div class="panel analyst-only">
+    <h3 id="tblTitle">Intermediary Targets (Target Month)</h3>
+    <div class="table-wrap">
+      <table id="tbl"><thead><tr>
+        <th data-key="INTERMEDIARY">INTERMEDIARY</th>
+        <th data-key="INTERMEDIARY CATEGORY">CATEGORY</th>
+        <th data-key="Primary BA">Primary BA</th>
+        <th data-key="Primary State">State</th>
+        <th data-key="Primary Zone">Zone</th>
+        <th class="right" data-key="Prior1" id="thPrior1">Prior-1</th>
+        <th class="right" data-key="Prior" id="thPrior">Prior</th>
+        <th class="right" data-key="Baseline" id="thBaseline">Baseline</th>
+        <th class="right" data-key="Mar-26 Target" id="thTarget">Target</th>
+        <th class="right" data-key="Uplift_%">Uplift %</th>
+        <th data-key="trend">Trend</th>
+        <th data-key="segment">Segment</th>
+      </tr></thead><tbody id="tbody"></tbody></table>
+    </div>
+    <div class="footer-tip">Values displayed in selected unit. CSV export uses raw rupees.</div>
+  </div>
+</div>
+
+<!-- Paste/replace your markdown table below (can be full FY) -->
+<script id="raw-data" type="text/plain">
+| Usgi Branch State | BA NAME | INTERMEDIARY | INTERMEDIARY CATEGORY | Zone | Dec-25 | Jan-26 | Feb-26 | Grand Total |
+| ----------------- | ------- | ------------ | --------------------- | ---- | ------ | ------ | ------ | ----------- |
+| DELHI | DEEPALI NAYYAR | BAJAJ CAPITAL INSURANCE BROKING LTD-SME | BROKER | North | 1998991 | 0 | 0 | 1998991 |
+| DELHI | MOHAMMAD NADEEM | RAJU PAL | POS AGENT | North | 66401 | 621327 | 417930 | 1105658 |
+| GUJARAT | PRAJAKTA PATEL | GIRNAR INSURANCE BROKERS PRIVATE LIMITED-SME | BROKER | West | 265723.82 | 721198.2 | 222348.24 | 1209270 |
+| GUJARAT | RAKESH DIPAKBHAI DHONDE | KINJALBEN KRUNALBHAI VORA-SME | AGENT | West | 989347 | 1807608 | 775020 | 3571975 |
+| MAHARASHTRA | HIMANI SHARMA | K M DASTUR REINSURANCE BROKERS PVT LTD-SME | BROKER | West | 14542715 | 17532198 | 37393475 | 69468388 |
+| MAHARASHTRA | SHRIHARI GORE | J P INSURANCE BROKERS PRIVATE LIMITED-SME | BROKER | West | 736660 | 2352281 | 37056 | 3125997 |
+| UTTAR PRADESH | PRAVEEN KUMAR SINGH | GROVER INSURANCE BROKERS PRIVATE LIMITED-SME | BROKER | North | 1892384 | 2384487 | 870109 | 5146980 |
+| UTTAR PRADESH | PRAVEEN KUMAR SINGH | BP AND AF IMF PRIVATE LIMITED | IMF | North | 2225139 | 2653716 | 1817300 | 6696155 |
+| GUJARAT | SACHIN BHALERAO | BIMAKAVACH INSURANCE BROKING PRIVATE LIMITED | BROKER | West | 0 | 664683 | 316725.66 | 981409 |
+| MAHARASHTRA | RAKESH DIPAKBHAI DHONDE | TEJAL NIRAV KOTHARI-SME | AGENT | West | 2308857 | 1443546 | 1342859 | 5095262 |
+| HARYANA | MOHAMMAD NADEEM | DEERAJ SIKRI | POS AGENT | North | 212747 | 311653 | 954477 | 1478877 |
+</script>
+
+<script>
+(function(){
+  // ====== Helpers ======
+  const $ = (s, r=document)=> r.querySelector(s); const $$ = (s, r=document)=> Array.from(r.querySelectorAll(s));
+  const toNum = s=> (s==null||String(s).trim()==''?0:Number(String(s).replace(/,/g,''))||0);
+  const fmt = (n, div=100000)=>{ if(isNaN(n)) return '—'; const v=n/div; const out=(Math.abs(v)>=1000? v.toLocaleString(undefined,{maximumFractionDigits:2}): v.toFixed(2)); return out.replace(/\.00$/,''); };
+  const uniq = a=> Array.from(new Set(a));
+
+  // ====== Parse Markdown (any months) ======
+  const raw = $('#raw-data').textContent.trim().split('\n');
+  let header=[], rows=[]; raw.forEach(line=>{ const t=line.trim(); if(!t.startsWith('|')) return; const parts=t.replace(/^\|/,'').replace(/\|$/,'').split('|').map(x=>x.trim()); if (t.toLowerCase().includes('usgi branch state')&&header.length===0){header=parts; return;} if(/^[-\s]+$/.test(parts[0])) return; rows.push(parts); });
+  const idx={}; header.forEach((h,i)=> idx[h]=i);
+  const zoneIdx=header.indexOf('Zone'), grandIdx=header.indexOf('Grand Total');
+  let monthCols = header.slice(zoneIdx+1, grandIdx).filter(h=>h && !['Zone','Grand Total'].includes(h)); if (!monthCols.length){ monthCols=header.filter(h=>/^[A-Za-z]{3,9}-\d{2}$/.test(h)); }
+  const recs = rows.map(r=>({ state:r[idx['Usgi Branch State']], ba:r[idx['BA NAME']], inter:r[idx['INTERMEDIARY']], cat:r[idx['INTERMEDIARY CATEGORY']], zone:r[idx['Zone']], months:Object.fromEntries(monthCols.map(m=>[m,toNum(String(r[idx[m]]||'').replace(/\\-/g,'-'))])) }));
+
+  // ====== UI month selectors ======
+  const selB=$('#selBaseline'), selP=$('#selPrior'), selP1=$('#selPrior1');
+  function fillMon(sel){ sel.innerHTML=''; monthCols.forEach(m=>{ const o=document.createElement('option'); o.value=m; o.textContent=m; sel.appendChild(o); }); }
+  fillMon(selB); fillMon(selP); fillMon(selP1);
+  if(monthCols.length){ selB.value=monthCols[monthCols.length-1]; }
+  if(monthCols.length>1){ selP.value=monthCols[monthCols.length-2]; }
+  if(monthCols.length>2){ selP1.value=monthCols[monthCols.length-3]; }
+
+  // ====== Planning logic ======
+  const multipliers={ 'accelerating':{'engine':1.35,'mid':1.5,'tail':2.0,'dormant':0.2,'negative':1.0}, 'steady/flat':{'engine':1.25,'mid':1.35,'tail':1.6,'dormant':0.15,'negative':1.0}, 're-activated':{'engine':1.3,'mid':1.5,'tail':1.8,'dormant':0.2,'negative':1.0}, 'drop-off':{'engine':1.15,'mid':1.2,'tail':1.3,'dormant':0.1,'negative':1.0}, 'dormant':{'engine':1.0,'mid':1.0,'tail':1.0,'dormant':0.1,'negative':1.0} };
+  function trendOf(prior, base){ if(base>0){ if(prior>0){return base>1.2*prior? 'accelerating':'steady/flat';} return 're-activated'; } return prior>0? 'drop-off':'dormant'; }
+  function segmentOf(b){ if(b>=500000) return 'engine'; if(b>=100000) return 'mid'; if(b>0) return 'tail'; if(b===0) return 'dormant'; return 'negative'; }
+
+  let EXC={ cats:new Set(), inters:new Set(), bas:new Set(), scope:'all', showExcluded:false };
+  function listToSet(v){ return new Set(String(v||'').split(/[\n,]+/).map(s=>s.trim()).filter(Boolean)); }
+
+  function buildOwnerMap(baseline, prior, prior1){ const buckets=new Map();
+    recs.forEach(rec=>{ const k=rec.inter+'|'+rec.cat; if(!buckets.has(k)) buckets.set(k,[]); buckets.get(k).push({ba:rec.ba, state:rec.state, zone:rec.zone, b:rec.months[baseline]||0, p:rec.months[prior]||0, p1:rec.months[prior1]||0}); });
+    const owner=new Map(); buckets.forEach((arr,k)=>{ function pick(f){ const grp=new Map(); arr.forEach(x=>{ const id=x.ba+'||'+x.state+'||'+x.zone; grp.set(id,(grp.get(id)||0)+(x[f]||0)); }); let best=null,bv=-Infinity; grp.forEach((v,id)=>{ if(v>bv){bv=v; best=id;} }); return bv>0? best.split('||'):null; } const got=pick('b')||pick('p')||pick('p1')||['—','—','—']; owner.set(k,{ba:got[0], state:got[1], zone:got[2]}); }); return owner; }
+
+  function build(){
+    const baseline=selB.value, prior=selP.value, prior1=selP1.value, targetLabel=$('#inpTargetLabel').value||'Target';
+    const TARGET=Number(String($('#inpTarget').value).replace(/[^0-9]/g,''))||100000000;
+    const owner=buildOwnerMap(baseline, prior, prior1);
+    // aggregate inter+cat for selected months
+    const map=new Map();
+    recs.forEach(rec=>{ const k=rec.inter+'|'+rec.cat; const dec=toNum(rec.months[prior1]), jan=toNum(rec.months[prior]), feb=toNum(rec.months[baseline]); if(!map.has(k)) map.set(k,{inter:rec.inter, cat:rec.cat, dec:0, jan:0, feb:0}); const a=map.get(k); a.dec+=dec; a.jan+=jan; a.feb+=feb; });
+    const rows=[]; map.forEach((a,k)=>{ const t=trendOf(a.jan,a.feb); const s=segmentOf(a.feb); const base=Math.max(a.feb,0); const mult=(multipliers[t]&&multipliers[t][s])?multipliers[t][s]:1.3; const plan=base*mult; const own=owner.get(k)||{ba:'—',state:'—',zone:'—'}; rows.push({'INTERMEDIARY':a.inter,'INTERMEDIARY CATEGORY':a.cat,'Prior1':a.dec,'Prior':a.jan,'Baseline':a.feb,'trend':t,'segment':s,'Plan':plan,'Primary BA':own.ba,'Primary State':own.state,'Primary Zone':own.zone}); });
+
+    const isEx=r=> EXC.cats.has(r['INTERMEDIARY CATEGORY']) || EXC.inters.has(r['INTERMEDIARY']) || EXC.bas.has(r['Primary BA']);
+    const kpiRows = EXC.scope==='all'? rows.filter(r=>!isEx(r)) : rows.slice();
+    const sum=(arr,f)=> arr.reduce((s,x)=> s+(x[f]||0),0);
+    const DEC_TOT=sum(kpiRows,'Prior1'), JAN_TOT=sum(kpiRows,'Prior'), FEB_TOT=sum(kpiRows,'Baseline');
+
+    const planned=sum(kpiRows,'Plan'); const gap=Math.max(0, TARGET - planned); let totW=0; const W=kpiRows.map(r=>{ const w=(r['Baseline']>0? r['Baseline']:10000); totW+=w; return w; });
+    kpiRows.forEach((r,i)=> r['Mar-26 Target']=r['Plan']+(gap>0? gap*(W[i]/(totW||1)):0));
+    const nonK=kpiRows.length===rows.length? []: rows.filter(r=>!kpiRows.includes(r)); nonK.forEach(r=> r['Mar-26 Target']=r['Plan']);
+    const allRows = (EXC.scope==='all') ? (EXC.showExcluded? kpiRows.concat(nonK): kpiRows) : (EXC.showExcluded? rows : rows.filter(r=> !isEx(r)));
+    const MAR_TOT=sum(kpiRows,'Mar-26 Target');
+
+    return { allRows, kpiRows, DEC_TOT, JAN_TOT, FEB_TOT, MAR_TOT, labels:{prior1:prior1, prior:prior, baseline:baseline, targetLabel}, target:TARGET };
+  }
+
+  // ===== Filters, sorting, rendering =====
+  const unitSel=$('#unit'); let sortKey='Mar-26 Target', sortAsc=false; const filters={q:'',ba:'',state:'',cat:'',trend:'',seg:''};
+  const fBA=$('#filterBA'), fState=$('#filterState'), fCat=$('#filterCat'), fTr=$('#filterTrend'), fSeg=$('#filterSeg');
+  function fillSel(sel, opts){ sel.innerHTML=''; const o=document.createElement('option'); o.value=''; o.textContent=sel.options[0]?.textContent||'All'; sel.appendChild(o); opts.forEach(v=>{ const p=document.createElement('option'); p.value=v; p.textContent=v; sel.appendChild(p); }); }
+
+  function group(rows, key, fields){ const m=new Map(); rows.forEach(r=>{ const k=r[key]; if(!m.has(k)) m.set(k, Object.fromEntries(fields.map(f=>[f,0]))); const o=m.get(k); fields.forEach(f=> o[f]+=r[f]||0); }); return Array.from(m.entries()).map(([k,v])=>({k, ...v})); }
+
+  function donut(canvas, outer, inner, title){ const ctx=canvas.getContext('2d'); const W=canvas.width=canvas.clientWidth*devicePixelRatio, H=canvas.height=canvas.clientHeight*devicePixelRatio; ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0); ctx.clearRect(0,0,canvas.clientWidth,canvas.clientHeight); const cx=canvas.clientWidth/2, cy=canvas.clientHeight/2, R=Math.min(cx,cy)-18, r=R*0.55; const colors=['#6aa6ff','#5bd196','#ffcc66','#ff7b7b','#b48cf2','#78e3e1','#f29bc1','#a2d35b']; const sum=a=>a.reduce((s,x)=>s+x.v,0)||1; function ring(data,R1,r1,alpha){ let a0=-Math.PI/2; const S=sum(data); data.forEach((d,i)=>{ const f=(d.v<=0?0:d.v/S); const a1=a0+f*Math.PI*2; const c=colors[i%colors.length]+(alpha==='outer'?'cc':''); ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,R1,a0,a1); ctx.lineTo(cx+r1*Math.cos(a1), cy+r1*Math.sin(a1)); ctx.arc(cx,cy,r1,a1,a0,true); ctx.closePath(); ctx.fillStyle=c; ctx.fill(); a0=a1; }); }
+    ring(outer,R,r,'outer'); ring(inner,R*0.88,r*0.88,'inner'); ctx.fillStyle='#cfe0ff'; ctx.font='600 14px system-ui'; ctx.fillText(title,12,22); }
+
+  function bar(canvas, items, title){ const ctx=canvas.getContext('2d'); const W=canvas.width=canvas.clientWidth*devicePixelRatio, H=canvas.height=canvas.clientHeight*devicePixelRatio; ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0); ctx.clearRect(0,0,canvas.clientWidth,canvas.clientHeight); const P={l:50,r:30,t:28,b:28}; const w=canvas.clientWidth-P.l-P.r, h=canvas.clientHeight-P.t-P.b; const maxV=Math.max(...items.flatMap(x=>[x.b,x.t]),1); const y=v=> P.t+h-(v/maxV)*h; const barW=(w/items.length)*0.7, gap=(w/items.length)*0.3; ctx.strokeStyle='#1b254b'; for(let i=0;i<=5;i++){ const gy=P.t+i*h/5; ctx.beginPath(); ctx.moveTo(P.l,gy); ctx.lineTo(P.l+w,gy); ctx.stroke(); } ctx.fillStyle='#cfe0ff'; ctx.font='600 14px system-ui'; ctx.fillText(title,P.l,20); items.forEach((it,i)=>{ const x=P.l+i*(barW+gap)+gap/2; ctx.fillStyle='#6aa6ffcc'; ctx.fillRect(x,y(it.b),barW/2-3,(P.t+h)-y(it.b)); ctx.fillStyle='#6aa6ff'; ctx.fillRect(x+barW/2+3,y(it.t),barW/2-3,(P.t+h)-y(it.t)); ctx.fillStyle='#cfe0ff'; ctx.font='12px system-ui'; ctx.save(); ctx.translate(x, P.t+h+16); ctx.rotate(-0.08); ctx.fillText(it.k,0,0); ctx.restore(); }); }
+
+  function rebuild(){
+    const { allRows, kpiRows, DEC_TOT, JAN_TOT, FEB_TOT, MAR_TOT, labels, target } = build();
+    const div=Number($('#unit').value); $('#lblDec').textContent=labels.prior1||'Prior-1'; $('#lblJan').textContent=labels.prior||'Prior'; $('#lblFeb').textContent=labels.baseline||'Baseline'; $('#lblMar').textContent=labels.targetLabel||'Target'; $('#kpiDec').textContent=fmt(DEC_TOT,div); $('#kpiJan').textContent=fmt(JAN_TOT,div); $('#kpiFeb').textContent=fmt(FEB_TOT,div); $('#kpiMar').textContent=fmt(MAR_TOT,div); $('#thPrior1').textContent=labels.prior1||'Prior-1'; $('#thPrior').textContent=labels.prior||'Prior'; $('#thBaseline').textContent=labels.baseline||'Baseline'; $('#thTarget').textContent=labels.targetLabel||'Target'; $('#tblTitle').textContent=`Intermediary Targets (${labels.targetLabel})`;
+
+    // Filters
+    const fill = (sel, arr)=>{ sel.innerHTML=''; const all=document.createElement('option'); all.value=''; all.textContent=sel.options[0]?.textContent||'All'; sel.appendChild(all); arr.forEach(v=>{ const o=document.createElement('option'); o.value=v; o.textContent=v; sel.appendChild(o); }); };
+    fill(fBA, uniq(allRows.map(r=>r['Primary BA']).filter(Boolean)).sort()); fill(fState, uniq(allRows.map(r=>r['Primary State']).filter(Boolean)).sort()); fill(fCat, uniq(allRows.map(r=>r['INTERMEDIARY CATEGORY']).filter(Boolean)).sort()); fill(fTr, uniq(allRows.map(r=>r['trend']).filter(Boolean)).sort()); fill(fSeg, uniq(allRows.map(r=>r['segment']).filter(Boolean)).sort());
+
+    // Category donut + callouts
+    const catAgg=group(kpiRows,'INTERMEDIARY CATEGORY',['Baseline','Mar-26 Target']); const catOuter=catAgg.map(x=>({label:x.k, v:x['Baseline']/1e7})); const catInner=catAgg.map(x=>({label:x.k, v:x['Mar-26 Target']/1e7}));
+    donut($('#donut'), catOuter, catInner, `${labels.baseline} (outer) vs ${labels.targetLabel} (inner)`);
+    const totalMar = kpiRows.reduce((s,x)=>s+x['Mar-26 Target'],0);
+    const catSorted = catAgg.slice().sort((a,b)=> b['Mar-26 Target']-a['Mar-26 Target']);
+    const catTop = catSorted[0]? `${catSorted[0].k} ${((catSorted[0]['Mar-26 Target']/totalMar)*100).toFixed(1)}%` : '—';
+    const catShift = catAgg.map(x=>({k:x.k, d:(x['Mar-26 Target']-x['Baseline'])})).sort((a,b)=> Math.abs(b.d)-Math.abs(a.d))[0];
+    $('#coCat1').innerHTML = `<li>Top category on target: <span class="hl">${catTop}</span></li>` + (catShift? `<li>Largest absolute shift: <span class="hl">${catShift.k}</span> (${fmt(catShift.d)})</li>`:'');
+    $('#coCat2').innerHTML = `<li>Double down on the top 1–2 categories to lock ≥ <span class="hl">${(totalMar? (catSorted.slice(0,2).reduce((s,x)=>s+x['Mar-26 Target'],0)/totalMar*100):0).toFixed(0)}%</span> of target</li>` + `<li>Assign BA‑wise closure plan for tail categories (low share + high uplift)</li>`;
+
+    // Segment bar + callouts
+    const segAgg=group(kpiRows,'segment',['Baseline','Mar-26 Target']).sort((a,b)=> b['Mar-26 Target']-a['Mar-26 Target']); const segItems = segAgg.map(x=>({k:x.k, b:x['Baseline']/1e7, t:x['Mar-26 Target']/1e7})); bar($('#bar'), segItems, 'Segment Distribution (₹ Cr)');
+    const engines = kpiRows.filter(r=> r.segment==='engine'); const engineShare = totalMar? (engines.reduce((s,x)=>s+x['Mar-26 Target'],0)/totalMar*100):0; const reac = kpiRows.filter(r=> r.trend==='re-activated');
+    $('#coSeg1').innerHTML = `<li>Engines contribute <span class="hl">${engineShare.toFixed(0)}%</span> of target</li><li>Re‑activated count: <span class="hl">${reac.length}</span></li>`;
+    $('#coSeg2').innerHTML = `<li>Close engines first (daily governance) then focus on accelerating mids</li><li>Run a 5‑day activation sprint on tails with BA ownership</li>`;
+
+    // BA/Zone pivots
+    const baAgg = group(kpiRows, 'Primary BA', ['Baseline','Mar-26 Target']).sort((a,b)=> b['Mar-26 Target']-a['Mar-26 Target']).slice(0,20);
+    const baItems = baAgg.map(x=>({k:x.k, b:x['Baseline']/1e7, t:x['Mar-26 Target']/1e7})); bar($('#barBA'), baItems, 'Top BA by Target (₹ Cr)'); $('#thBA_B').textContent=labels.baseline; $('#thBA_T').textContent=labels.targetLabel; const tbBA=$('#tblBA tbody'); tbBA.innerHTML=''; baAgg.forEach(x=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td>${x.k}</td><td>—</td><td class="right">${fmt(x['Baseline'],div)}</td><td class="right">${fmt(x['Mar-26 Target'],div)}</td>`; tbBA.appendChild(tr); });
+    const zoneAgg = group(kpiRows, 'Primary Zone', ['Baseline','Mar-26 Target']).sort((a,b)=> b['Mar-26 Target']-a['Mar-26 Target']); const zItems = zoneAgg.map(x=>({k:x.k, b:x['Baseline']/1e7, t:x['Mar-26 Target']/1e7})); bar($('#barZone'), zItems, 'Zone Distribution (₹ Cr)'); const tbZ=$('#tblZone tbody'); tbZ.innerHTML=''; zoneAgg.forEach(x=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td>${x.k||''}</td><td class="right">${fmt(x['Baseline'],div)}</td><td class="right">${fmt(x['Mar-26 Target'],div)}</td>`; tbZ.appendChild(tr); });
+
+    // STORY: Strategy, Evidence, Risks
+    // Concentration: top 5 inter share
+    const interRank = kpiRows.slice().sort((a,b)=> b['Mar-26 Target']-a['Mar-26 Target']); const top5 = interRank.slice(0,5).reduce((s,x)=> s+x['Mar-26 Target'],0); const top10 = interRank.slice(0,10).reduce((s,x)=> s+x['Mar-26 Target'],0);
+    const top5Pct = totalMar? (top5/totalMar*100):0; const top10Pct = totalMar? (top10/totalMar*100):0;
+    const dropoffs = kpiRows.filter(r=> r.trend==='drop-off'); const dormant = kpiRows.filter(r=> r.trend==='dormant'); const negatives = kpiRows.filter(r=> r['Baseline']<0);
+    const accel = kpiRows.filter(r=> r.trend==='accelerating'); const steady = kpiRows.filter(r=> r.trend==='steady/flat');
+    const catTopName = catSorted[0]?.k || '';
+
+    const strat = [
+      `Lock engines: capture <span class="hl">${engineShare.toFixed(0)}%</span> of target via top engines this week`,
+      `Accelerate growth: push <span class="hl">${accel.length}</span> accelerating & mid partners; convert into closures`,
+      `Re‑ignite re‑activated: <span class="hl">${reac.length}</span> partners back—give fast underwriting & pricing`,
+      `De‑risk concentration: manage top‑5 share from <span class="hl">${top5Pct.toFixed(0)}%</span> to ≤ 50%`,
+      `Run tail sprint: BA‑owned outreach for tails/dormant; daily review until closure`
+    ];
+    $('#storyStrategy').innerHTML = strat.map(s=> `<li>${s}</li>`).join('');
+
+    const evidence = [
+      `Baseline: <span class="hl">${fmt(FEB_TOT,div)}</span>; Target: <span class="hl">${fmt(MAR_TOT,div)}</span>`,
+      `Category lead: <span class="hl">${catTopName||'—'}</span> accounts for ${(catSorted[0]? (catSorted[0]['Mar-26 Target']/totalMar*100).toFixed(1):'0.0')}%`,
+      `Top‑5 inter share: <span class="hl">${top5Pct.toFixed(0)}%</span> (Top‑10: ${top10Pct.toFixed(0)}%)`,
+      `Momentum: Accelerating=<span class="hl">${accel.length}</span>, Re‑activated=<span class="hl">${reac.length}</span>, Steady=<span class="hl">${steady.length}</span>`,
+      `At‑risk: Drop‑off=<span class="warn">${dropoffs.length}</span>, Dormant=<span class="warn">${dormant.length}</span>`
+    ];
+    $('#storyEvidence').innerHTML = evidence.map(s=> `<li>${s}</li>`).join('');
+
+    const negAmt = kpiRows.filter(r=> r['Baseline']<0).reduce((s,x)=> s+x['Baseline'],0);
+    const risks = [
+      `${top5Pct>50? '<span class="warn">High concentration</span>':'Concentration'} in top‑5 (${top5Pct.toFixed(0)}%) → set BA caps & alt‑pipeline`,
+      `${dropoffs.length>0? '<span class="warn">Drop‑offs present</span>':'Drop‑offs minimal'} → BA escalation & pricing/underwriting fix`,
+      `${negatives.length>0? '<span class="warn">Chargebacks/negatives</span>':'Negatives'} ${negatives.length>0? 'amount '+fmt(negAmt,div): 'none'} → isolate & stop‑loss`,
+      `Tail fatigue risk → time‑boxed activation blitz with scripts & quick quotes`
+    ];
+    $('#storyRisks').innerHTML = risks.map(s=> `<li>${s}</li>`).join('');
+
+    // Progress & Ask
+    const progressPct = target? (MAR_TOT/target*100):0; $('#progressBar').style.width = Math.min(100,progressPct).toFixed(1)+'%'; $('#progressLine').textContent = `Target ${labels.targetLabel}: ₹ ${target.toLocaleString()}`; $('#progressMeta').textContent = `Planned vs Target: ${progressPct.toFixed(1)}%`; const wd = Number($('#workDays').value||22); $('#wdays').textContent = wd; const ask = (target - MAR_TOT)/Math.max(1,wd); $('#askPerDay').textContent = ask>0? ask.toLocaleString(undefined,{maximumFractionDigits:0}): 'Locked';
+
+    // BA ask table
+    const baAsk = group(kpiRows,'Primary BA',['Mar-26 Target']).sort((a,b)=> b['Mar-26 Target']-a['Mar-26 Target']); const tb=$('#tblAsk tbody'); tb.innerHTML=''; baAsk.forEach(x=>{ const tr=document.createElement('tr'); const daily=Math.max(0, ((x['Mar-26 Target'])/Math.max(1,wd))); tr.innerHTML=`<td>${x.k}</td><td class="right">${(x['Mar-26 Target']).toLocaleString()}</td><td class="right">${daily.toLocaleString(undefined,{maximumFractionDigits:0})}</td>`; tb.appendChild(tr); });
+
+    // Table rendering
+    function applyFilters(data){ const q=filters.q.toLowerCase(); return data.filter(r=>{ if(q && !String(r['INTERMEDIARY']).toLowerCase().includes(q)) return false; if(filters.ba && r['Primary BA']!==filters.ba) return false; if(filters.state && r['Primary State']!==filters.state) return false; if(filters.cat && r['INTERMEDIARY CATEGORY']!==filters.cat) return false; if(filters.trend && r['trend']!==filters.trend) return false; if(filters.seg && r['segment']!==filters.seg) return false; return true; }); }
+    const TB=$('#tbody'); const data=applyFilters(allRows).slice().sort((a,b)=>{ const va=a[sortKey], vb=b[sortKey]; if(va==null&&vb==null) return 0; if(va==null) return sortAsc?-1:1; if(vb==null) return sortAsc?1:-1; if(typeof va==='number' && typeof vb==='number') return sortAsc? va-vb : vb-va; return sortAsc? String(va).localeCompare(String(vb)) : String(vb).localeCompare(String(va)); }); TB.innerHTML=''; const frag=document.createDocumentFragment(); data.forEach(r=>{ const tr=document.createElement('tr'); const cells=[r['INTERMEDIARY'], r['INTERMEDIARY CATEGORY'], r['Primary BA'], r['Primary State'], r['Primary Zone'], fmt(r['Prior1'],div), fmt(r['Prior'],div), fmt(r['Baseline'],div), fmt(r['Mar-26 Target'],div), r['Baseline']>0? (((r['Mar-26 Target']-r['Baseline'])/r['Baseline'])*100).toFixed(2).replace(/\.00$/,''): '—', r['trend'], r['segment']]; cells.forEach((c,i)=>{ const td=document.createElement('td'); td.textContent=c; if(i>=5 && i<=9) td.className='right'; tr.appendChild(td); }); if(EXC.showExcluded){ const ex = EXC.cats.has(r['INTERMEDIARY CATEGORY'])||EXC.inters.has(r['INTERMEDIARY'])||EXC.bas.has(r['Primary BA']); if(ex) tr.style.opacity=.45; } frag.appendChild(tr); }); TB.appendChild(frag);
+
+    // Exclusion chips
+    const cats = uniq(allRows.map(r=>r['INTERMEDIARY CATEGORY']).filter(Boolean)).sort(); const wrap=$('#excludeCats'); wrap.innerHTML=''; cats.forEach(c=>{ const sp=document.createElement('span'); sp.className='chip'; sp.textContent=c; sp.style.cursor='pointer'; sp.style.opacity = EXC.cats.has(c)? .45:1; sp.addEventListener('click',()=>{ if(EXC.cats.has(c)) EXC.cats.delete(c); else EXC.cats.add(c); sp.style.opacity = EXC.cats.has(c)? .45:1; }); wrap.appendChild(sp); });
+
+    // Update board copy (hidden but copyable): use Strategy + Evidence + Risks
+    const clip = [ 'Strategy:', ...$('#storyStrategy').querySelectorAll('li') ].map(x=> x.textContent||x).join('\n');
+  }
+
+  // ===== Events =====
+  $('#recalc').addEventListener('click', rebuild); $('#unit').addEventListener('change', rebuild); $('#workDays').addEventListener('change', rebuild);
+  $('#applyExclusions').addEventListener('click', ()=>{ EXC.inters = listToSet($('#excludeInters').value); EXC.bas = listToSet($('#excludeBAs').value); EXC.scope = $('#exclScope').value; EXC.showExcluded = ($('#showExcluded').value==='show'); rebuild(); });
+  $('#search').addEventListener('input', e=>{ filters.q=e.target.value; rebuild(); }); $('#filterBA').addEventListener('change', e=>{filters.ba=e.target.value; rebuild();}); $('#filterState').addEventListener('change', e=>{filters.state=e.target.value; rebuild();}); $('#filterCat').addEventListener('change', e=>{filters.cat=e.target.value; rebuild();}); $('#filterTrend').addEventListener('change', e=>{filters.trend=e.target.value; rebuild();}); $('#filterSeg').addEventListener('change', e=>{filters.seg=e.target.value; rebuild();}); $('#resetFilters').addEventListener('click', ()=>{ Object.keys(filters).forEach(k=> filters[k]=''); $('#search').value=''; rebuild(); });
+  $$('#tbl thead th').forEach(th=> th.addEventListener('click', ()=>{ const k=th.getAttribute('data-key'); if(!k) return; if(sortKey===k) sortAsc=!sortAsc; else { sortKey=k; sortAsc=(k==='INTERMEDIARY'); } rebuild(); }));
+
+  $('#exportCsvBtn').addEventListener('click', ()=>{ const { allRows, labels }= build(); const hdr=['INTERMEDIARY','INTERMEDIARY CATEGORY','Primary BA','Primary State','Primary Zone', labels.prior1||'Prior-1', labels.prior||'Prior', labels.baseline||'Baseline', labels.targetLabel||'Target','trend','segment']; const out=[hdr.join(',')].concat(allRows.map(r=>{const cells=[r['INTERMEDIARY'],r['INTERMEDIARY CATEGORY'],r['Primary BA'],r['Primary State'],r['Primary Zone'],r['Prior1'],r['Prior'],r['Baseline'],r['Mar-26 Target'],r['trend'],r['segment']]; return cells.map(c=>{const s=String(c??''); return /[",\n]/.test(s)? '"'+s.replace(/"/g,'""')+'"': s; }).join(',');})); const blob=new Blob([out.join('\n')],{type:'text/csv;charset=utf-8;'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='WarRoom_Intermediary.csv'; a.click(); });
+  $('#printBtn').addEventListener('click', ()=> window.print());
+  $('#toggleBoard').addEventListener('click', ()=>{ document.body.classList.toggle('board'); });
+  $('#copyStory').addEventListener('click', ()=>{
+    const sec = ['Strategy','Evidence','Watch‑outs & Fix'];
+    const txt = [
+      'Strategy:\n' + Array.from($('#storyStrategy').querySelectorAll('li')).map(li=> '• '+li.textContent).join('\n'),
+      '\nEvidence:\n' + Array.from($('#storyEvidence').querySelectorAll('li')).map(li=> '• '+li.textContent).join('\n'),
+      '\nWatch‑outs & Fix:\n' + Array.from($('#storyRisks').querySelectorAll('li')).map(li=> '• '+li.textContent).join('\n')
+    ].join('\n');
+    navigator.clipboard.writeText(txt).then(()=>{ $('#copyStory').textContent='Copied!'; setTimeout(()=> $('#copyStory').textContent='Copy Strategy', 1200); });
+  });
+
+  // start
+  rebuild();
+})();
+</script>
+</body>
+</html>

@@ -1,145 +1,70 @@
 <!doctype html>
-<html lang="en">
+<html>
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bancassurance Command Center</title>
+
+    <title>Bancassurance Command Center V7</title>
+
     <link rel="stylesheet" href="style.css" />
+
+    <script src="xlsx.min.js"></script>
   </head>
 
   <body>
     <header>
       <h1>Bancassurance Command Center</h1>
-      <p>Strategy Dashboard for Bank Partnerships</p>
     </header>
 
     <div class="tabs">
-      <button class="tablink active" onclick="openTab(event, 'dashboard')">
-        Dashboard
-      </button>
-      <button class="tablink" onclick="openTab(event, 'strategy')">
-        Strategy
-      </button>
-      <button class="tablink" onclick="openTab(event, 'data')">
-        Expected Data
-      </button>
+      <button onclick="openTab('explorer')">Data Explorer</button>
+      <button onclick="openTab('brokers')">Broker Intelligence</button>
+      <button onclick="openTab('ba')">BA Leaderboard</button>
+      <button onclick="openTab('product')">Product Mix</button>
+      <button onclick="openTab('geo')">Geographic Analysis</button>
+      <button onclick="openTab('opportunity')">Opportunity Engine</button>
     </div>
 
-    <div id="dashboard" class="tabcontent active">
-      <section class="upload-section">
-        <h2>Upload Premium Register</h2>
-        <input type="file" id="fileInput" accept=".csv" />
-        <p>Upload CSV exported from your Premium Register.</p>
-      </section>
+    <div id="explorer" class="tab">
+      <input type="file" id="fileInput" />
 
-      <section class="kpi-grid">
-        <div class="kpi">
-          <h3>Total Premium</h3>
-          <p id="totalPremium">0</p>
-        </div>
+      <div class="pivot-controls">
+        <select id="dimension"></select>
+        <select id="measure"></select>
 
-        <div class="kpi">
-          <h3>Total Policies</h3>
-          <p id="totalPolicies">0</p>
-        </div>
+        <button onclick="buildPivot()">Analyze</button>
+      </div>
 
-        <div class="kpi">
-          <h3>Top Bank</h3>
-          <p id="topBank">-</p>
-        </div>
-
-        <div class="kpi">
-          <h3>Top Product</h3>
-          <p id="topLOB">-</p>
-        </div>
-      </section>
-
-      <section>
-        <h2>Premium by Bank Partner</h2>
-        <canvas id="bankChart" width="900" height="320"></canvas>
-      </section>
-
-      <section>
-        <h2>Product Mix (Line of Business)</h2>
-        <canvas id="lobChart" width="900" height="320"></canvas>
-      </section>
-
-      <section>
-        <h2>Premium by State</h2>
-        <canvas id="stateChart" width="900" height="320"></canvas>
-      </section>
-
-      <section>
-        <h2>BA Performance</h2>
-        <canvas id="baChart" width="900" height="320"></canvas>
-      </section>
-
-      <section>
-        <h2>Sales Manager Performance</h2>
-        <canvas id="managerChart" width="900" height="320"></canvas>
-      </section>
-
-      <section>
-        <h2>Monthly Premium Trend</h2>
-        <canvas id="monthChart" width="900" height="320"></canvas>
-      </section>
+      <canvas id="chart" width="900" height="450"></canvas>
     </div>
 
-    <div id="strategy" class="tabcontent">
-      <h2>Bancassurance Growth Strategy</h2>
-
-      <h3>Strategic Pillars</h3>
-
-      <ul>
-        <li>SME Insurance Expansion via Bank Loan Customers</li>
-        <li>Embedded Insurance with Loans, FDs and Motor Finance</li>
-        <li>Digital Bancassurance & Data-driven cross-sell</li>
-        <li>Cluster-based SME insurance programs</li>
-      </ul>
-
-      <h3>Embedded Insurance Opportunities</h3>
-
-      <ul>
-        <li>SME Loan → Fire & Property Insurance</li>
-        <li>Vehicle Loan → Motor Insurance</li>
-        <li>Export Customers → Marine Insurance</li>
-        <li>Salary Accounts → Health Insurance</li>
-      </ul>
-
-      <h3>Target Portfolio Mix</h3>
-
-      <ul>
-        <li>SME Insurance – 40%</li>
-        <li>Retail Health – 25%</li>
-        <li>Motor – 20%</li>
-        <li>Micro Insurance – 10%</li>
-      </ul>
+    <div id="brokers" class="tab">
+      <h2>Top Brokers</h2>
+      <table id="brokerTable"></table>
     </div>
 
-    <div id="data" class="tabcontent">
-      <h2>Expected Premium Register Columns</h2>
+    <div id="ba" class="tab">
+      <h2>BA Leaderboard</h2>
+      <table id="baTable"></table>
+    </div>
 
-      <pre>
-reference number
-Source name
-master policy
-policy issue date
-USGI Net Premium
-Intermediary Code
-Intermediary
-BA Name
-State
-USGI Branch State
-Line of Business
-Product Name
-Business Type
-SubVertical Channel
-Vertical Channel Map
-Primary Sales Manager
-</pre
-      >
+    <div id="product" class="tab">
+      <h2>Product Mix</h2>
+      <canvas id="productChart" width="900" height="450"></canvas>
+    </div>
+
+    <div id="geo" class="tab">
+      <h2>State Premium Distribution</h2>
+      <canvas id="stateChart" width="900" height="450"></canvas>
+    </div>
+
+    <div id="opportunity" class="tab">
+      <h2>Bancassurance Opportunity Model</h2>
+
+      <div id="opportunityResult"></div>
     </div>
 
     <script src="app.js"></script>
+    <script src="pivot.js"></script>
+    <script src="analytics.js"></script>
   </body>
 </html>

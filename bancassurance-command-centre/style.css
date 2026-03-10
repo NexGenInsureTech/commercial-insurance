@@ -7,7 +7,7 @@ body {
 header {
   background: #1f3b5c;
   color: white;
-  padding: 20px;
+  padding: 15px;
   text-align: center;
 }
 
@@ -16,50 +16,32 @@ header {
   background: #ddd;
 }
 
-.tablink {
+.tabs button {
   flex: 1;
-  padding: 12px;
+  padding: 10px;
   border: none;
   background: #ddd;
-  font-weight: bold;
   cursor: pointer;
+  font-weight: bold;
 }
 
-.tablink.active {
-  background: white;
-}
-
-.tabcontent {
+.tab {
   display: none;
   padding: 20px;
 }
 
-.tabcontent.active {
-  display: block;
-}
-
-.kpi-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 15px;
-  margin-top: 20px;
-}
-
-.kpi {
-  background: white;
-  padding: 15px;
-  border-radius: 8px;
-  text-align: center;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-section {
-  background: white;
-  margin-top: 20px;
-  padding: 20px;
-  border-radius: 8px;
-}
-
 canvas {
-  max-width: 100%;
+  background: white;
+  border: 1px solid #ccc;
+  margin-top: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+td {
+  border: 1px solid #ccc;
+  padding: 6px;
 }

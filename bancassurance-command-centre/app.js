@@ -4,4 +4,4 @@ function openTab(tab) {
   document.getElementById(tab).style.display = "block";
 }
 
-openTab("explorer");
+openTab("executive");

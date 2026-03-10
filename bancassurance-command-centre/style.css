@@ -13,11 +13,11 @@ header {
 
 .tabs {
   display: flex;
+  flex-wrap: wrap;
   background: #ddd;
 }
 
 .tabs button {
-  flex: 1;
   padding: 10px;
   border: none;
   background: #ddd;
@@ -43,5 +43,9 @@ table {
 
 td {
   border: 1px solid #ccc;
-  padding: 6px;
+  padding: 5px;
+}
+
+#filters select {
+  margin: 5px;
 }

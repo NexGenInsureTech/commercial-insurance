@@ -2,8 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-
-    <title>Bancassurance Command Center V7</title>
+    <title>Insurance Strategy Command Center</title>
 
     <link rel="stylesheet" href="style.css" />
 
@@ -12,59 +11,77 @@
 
   <body>
     <header>
-      <h1>Bancassurance Command Center</h1>
+      <h1>Insurance Strategy Command Center</h1>
     </header>
 
+    <input type="file" id="fileInput" />
+
+    <div id="filters"></div>
+
     <div class="tabs">
-      <button onclick="openTab('explorer')">Data Explorer</button>
-      <button onclick="openTab('brokers')">Broker Intelligence</button>
-      <button onclick="openTab('ba')">BA Leaderboard</button>
-      <button onclick="openTab('product')">Product Mix</button>
-      <button onclick="openTab('geo')">Geographic Analysis</button>
+      <button onclick="openTab('executive')">Executive Dashboard</button>
+      <button onclick="openTab('pivot')">Pivot Explorer</button>
+      <button onclick="openTab('distribution')">
+        Distribution Intelligence
+      </button>
+      <button onclick="openTab('ba')">BA Command Center</button>
+      <button onclick="openTab('product')">Product Portfolio</button>
+      <button onclick="openTab('geo')">Geographic Strategy</button>
+      <button onclick="openTab('renewal')">Renewal Engine</button>
+      <button onclick="openTab('broker')">Broker Intelligence</button>
       <button onclick="openTab('opportunity')">Opportunity Engine</button>
     </div>
 
-    <div id="explorer" class="tab">
-      <input type="file" id="fileInput" />
+    <div id="executive" class="tab">
+      <h2>Executive Premium Dashboard</h2>
 
-      <div class="pivot-controls">
-        <select id="dimension"></select>
-        <select id="measure"></select>
-
-        <button onclick="buildPivot()">Analyze</button>
-      </div>
-
-      <canvas id="chart" width="900" height="450"></canvas>
+      <canvas id="premiumChart" width="900" height="400"></canvas>
     </div>
 
-    <div id="brokers" class="tab">
-      <h2>Top Brokers</h2>
-      <table id="brokerTable"></table>
+    <div id="pivot" class="tab">
+      <select id="dimension"></select>
+      <select id="measure"></select>
+
+      <button onclick="runPivot()">Run Pivot</button>
+
+      <canvas id="pivotChart" width="900" height="400"></canvas>
+    </div>
+
+    <div id="distribution" class="tab">
+      <canvas id="distributionChart"></canvas>
     </div>
 
     <div id="ba" class="tab">
-      <h2>BA Leaderboard</h2>
       <table id="baTable"></table>
     </div>
 
     <div id="product" class="tab">
-      <h2>Product Mix</h2>
-      <canvas id="productChart" width="900" height="450"></canvas>
+      <canvas id="productChart"></canvas>
     </div>
 
     <div id="geo" class="tab">
-      <h2>State Premium Distribution</h2>
-      <canvas id="stateChart" width="900" height="450"></canvas>
+      <canvas id="stateChart"></canvas>
+    </div>
+
+    <div id="renewal" class="tab">
+      <canvas id="renewalChart"></canvas>
+    </div>
+
+    <div id="broker" class="tab">
+      <table id="brokerTable"></table>
     </div>
 
     <div id="opportunity" class="tab">
-      <h2>Bancassurance Opportunity Model</h2>
-
       <div id="opportunityResult"></div>
     </div>
 
     <script src="app.js"></script>
-    <script src="pivot.js"></script>
+    <script src="dataLoader.js"></script>
+    <script src="filters.js"></script>
+    <script src="pivotEngine.js"></script>
     <script src="analytics.js"></script>
+    <script src="charts.js"></script>
+    <script src="opportunity.js"></script>
+    <script src="utils.js"></script>
   </body>
 </html>

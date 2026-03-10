@@ -1,35 +1,46 @@
-function buildBrokerLeaderboard(data) {
-  const brokerMap = {};
+function runAllAnalytics() {
+  premiumDashboard();
+  distributionAnalysis();
+  baLeaderboard();
+  productMix();
+  stateDistribution();
+  renewalAnalysis();
+  brokerAnalysis();
+  opportunityEngine();
+}
 
-  data.forEach((r) => {
+function premiumDashboard() {
+  const map = {};
+
+  filteredData.forEach((r) => {
+    const month = r["Month"];
+
+    const premium = parseFloat(r["USGI NET PREMIUM"] || 0);
+
+    map[month] = (map[month] || 0) + premium;
+  });
+
+  drawChart("premiumChart", map);
+}
+
+function distributionAnalysis() {
+  const map = {};
+
+  filteredData.forEach((r) => {
     const broker = r["INTERMEDIARY"];
 
     const premium = parseFloat(r["USGI NET PREMIUM"] || 0);
 
-    brokerMap[broker] = (brokerMap[broker] || 0) + premium;
+    map[broker] = (map[broker] || 0) + premium;
   });
 
-  const sorted = Object.entries(brokerMap)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 20);
-
-  const table = document.getElementById("brokerTable");
-
-  table.innerHTML = "";
-
-  sorted.forEach((r) => {
-    const tr = document.createElement("tr");
-
-    tr.innerHTML = `<td>${r[0]}</td><td>${r[1].toLocaleString()}</td>`;
-
-    table.appendChild(tr);
-  });
+  drawChart("distributionChart", map);
 }
 
-function buildBALeaderboard(data) {
+function baLeaderboard() {
   const map = {};
 
-  data.forEach((r) => {
+  filteredData.forEach((r) => {
     const ba = r["BA NAME"];
 
     const premium = parseFloat(r["USGI NET PREMIUM"] || 0);
@@ -37,27 +48,13 @@ function buildBALeaderboard(data) {
     map[ba] = (map[ba] || 0) + premium;
   });
 
-  const sorted = Object.entries(map)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 20);
-
-  const table = document.getElementById("baTable");
-
-  table.innerHTML = "";
-
-  sorted.forEach((r) => {
-    const tr = document.createElement("tr");
-
-    tr.innerHTML = `<td>${r[0]}</td><td>${r[1].toLocaleString()}</td>`;
-
-    table.appendChild(tr);
-  });
+  renderTable("baTable", map);
 }
 
-function buildProductMix(data) {
+function productMix() {
   const map = {};
 
-  data.forEach((r) => {
+  filteredData.forEach((r) => {
     const lob = r["LINE OF BUSINESS"];
 
     const premium = parseFloat(r["USGI NET PREMIUM"] || 0);
@@ -68,10 +65,10 @@ function buildProductMix(data) {
   drawChart("productChart", map);
 }
 
-function buildStateDistribution(data) {
+function stateDistribution() {
   const map = {};
 
-  data.forEach((r) => {
+  filteredData.forEach((r) => {
     const state = r["STATE"];
 
     const premium = parseFloat(r["USGI NET PREMIUM"] || 0);
@@ -82,17 +79,30 @@ function buildStateDistribution(data) {
   drawChart("stateChart", map);
 }
 
-function opportunityEngine(data) {
-  let totalPremium = 0;
+function renewalAnalysis() {
+  const map = {};
 
-  data.forEach((r) => {
-    totalPremium += parseFloat(r["USGI NET PREMIUM"] || 0);
+  filteredData.forEach((r) => {
+    const type = r["Business Type Fresh Renewal"];
+
+    const premium = parseFloat(r["USGI NET PREMIUM"] || 0);
+
+    map[type] = (map[type] || 0) + premium;
   });
 
-  const growth = totalPremium * 1.4;
+  drawChart("renewalChart", map);
+}
 
-  document.getElementById("opportunityResult").innerHTML = `
-Current Premium: ₹${totalPremium.toLocaleString()} <br>
-Potential Premium: ₹${growth.toLocaleString()}
-`;
+function brokerAnalysis() {
+  const map = {};
+
+  filteredData.forEach((r) => {
+    const broker = r["INTERMEDIARY"];
+
+    const premium = parseFloat(r["USGI NET PREMIUM"] || 0);
+
+    map[broker] = (map[broker] || 0) + premium;
+  });
+
+  renderTable("brokerTable", map);
 }

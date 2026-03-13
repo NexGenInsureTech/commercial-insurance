@@ -1,0 +1,922 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Bancassurance Strategy: Indian Bank General Insurance (2026-2029)
+    </title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- 
+    <!-- Chosen Palette: Executive Navy & Trust Gold (Background: Slate-50, Primary: Navy-900, Accent: Amber-500, Text: Slate-800) -->
+    <!-- Application Structure Plan: A centralized 'Executive Dashboard' single-page layout. Chose this structure because C-suite and strategic stakeholders need immediate access to high-level KPIs, followed by the ability to drill down into specific segments without losing context. The flow moves logically from 'The Captive Advantage' (Why Indian Bank?) -> 'Segment Deep Dives' (Who & What?) -> 'Innovation Engine' (How?) -> 'Financial Projections' (The ROI). Interactive tabs and charts condense a 150-page strategy into an easily digestible, highly impactful interactive brief. -->
+    <!-- Visualization & Content Choices: 
+         1. Bank RAM Profile -> Goal: Inform on captive TAM -> Viz: Doughnut Chart (Chart.js) -> Justification: Clearly shows the 66% dominance of RAM, proving the retail/SME thesis. 
+         2. Segment Deep Dive -> Goal: Organize complex product/KPI matrices -> Viz: Interactive Tabbed Interface (Vanilla JS + HTML) -> Justification: Prevents cognitive overload; allows focused reading on 1 of 5 segments at a time. 
+         3. Financial Projections -> Goal: Change/Compare Bull vs Bear -> Viz: Line Chart (Chart.js) -> Justification: Standard financial viz for YoY growth trajectories. 
+         CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. Relying on Unicode icons and Chart.js Canvas for visual hierarchy. -->
+    -->
+
+    <style>
+      /* Essential custom styles for chart containers and scrollbars */
+      body {
+        font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background-color: #f8fafc;
+        color: #1e293b;
+      }
+
+      .chart-container {
+        position: relative;
+        width: 100%;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+        height: 350px;
+        max-height: 400px;
+      }
+
+      @media (min-width: 768px) {
+        .chart-container {
+          height: 400px;
+        }
+      }
+
+      /* Custom Scrollbar for a premium feel */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f5f9;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #94a3b8;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #64748b;
+      }
+
+      .tab-active {
+        border-bottom: 4px solid #f59e0b;
+        color: #1e3a8a;
+        font-weight: bold;
+        background-color: #eff6ff;
+      }
+      .tab-inactive {
+        color: #64748b;
+        border-bottom: 4px solid transparent;
+      }
+      .tab-inactive:hover {
+        color: #1e3a8a;
+        background-color: #f8fafc;
+      }
+
+      .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        box-shadow:
+          0 4px 6px -1px rgba(0, 0, 0, 0.05),
+          0 2px 4px -1px rgba(0, 0, 0, 0.03);
+      }
+
+      /* Unicode icon sizing */
+      .u-icon {
+        font-size: 1.5rem;
+        line-height: 1;
+      }
+      .u-icon-lg {
+        font-size: 2.5rem;
+        line-height: 1;
+      }
+    </style>
+  </head>
+  <body class="antialiased selection:bg-amber-200 selection:text-blue-900">
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-card transition-all duration-300">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <div class="flex items-center">
+            <span class="u-icon text-blue-900 mr-2">🏛️</span>
+            <span class="font-bold text-xl text-blue-900 tracking-tight"
+              >Project Genesis <span class="text-amber-500">2026</span></span
+            >
+          </div>
+          <div class="hidden md:flex items-center space-x-8">
+            <a
+              href="#executive-summary"
+              class="text-sm font-medium text-slate-600 hover:text-blue-900 transition"
+              >Exec Summary</a
+            >
+            <a
+              href="#market-opportunity"
+              class="text-sm font-medium text-slate-600 hover:text-blue-900 transition"
+              >TAM & Opportunity</a
+            >
+            <a
+              href="#segment-strategy"
+              class="text-sm font-medium text-slate-600 hover:text-blue-900 transition"
+              >Segment Strategy</a
+            >
+            <a
+              href="#innovation-engine"
+              class="text-sm font-medium text-slate-600 hover:text-blue-900 transition"
+              >Product & UX</a
+            >
+            <a
+              href="#financials"
+              class="text-sm font-medium text-amber-600 hover:text-amber-700 font-bold transition"
+              >Financial Model</a
+            >
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content Padding -->
+    <div class="pt-20 pb-12">
+      <!-- Chapter 1: Executive Summary -->
+      <section
+        id="executive-summary"
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12"
+      >
+        <div class="text-center max-w-4xl mx-auto mb-12">
+          <p
+            class="text-amber-500 font-bold tracking-wider uppercase text-sm mb-2"
+          >
+            Strictly Confidential • March 2026
+          </p>
+          <h1
+            class="text-4xl md:text-5xl font-extrabold text-blue-900 mb-6 leading-tight"
+          >
+            The Sure-Shot Blueprint for <br />
+            <span
+              class="text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-amber-500"
+              >Bancassurance Dominance</span
+            >
+          </h1>
+          <p class="text-lg text-slate-600 mb-8">
+            A comprehensive, segment-wise business development strategy to scale
+            the new Indian Bank Promoted General Insurance Company. Leveraging a
+            ₹7.9 Lakh Cr deposit base, Bima Sugam native architecture, and
+            frictionless embedded journeys to guarantee
+            <strong class="text-blue-900">35%+ YoY growth</strong> and
+            <strong class="text-blue-900">90%+ retention</strong> by Year 3.
+          </p>
+          <a
+            href="#market-opportunity"
+            class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-900 hover:bg-blue-800 transition"
+          >
+            Explore Strategy Data <span>⬇️</span>
+          </a>
+        </div>
+
+        <!-- Hero KPIs -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="glass-card rounded-xl p-6 border-t-4 border-blue-900">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-sm font-bold text-slate-500 uppercase">
+                Target GWP (2029)
+              </h3>
+              <span class="u-icon text-blue-700">📈</span>
+            </div>
+            <p class="text-3xl font-extrabold text-blue-900">
+              ₹<span class="counter" data-target="10000">0</span> Cr
+            </p>
+            <p class="text-sm text-green-600 font-medium mt-2">
+              ▲ 35% YoY Growth
+            </p>
+          </div>
+          <div class="glass-card rounded-xl p-6 border-t-4 border-amber-500">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-sm font-bold text-slate-500 uppercase">
+                Captive Digital TAM
+              </h3>
+              <span class="u-icon text-amber-500">📱</span>
+            </div>
+            <p class="text-3xl font-extrabold text-blue-900">
+              <span class="counter" data-target="2.25">0</span> Cr
+            </p>
+            <p class="text-sm text-slate-600 mt-2">Mobile Banking Users</p>
+          </div>
+          <div class="glass-card rounded-xl p-6 border-t-4 border-blue-600">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-sm font-bold text-slate-500 uppercase">
+                Distribution Network
+              </h3>
+              <span class="u-icon text-blue-600">🗺️</span>
+            </div>
+            <p class="text-3xl font-extrabold text-blue-900">
+              <span class="counter" data-target="5965">0</span>
+            </p>
+            <p class="text-sm text-slate-600 mt-2">
+              Domestic Branches (+16K BCs)
+            </p>
+          </div>
+          <div class="glass-card rounded-xl p-6 border-t-4 border-green-500">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-sm font-bold text-slate-500 uppercase">
+                Target Retention
+              </h3>
+              <span class="u-icon text-green-500">🔒</span>
+            </div>
+            <p class="text-3xl font-extrabold text-blue-900">
+              <span class="counter" data-target="90">0</span>%
+            </p>
+            <p class="text-sm text-slate-600 mt-2">via Auto-Debit & Loyalty</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Chapter 2: Market Opportunity Analysis -->
+      <section
+        id="market-opportunity"
+        class="bg-white py-16 border-y border-slate-200"
+      >
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="mb-10">
+            <h2 class="text-3xl font-bold text-blue-900">
+              Chapter 1: The Captive Ecosystem Advantage
+            </h2>
+            <p class="mt-4 text-lg text-slate-600">
+              Indian Bank presents an unparalleled launchpad. The strategy
+              bypasses high CAC (Customer Acquisition Cost) by embedding
+              contextual micro-insurance into existing massive capital flows,
+              specifically leveraging the ₹390K Cr RAM (Retail, Agri, MSME)
+              portfolio.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h3 class="text-xl font-bold text-slate-800 mb-6">
+                Unlocking the Balance Sheet (March 2026)
+              </h3>
+              <div class="space-y-6">
+                <div class="flex items-start">
+                  <div class="flex-shrink-0 mt-1">
+                    <span class="u-icon text-blue-700">💰</span>
+                  </div>
+                  <div class="ml-4">
+                    <h4 class="text-lg font-bold text-blue-900">
+                      ₹790,923 Cr Total Deposits
+                    </h4>
+                    <p class="text-slate-600 text-sm mt-1">
+                      Growing at 12.62% YoY. Every FD opened is a 99% conversion
+                      window for a ₹299 embedded accident cover.
+                    </p>
+                  </div>
+                </div>
+                <div class="flex items-start">
+                  <div class="flex-shrink-0 mt-1">
+                    <span class="u-icon text-amber-500">📊</span>
+                  </div>
+                  <div class="ml-4">
+                    <h4 class="text-lg font-bold text-blue-900">
+                      ₹638,848 Cr Gross Advances
+                    </h4>
+                    <p class="text-slate-600 text-sm mt-1">
+                      Growing at 14.24% YoY. Loan disbursals act as the primary
+                      trigger for modular Bima Sugam SME packs.
+                    </p>
+                  </div>
+                </div>
+                <div class="flex items-start">
+                  <div class="flex-shrink-0 mt-1">
+                    <span class="u-icon text-green-600">🌾</span>
+                  </div>
+                  <div class="ml-4">
+                    <h4 class="text-lg font-bold text-blue-900">
+                      43.75% Priority Sector Lending
+                    </h4>
+                    <p class="text-slate-600 text-sm mt-1">
+                      Massive rural/agri base serviced via 2,001 rural branches
+                      and 16,247 BCs. Ideal for Parametric Crop Shields.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="glass-card p-6 rounded-xl">
+              <h3 class="text-center font-bold text-slate-700 mb-4">
+                Gross Advances Breakdown: The RAM Dominance
+              </h3>
+              <div class="chart-container">
+                <canvas id="ramChart"></canvas>
+              </div>
+              <p class="text-xs text-center text-slate-500 mt-4">
+                *At an estimated 4% penetration, the ₹390K Cr RAM portfolio
+                alone represents a ₹15,000 Cr insurance potential.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Chapter 3: Segment-Wise Deep Dive -->
+      <section id="segment-strategy" class="py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="mb-10 text-center max-w-3xl mx-auto">
+            <h2 class="text-3xl font-bold text-blue-900">
+              Chapter 2: Tactical Segment Execution
+            </h2>
+            <p class="mt-4 text-lg text-slate-600">
+              A one-size-fits-all approach fails in modern bancassurance. We
+              have architected hyper-specific, modular products tailored to
+              Indian Bank's 5 core customer archetypes, utilizing exact leverage
+              points within their banking journey.
+            </p>
+          </div>
+
+          <!-- Interactive Tabs -->
+          <div class="mb-8 border-b border-slate-300 overflow-x-auto">
+            <ul class="flex w-full min-w-max space-x-1" id="segmentTabs">
+              <li
+                class="flex-1 text-center cursor-pointer py-3 px-4 rounded-t-lg tab-active transition-colors duration-200"
+                onclick="switchTab('retail', this)"
+              >
+                <span class="u-icon mr-2">👨‍👩‍👧</span> Retail
+              </li>
+              <li
+                class="flex-1 text-center cursor-pointer py-3 px-4 rounded-t-lg tab-inactive transition-colors duration-200"
+                onclick="switchTab('msme', this)"
+              >
+                <span class="u-icon mr-2">🏪</span> MSME
+              </li>
+              <li
+                class="flex-1 text-center cursor-pointer py-3 px-4 rounded-t-lg tab-inactive transition-colors duration-200"
+                onclick="switchTab('agri', this)"
+              >
+                <span class="u-icon mr-2">🚜</span> Agriculture
+              </li>
+              <li
+                class="flex-1 text-center cursor-pointer py-3 px-4 rounded-t-lg tab-inactive transition-colors duration-200"
+                onclick="switchTab('urban', this)"
+              >
+                <span class="u-icon mr-2">🏢</span> Urban Corporate
+              </li>
+              <li
+                class="flex-1 text-center cursor-pointer py-3 px-4 rounded-t-lg tab-inactive transition-colors duration-200"
+                onclick="switchTab('overseas', this)"
+              >
+                <span class="u-icon mr-2">✈️</span> Overseas/NRI
+              </li>
+            </ul>
+          </div>
+
+          <!-- Tab Content Container -->
+          <div
+            id="segmentContent"
+            class="glass-card rounded-b-xl rounded-tr-xl p-8 min-h-[400px]"
+          >
+            <!-- Content injected via JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Chapter 4: Product Modularity & UX -->
+      <section id="innovation-engine" class="bg-blue-900 text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="mb-12 text-center max-w-3xl mx-auto">
+            <h2 class="text-3xl font-bold text-amber-500">
+              Chapter 3: The Innovation & UX Engine
+            </h2>
+            <p class="mt-4 text-lg text-blue-100">
+              Migrating from legacy "form-filling" to dynamic, contextual
+              embedding. Fully compliant with IRDAI's Bima Sugam ecosystem,
+              driving a target NPS of >80.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- UX Card 1 -->
+            <div
+              class="bg-blue-800 rounded-xl p-6 border border-blue-700 shadow-lg relative overflow-hidden"
+            >
+              <div class="absolute -right-4 -top-4 opacity-10 u-icon-lg">
+                ⚡
+              </div>
+              <h3 class="text-xl font-bold mb-4 flex items-center">
+                <span class="mr-2">⏱️</span> The 30-Second Journey
+              </h3>
+              <p class="text-blue-100 mb-4 text-sm">
+                "Zero Form" architecture utilizing Indian Bank INB/MB APIs. Bank
+                KYC auto-populates all underwriting requirements.
+              </p>
+              <div
+                class="bg-blue-900 rounded p-4 text-sm font-mono text-amber-400"
+              >
+                > Trigger: UPI Txn >₹5K<br />
+                > Action: Auto-offer sent<br />
+                > Click: Accept via MPIN<br />
+                > Result: Policy Issued
+              </div>
+            </div>
+
+            <!-- UX Card 2 -->
+            <div
+              class="bg-blue-800 rounded-xl p-6 border border-blue-700 shadow-lg relative overflow-hidden"
+            >
+              <div class="absolute -right-4 -top-4 opacity-10 u-icon-lg">
+                🧩
+              </div>
+              <h3 class="text-xl font-bold mb-4 flex items-center">
+                <span class="mr-2">🛒</span> Bima Sugam Modularity
+              </h3>
+              <p class="text-blue-100 mb-4 text-sm">
+                Moving away from rigid monolithic policies. Core base covers
+                with highly specific, point-of-sale add-ons.
+              </p>
+              <ul class="space-y-2 text-sm text-blue-200">
+                <li class="flex justify-between border-b border-blue-700 pb-1">
+                  <span>Base: Fire (SME)</span> <span>₹999</span>
+                </li>
+                <li
+                  class="flex justify-between border-b border-blue-700 pb-1 text-amber-300"
+                >
+                  <span>+ Add: Emp. Comp.</span> <span>₹300</span>
+                </li>
+                <li class="flex justify-between pb-1 text-amber-300">
+                  <span>+ Add: Drone Cover</span> <span>₹150</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- UX Card 3 -->
+            <div
+              class="bg-blue-800 rounded-xl p-6 border border-blue-700 shadow-lg relative overflow-hidden"
+            >
+              <div class="absolute -right-4 -top-4 opacity-10 u-icon-lg">
+                🛡️
+              </div>
+              <h3 class="text-xl font-bold mb-4 flex items-center">
+                <span class="mr-2">🎁</span> Gamified Loyalty
+              </h3>
+              <p class="text-blue-100 mb-4 text-sm">
+                Insurance as a reward for banking behavior. Drives dual metrics
+                for the bank and the insurer simultaneously.
+              </p>
+              <div class="flex items-center space-x-4 bg-blue-900 rounded p-4">
+                <div class="text-2xl">🏦</div>
+                <div class="text-xl text-slate-400">➔</div>
+                <div class="text-sm">Insure 3 FDs</div>
+                <div class="text-xl text-slate-400">➔</div>
+                <div class="text-amber-400 font-bold">Free ₹500 Cover</div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="mt-12 bg-white text-blue-900 rounded-xl p-8 text-center max-w-4xl mx-auto"
+          >
+            <h3 class="text-2xl font-bold mb-4">
+              Tech Levers & Risk Mitigation
+            </h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+              <div class="p-3 bg-slate-100 rounded">
+                🛰️ Satellite Crop Claims
+              </div>
+              <div class="p-3 bg-slate-100 rounded">
+                🤖 AI Underwriting (90%)
+              </div>
+              <div class="p-3 bg-slate-100 rounded">
+                🗣️ Vernacular Voice Bots
+              </div>
+              <div class="p-3 bg-slate-100 rounded">
+                📉 Telematics (CR <65%)
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Chapter 5: Go-To-Market & Financials -->
+      <section id="financials" class="py-16 bg-white border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="mb-10 text-center max-w-3xl mx-auto">
+            <h2 class="text-3xl font-bold text-blue-900">
+              Chapter 4: Financial Model & 3-Year Roadmap
+            </h2>
+            <p class="mt-4 text-lg text-slate-600">
+              Path to market dominance. The model assumes 25% steady-state
+              margins fueled by low acquisition costs via branch synergy and
+              high digital renewal rates.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <!-- Roadmap -->
+            <div>
+              <h3
+                class="text-2xl font-bold text-slate-800 mb-6 flex items-center"
+              >
+                <span class="u-icon mr-3">🚀</span> Implementation Playbook
+              </h3>
+              <div
+                class="relative border-l-4 border-amber-500 ml-4 space-y-8 pb-4"
+              >
+                <div class="relative pl-6">
+                  <div
+                    class="absolute -left-3 top-0 w-5 h-5 bg-amber-500 rounded-full border-4 border-white"
+                  ></div>
+                  <h4 class="font-bold text-blue-900 text-lg">
+                    Phase 1: Pilot & Prove (Q1-Q2 2026)
+                  </h4>
+                  <p class="text-sm text-slate-600 mt-2">
+                    Launch in 500 stronghold branches (Tamil Nadu & UP
+                    clusters). Target 10% RAM penetration. Rollout teller
+                    commission structures (2% first year). Establish core org
+                    structure (200 staff). Deploy Flutter + Firebase tech stack.
+                  </p>
+                </div>
+
+                <div class="relative pl-6">
+                  <div
+                    class="absolute -left-3 top-0 w-5 h-5 bg-blue-300 rounded-full border-4 border-white"
+                  ></div>
+                  <h4 class="font-bold text-blue-900 text-lg">
+                    Phase 2: Scale & Saturate (2027)
+                  </h4>
+                  <p class="text-sm text-slate-600 mt-2">
+                    National rollout via 16,247 BCs and Indian Bank Mobile App.
+                    Partner with Bima Vahaks for deep rural penetration.
+                    Implement 10K certified teller training modules. Push
+                    customer cashback (10% premium).
+                  </p>
+                </div>
+
+                <div class="relative pl-6">
+                  <div
+                    class="absolute -left-3 top-0 w-5 h-5 bg-slate-300 rounded-full border-4 border-white"
+                  ></div>
+                  <h4 class="font-bold text-blue-900 text-lg">
+                    Phase 3: Dominate & Expand (2028-29)
+                  </h4>
+                  <p class="text-sm text-slate-600 mt-2">
+                    Activate 3 Overseas branches + GIFT City IBU. Initiate
+                    White-label APIs for Karnataka Bank / IOB tie-ups (Open
+                    Architecture leverage). Achieve 95% digital renewal rate.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Financial Chart -->
+            <div class="glass-card p-6 rounded-xl flex flex-col justify-center">
+              <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold text-slate-800">
+                  GWP Projections (₹ Crores)
+                </h3>
+                <select
+                  id="scenarioToggle"
+                  class="text-sm border-slate-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-slate-50 p-1"
+                  onchange="updateChart()"
+                >
+                  <option value="bull">Bull Case (30% Uptake)</option>
+                  <option value="bear">Bear Case (Digital Pivot)</option>
+                </select>
+              </div>
+              <div class="chart-container">
+                <canvas id="financialChart"></canvas>
+              </div>
+              <div class="mt-4 grid grid-cols-2 gap-4 text-center">
+                <div class="bg-blue-50 p-3 rounded">
+                  <span class="block text-xs text-slate-500 uppercase font-bold"
+                    >Target Margin</span
+                  >
+                  <span class="block text-xl font-bold text-blue-900">25%</span>
+                </div>
+                <div class="bg-amber-50 p-3 rounded">
+                  <span class="block text-xs text-slate-500 uppercase font-bold"
+                    >7-Day Claim Settle</span
+                  >
+                  <span class="block text-xl font-bold text-amber-600"
+                    >Via Bank Offset</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="bg-slate-900 text-slate-400 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p class="text-sm">
+            Strategic Consultant Masterpiece • Generated March 2026 •
+            Confidential for Indian Bank Exec Committee
+          </p>
+          <div class="mt-4 flex justify-center space-x-4">
+            <span class="text-xs">✔ SEBI Broker Rules Compliant</span>
+            <span class="text-xs">✔ IRDAI Open Architecture Ready</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Application Logic -->
+    <script>
+      // --- Data Storage: Segment Definitions ---
+      const segmentData = {
+        retail: {
+          title: "Retail (FD/Savings Holders)",
+          size: "2.25 Cr Mobile / 2.52 Cr UPI Users",
+          leverage: "FD booking moments, UPI transactions >₹5K",
+          products: [
+            "FD-Linked Accident Cover (₹299/yr)",
+            "Hospital Cash / Dengue Shield (₹500)",
+            "Cyber Fraud Protect (₹199)",
+          ],
+          gtm: "1-Click App Embed, Auto-Debit Authorization",
+          kpi: "20% penetration of active mobile banking base",
+        },
+        msme: {
+          title: "MSME (Shopkeepers & Traders)",
+          size: "₹390K Cr RAM (Core Focus)",
+          leverage: "Loan disbursal moments, Current Account opening",
+          products: [
+            "Bima Sugam Shopkeeper Pack (₹999 Base Fire/Theft)",
+            "Business Interruption Add-on (+₹499)",
+            "Group Health for Employees (₹1,500/life)",
+          ],
+          gtm: "Branch sliders, RM tablet integration, AR 'See your shop protected'",
+          kpi: "15% penetration of new MSME loan disbursals",
+        },
+        agri: {
+          title: "Agriculture & Rural",
+          size: "43.75% Priority Sector Lending base",
+          leverage:
+            "16,247 BC touchpoints, Aadhaar enrollment, Kisan Credit Card",
+          products: [
+            "Weather-Indexed Crop Shield (₹1K/acre)",
+            "Tractor/Equipment Protection",
+            "Livestock Micro-Insurance",
+          ],
+          gtm: "BC assisted sales, Bima Vahak network, Vernacular Voice Bots",
+          kpi: "25% farmer coverage within target districts",
+        },
+        urban: {
+          title: "Urban/Metro Corporates",
+          size: "1,181 Metro Branches",
+          leverage:
+            "Treasury desk interactions, Forex dealings, Corporate salary accounts",
+          products: [
+            "Directors & Officers (D&O) Liability (₹2K base)",
+            "Comprehensive Cyber Risk Pack",
+            "Marine & Transit Insurance",
+          ],
+          gtm: "Dedicated Relationship Management, Custom Underwriting APIs",
+          kpi: "10% wallet share of existing corporate clients",
+        },
+        overseas: {
+          title: "Overseas & IBU",
+          size: "3 Overseas Branches + GIFT IBU",
+          leverage: "NRI inward remittances, travel bookings",
+          products: [
+            "NRI Travel + Luggage Protection (₹199/month)",
+            "Global Health Top-up",
+            "Remittance Protection",
+          ],
+          gtm: "Digital-first native targeting, Forex portal integration",
+          kpi: "5% NRI uptake on active remittance accounts",
+        },
+      };
+
+      // --- UI Interaction: Segment Tabs ---
+      function switchTab(segmentKey, element) {
+        // Reset tab styles
+        document.querySelectorAll("#segmentTabs li").forEach((el) => {
+          el.classList.remove("tab-active");
+          el.classList.add("tab-inactive");
+        });
+        // Set active style
+        element.classList.remove("tab-inactive");
+        element.classList.add("tab-active");
+
+        // Populate content
+        const data = segmentData[segmentKey];
+        const contentDiv = document.getElementById("segmentContent");
+
+        // Fade out, update, fade in (simple simulation)
+        contentDiv.style.opacity = 0;
+
+        setTimeout(() => {
+          contentDiv.innerHTML = `
+                    <div class="flex flex-col md:flex-row justify-between items-start mb-6 pb-6 border-b border-slate-200">
+                        <div>
+                            <h3 class="text-2xl font-bold text-blue-900">${data.title}</h3>
+                            <p class="text-amber-600 font-bold mt-1 text-lg">Opportunity Size: ${data.size}</p>
+                        </div>
+                        <div class="mt-4 md:mt-0 bg-blue-50 text-blue-800 px-4 py-2 rounded-lg border border-blue-200 shadow-sm text-center">
+                            <span class="block text-xs uppercase font-bold text-slate-500">Target KPI</span>
+                            <span class="font-bold text-lg">${data.kpi}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="bg-slate-50 p-5 rounded-lg border border-slate-200">
+                            <div class="flex items-center mb-3">
+                                <span class="u-icon text-blue-600 mr-2">🎯</span>
+                                <h4 class="font-bold text-slate-800">Leverage Points</h4>
+                            </div>
+                            <p class="text-sm text-slate-600">${data.leverage}</p>
+                        </div>
+                        
+                        <div class="bg-slate-50 p-5 rounded-lg border border-slate-200">
+                            <div class="flex items-center mb-3">
+                                <span class="u-icon text-amber-500 mr-2">⭐</span>
+                                <h4 class="font-bold text-slate-800">Hero Products (Modular)</h4>
+                            </div>
+                            <ul class="text-sm text-slate-600 space-y-2 list-disc pl-4 marker:text-amber-500">
+                                ${data.products.map((p) => `<li>${p}</li>`).join("")}
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-slate-50 p-5 rounded-lg border border-slate-200">
+                            <div class="flex items-center mb-3">
+                                <span class="u-icon text-green-600 mr-2">🛤️</span>
+                                <h4 class="font-bold text-slate-800">Go-To-Market</h4>
+                            </div>
+                            <p class="text-sm text-slate-600">${data.gtm}</p>
+                        </div>
+                    </div>
+                `;
+          contentDiv.style.opacity = 1;
+          contentDiv.style.transition = "opacity 0.3s ease-in-out";
+        }, 150);
+      }
+
+      // --- Number Counter Animation ---
+      function animateCounters() {
+        const counters = document.querySelectorAll(".counter");
+        const speed = 200; // lower is slower
+
+        counters.forEach((counter) => {
+          const updateCount = () => {
+            const target = +counter.getAttribute("data-target");
+            const count = +counter.innerText;
+
+            // Increment varies based on target size to finish at similar times
+            const inc = target / speed;
+
+            if (count < target) {
+              // Use Math.ceil for whole numbers, toFixed for decimals
+              if (target % 1 !== 0) {
+                counter.innerText = (count + inc).toFixed(2);
+              } else {
+                counter.innerText = Math.ceil(count + inc);
+              }
+              setTimeout(updateCount, 15);
+            } else {
+              counter.innerText = target;
+            }
+          };
+          updateCount();
+        });
+      }
+
+      // --- Chart Configurations (Chart.js) ---
+
+      // 1. RAM Doughnut Chart
+      const ramCtx = document.getElementById("ramChart").getContext("2d");
+      const ramChart = new Chart(ramCtx, {
+        type: "doughnut",
+        data: {
+          labels: ["RAM (Retail/Agri/MSME)", "Corporate/Other"],
+          datasets: [
+            {
+              data: [66, 34],
+              backgroundColor: ["#1e3a8a", "#f59e0b"],
+              borderWidth: 0,
+              hoverOffset: 4,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: "bottom",
+              labels: { boxWidth: 12, font: { family: "Segoe UI" } },
+            },
+            tooltip: {
+              callbacks: {
+                label: function (context) {
+                  let label = context.label || "";
+                  if (label) {
+                    label += ": ";
+                  }
+                  label +=
+                    context.raw +
+                    "% (₹" +
+                    (context.raw === 66 ? "390K" : "248K") +
+                    " Cr)";
+                  return label;
+                },
+              },
+            },
+          },
+          cutout: "65%",
+        },
+      });
+
+      // 2. Financial Projections Chart
+      const finCtx = document.getElementById("financialChart").getContext("2d");
+
+      // Data Scenarios
+      const finData = {
+        bull: {
+          data: [5000, 6800, 8500, 10000],
+          label: "Bull Case GWP (₹ Cr)",
+          color: "#16a34a",
+          bg: "rgba(22, 163, 74, 0.1)",
+        },
+        bear: {
+          data: [2500, 3800, 5000, 6500],
+          label: "Bear Case GWP (₹ Cr)",
+          color: "#ea580c",
+          bg: "rgba(234, 88, 12, 0.1)",
+        },
+      };
+
+      let finChartObj = new Chart(finCtx, {
+        type: "line",
+        data: {
+          labels: [
+            "Year 1 (2026)",
+            "Year 2 (2027)",
+            "Year 3 (2028)",
+            "Year 4 (2029)",
+          ],
+          datasets: [
+            {
+              label: finData.bull.label,
+              data: finData.bull.data,
+              borderColor: finData.bull.color,
+              backgroundColor: finData.bull.bg,
+              borderWidth: 3,
+              fill: true,
+              tension: 0.3,
+              pointRadius: 5,
+              pointBackgroundColor: "#fff",
+              pointBorderColor: finData.bull.color,
+              pointBorderWidth: 2,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: { borderDash: [5, 5], color: "#e2e8f0" },
+              ticks: {
+                callback: function (value) {
+                  return "₹" + value;
+                },
+              },
+            },
+            x: { grid: { display: false } },
+          },
+          plugins: {
+            legend: { position: "top" },
+            tooltip: { mode: "index", intersect: false },
+          },
+        },
+      });
+
+      // Function to update financial chart based on dropdown
+      function updateChart() {
+        const scenario = document.getElementById("scenarioToggle").value;
+        const targetData = finData[scenario];
+
+        finChartObj.data.datasets[0].data = targetData.data;
+        finChartObj.data.datasets[0].label = targetData.label;
+        finChartObj.data.datasets[0].borderColor = targetData.color;
+        finChartObj.data.datasets[0].backgroundColor = targetData.bg;
+        finChartObj.data.datasets[0].pointBorderColor = targetData.color;
+
+        finChartObj.update();
+      }
+
+      // --- Initialization ---
+      document.addEventListener("DOMContentLoaded", () => {
+        // Load first tab data
+        switchTab("retail", document.querySelector("#segmentTabs li"));
+
+        // Start counters when in view (simple implementation: delay slightly)
+        setTimeout(animateCounters, 500);
+      });
+    </script>
+  </body>
+</html>

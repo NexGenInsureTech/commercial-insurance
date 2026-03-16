@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>100Cr Control Tower (Web) – No CDN</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- ✅ Correct stylesheet tag -->
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>100Cr Control Tower (Web) – No CDN</h1>
+    <div class="sub">Upload <em>Working_for_Strategy.xlsx</em> to refresh figures</div>
+  </header>
+
+  <!-- Command Center + File Upload -->
+  <section class="command-center">
+    <div class="cc-row">
+      <label class="file-label">
+        <input id="xlsxFile" type="file" accept=".xlsx" />
+        <span>Upload: Working_for_Strategy.xlsx</span>
+      </label>
+      <button class="info-btn" data-topic="upload" aria-label="About Upload">ℹ︎</button>
+
+      <div class="toggles">
+        <div class="toggle">
+          <label>Include Promoter</label>
+          <select id="includePromoter"><option>Yes</option><option>No</option></select>
+        </div>
+        <div class="toggle">
+          <label>Include NBFC</label>
+          <select id="includeNBFC"><option>Yes</option><option>No</option></select>
+        </div>
+        <div class="toggle">
+          <label>Include RRB</label>
+          <select id="includeRRB"><option>Yes</option><option>No</option></select>
+        </div>
+        <div class="toggle">
+          <label>NBFC Granularity</label>
+          <select id="nbfcGranularity"><option>Aggregate</option><option>Partners</option></select>
+        </div>
+      </div>
+      <button class="info-btn" data-topic="toggles" aria-label="About Toggles">ℹ︎</button>
+    </div>
+
+    <div class="targets">
+      <div>
+        <label>Monthly Target (₹ Lakhs)</label>
+        <input id="targetTotal" type="number" step="1" value="10000" />
+      </div>
+      <div>
+        <label>Promoter Target</label>
+        <input id="targetPromoter" type="number" step="1" value="7900" />
+      </div>
+      <div>
+        <label>NBFC Target</label>
+        <input id="targetNBFC" type="number" step="1" value="1800" />
+      </div>
+      <div>
+        <label>RRB Target</label>
+        <input id="targetRRB" type="number" step="1" value="300" />
+      </div>
+      <button id="applyTargets" class="primary">Apply Targets</button>
+      <button class="info-btn" data-topic="targets" aria-label="About Targets">ℹ︎</button>
+    </div>
+  </section>
+
+  <!-- Tabs -->
+  <nav class="tabs">
+    <button class="tab-link active" data-tab="overview">Overview</button>
+    <button class="tab-link" data-tab="channels">Channel Targets</button>
+    <button class="tab-link" data-tab="heatmap">Promoter Heatmap</button>
+    <button class="tab-link" data-tab="bubble">Outlets vs Premium/Outlet</button>
+    <button class="tab-link" data-tab="daily">Daily Tracker</button>
+    <button class="tab-link" data-tab="about">About</button>
+  </nav>
+
+  <!-- Tab: Overview -->
+  <section id="overview" class="tab-panel active">
+    <div class="panel-title">
+      <h3>Overview</h3>
+      <button class="info-btn" data-topic="overview" aria-label="About Overview">ℹ︎</button>
+    </div>
+
+    <div class="kpis">
+      <div class="kpi">
+        <div class="kpi-title">Monthly Target</div>
+        <div id="kpiTarget" class="kpi-value">—</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-title">Dec–Feb Avg (Baseline)</div>
+        <div id="kpiBaseline" class="kpi-value">—</div>
+        <div id="kpiMonths" class="kpi-note"></div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-title">Gap to Target</div>
+        <div id="kpiGap" class="kpi-value">—</div>
+      </div>
+    </div>
+
+    <div class="panel-title">
+      <h3>Waterfall – Baseline ➜ Target</h3>
+      <button class="info-btn" data-topic="waterfall" aria-label="About Waterfall">ℹ︎</button>
+    </div>
+    <ul id="waterfallList" class="wf-list"></ul>
+  </section>
+
+  <!-- Tab: Channel Targets -->
+  <section id="channels" class="tab-panel">
+    <div class="panel-title">
+      <h3>Channel Targets (Monthly)</h3>
+      <button class="info-btn" data-topic="channels" aria-label="About Channel Targets">ℹ︎</button>
+    </div>
+    <div id="channelBars" class="bars"></div>
+
+    <div class="panel-title">
+      <h4>NBFC Partners (Optional Granularity)</h4>
+      <button class="info-btn" data-topic="nbfcPartners" aria-label="About NBFC Partners">ℹ︎</button>
+    </div>
+    <div id="nbfcPartnerBars" class="bars"></div>
+  </section>
+
+  <!-- Tab: Heatmap -->
+  <section id="heatmap" class="tab-panel">
+    <div class="panel-title">
+      <h3>Promoter – Top Areas × Line of Business</h3>
+      <button class="info-btn" data-topic="heatmap" aria-label="About Heatmap">ℹ︎</button>
+    </div>
+    <div class="note">Top 10 areas by total premium; darker cells indicate higher premium.</div>
+    <div id="heatmapGrid" class="heatmap-grid"></div>
+  </section>
+
+  <!-- Tab: Bubble -->
+  <section id="bubble" class="tab-panel">
+    <div class="panel-title">
+      <h3>Outlets vs Premium/Outlet (size = Premium)</h3>
+      <button class="info-btn" data-topic="bubble" aria-label="About Bubble Chart">ℹ︎</button>
+    </div>
+    <svg id="bubbleSvg" class="bubble-svg" viewBox="0 0 900 500" preserveAspectRatio="xMidYMid meet"></svg>
+    <div id="bubbleLegend" class="legend"></div>
+  </section>
+
+  <!-- Tab: Daily Tracker -->
+  <section id="daily" class="tab-panel">
+    <div class="panel-title">
+      <h3>Daily Tracker – Current Month</h3>
+      <button class="info-btn" data-topic="daily" aria-label="About Daily Tracker">ℹ︎</button>
+    </div>
+    <div class="note">Enter daily actuals (Promoter / NBFC / RRB); linear pace auto‑computed.</div>
+    <div class="daily-grid">
+      <table id="dailyTable"></table>
+      <svg id="dailySvg" class="daily-svg" viewBox="0 0 900 300" preserveAspectRatio="xMidYMid meet"></svg>
+    </div>
+  </section>
+
+  <!-- Tab: About -->
+  <section id="about" class="tab-panel">
+    <div class="panel-title">
+      <h3>About & How it works</h3>
+      <button class="info-btn" data-topic="about" aria-label="About This App">ℹ︎</button>
+    </div>
+    <p>This page computes the same Control Tower metrics directly in your browser from your uploaded <em>Working_for_Strategy.xlsx</em>—no servers, no CDNs.</p>
+    <ul>
+      <li>Upload the Excel from the Command Center.</li>
+      <li>Use the toggles to keep only NBFC, hide Promoter/RRB, or switch NBFC granularity.</li>
+      <li>All visuals refresh live after each upload or target change.</li>
+    </ul>
+  </section>
+
+  <!-- Modal (shared for all ℹ︎ icons) -->
+  <div id="modal" class="modal" aria-hidden="true">
+    <div class="modal-backdrop" data-close="modal"></div>
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalBody">
+      <div class="modal-header">
+        <h3 id="modalTitle">Info</h3>
+        <button class="modal-close" data-close="modal" aria-label="Close">×</button>
+      </div>
+      <div id="modalBody" class="modal-body"></div>
+      <div class="modal-footer">
+        <button class="primary" data-close="modal">Got it</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ Correct script tags; order matters: vendor first, then app -->
+  <script src="vendor/xlsx.full.min.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>

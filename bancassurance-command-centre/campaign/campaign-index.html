@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>PLI Intelligence Platform</title>
+
+<style>
+body { font-family: Arial; background:#f4f6fa; margin:0; }
+.container { padding:20px; }
+h1 { margin-bottom:10px; }
+
+.controls { display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap; }
+select, input { padding:8px; border-radius:6px; }
+
+.dashboard {
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:10px;
+margin-bottom:20px;
+}
+
+.card {
+background:white;
+padding:12px;
+border-radius:8px;
+box-shadow:0 2px 6px rgba(0,0,0,0.1);
+}
+
+table { width:100%; border-collapse:collapse; background:white; }
+th, td { padding:8px; text-align:center; }
+th { background:#2f54eb; color:white; }
+
+canvas { background:white; margin-top:20px; border-radius:10px; }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>PLI Intelligence Platform</h1>
+
+<div class="controls">
+<input type="file" id="fileInput">
+
+<select id="scenario">
+<option value="600">600 Cr</option>
+<option value="1000">1000 Cr</option>
+</select>
+
+<select id="bankFilter"><option>All</option></select>
+<select id="regionFilter"><option>All</option></select>
+</div>
+
+<div class="dashboard">
+<div class="card">GWP<br><b id="gwp"></b></div>
+<div class="card">Incentive<br><b id="inc"></b></div>
+<div class="card">Avg Ach<br><b id="ach"></b></div>
+<div class="card">Top RM<br><b id="top"></b></div>
+<div class="card">Loss Ratio Avg<br><b id="lr"></b></div>
+</div>
+
+<table>
+<thead>
+<tr>
+<th>Rank</th><th>Name</th><th>Bank</th><th>Region</th>
+<th>Product</th><th>Ach%</th><th>LR</th>
+<th>Incentive</th>
+</tr>
+</thead>
+<tbody id="table"></tbody>
+</table>
+
+<canvas id="barChart" height="120"></canvas>
+<canvas id="scatterChart" height="120"></canvas>
+
+</div>
+
+<script>
+
+let data = [];
+
+// CSV Upload
+document.getElementById("fileInput").addEventListener("change", function(e){
+    let file = e.target.files[0];
+    let reader = new FileReader();
+
+    reader.onload = function(event){
+        let rows = event.target.result.split("\n");
+        data = rows.slice(1).map(r=>{
+            let c = r.split(",");
+            return {
+                name:c[0],
+                bank:c[1],
+                region:c[2],
+                product:c[3],
+                target:+c[4],
+                actual:+c[5],
+                lr:+c[6],
+                renewal:c[7]=="1"
+            }
+        });
+
+        populateFilters();
+        render();
+    };
+
+    reader.readAsText(file);
+});
+
+// Incentive Logic
+function calc(a, actual){
+    if(a<0.95) return 0;
+    if(a<=1) return actual*0.0018;
+    if(a<=1.1) return actual*0.003;
+    if(a<=1.2) return actual*0.0045;
+    if(a<=1.4) return actual*0.007;
+    if(a<=1.65) return actual*0.01;
+    return actual*0.0125;
+}
+
+// Filters
+function populateFilters(){
+    let banks = [...new Set(data.map(d=>d.bank))];
+    let regions = [...new Set(data.map(d=>d.region))];
+
+    let b = document.getElementById("bankFilter");
+    let r = document.getElementById("regionFilter");
+
+    b.innerHTML="<option>All</option>";
+    r.innerHTML="<option>All</option>";
+
+    banks.forEach(x=>b.innerHTML+=`<option>${x}</option>`);
+    regions.forEach(x=>r.innerHTML+=`<option>${x}</option>`);
+}
+
+function render(){
+
+    let scenario = document.getElementById("scenario").value;
+    let bank = document.getElementById("bankFilter").value;
+    let region = document.getElementById("regionFilter").value;
+
+    let filtered = data.filter(d =>
+        (bank=="All" || d.bank==bank) &&
+        (region=="All" || d.region==region)
+    );
+
+    let totalGWP=0, totalInc=0, totalAch=0, totalLR=0;
+
+    filtered.forEach(d=>{
+        if(scenario=="1000") d.actual*=1.3;
+
+        d.ach = d.actual/d.target;
+        d.inc = calc(d.ach,d.actual);
+
+        if(d.renewal) d.inc*=1.05;
+        if(d.lr>0.75) d.inc*=0.7;
+
+        totalGWP+=d.actual;
+        totalInc+=d.inc;
+        totalAch+=d.ach;
+        totalLR+=d.lr;
+    });
+
+    filtered.sort((a,b)=>b.inc-a.inc);
+
+    let html="";
+    filtered.forEach((d,i)=>{
+        html+=`
+        <tr>
+        <td>${i+1}</td>
+        <td>${d.name}</td>
+        <td>${d.bank}</td>
+        <td>${d.region}</td>
+        <td>${d.product}</td>
+        <td>${(d.ach*100).toFixed(1)}%</td>
+        <td>${d.lr}</td>
+        <td>${Math.round(d.inc)}</td>
+        </tr>`;
+    });
+
+    document.getElementById("table").innerHTML=html;
+
+    document.getElementById("gwp").innerText=Math.round(totalGWP);
+    document.getElementById("inc").innerText=Math.round(totalInc);
+    document.getElementById("ach").innerText=(totalAch/filtered.length*100).toFixed(1)+"%";
+    document.getElementById("lr").innerText=(totalLR/filtered.length).toFixed(2);
+    document.getElementById("top").innerText=filtered[0]?.name || "-";
+
+    drawBar(filtered);
+    drawScatter(filtered);
+}
+
+function drawBar(data){
+    let c=document.getElementById("barChart");
+    let ctx=c.getContext("2d");
+    ctx.clearRect(0,0,c.width,c.height);
+
+    let max=Math.max(...data.map(d=>d.inc),1);
+    let x=30;
+
+    data.forEach(d=>{
+        let h=(d.inc/max)*150;
+        ctx.fillRect(x,200-h,40,h);
+        ctx.fillText(d.name,x,220);
+        x+=70;
+    });
+}
+
+function drawScatter(data){
+    let c=document.getElementById("scatterChart");
+    let ctx=c.getContext("2d");
+    ctx.clearRect(0,0,c.width,c.height);
+
+    data.forEach(d=>{
+        let x=d.lr*300;
+        let y=200-(d.inc/1000);
+        ctx.fillRect(x,y,5,5);
+    });
+}
+
+document.querySelectorAll("select").forEach(e=>e.addEventListener("change",render));
+
+</script>
+
+</body>
+</html>

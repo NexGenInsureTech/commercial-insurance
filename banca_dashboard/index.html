@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bancassurance Control Tower</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+
+<body>
+
+<div class="app-shell">
+
+  <!-- HEADER -->
+  <header class="topbar">
+
+    <div class="brand-section">
+      <div class="brand-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M3 20h18v-2H3v2zm2-4h3V8H5v8zm5 0h4V4h-4v12zm6 0h3v-6h-3v6z"/>
+        </svg>
+      </div>
+
+      <div>
+        <h1>Bancassurance Control Tower</h1>
+        <p>General Insurance Distribution Dashboard</p>
+      </div>
+    </div>
+
+    <div class="top-actions">
+
+      <div class="search-box">
+        <svg viewBox="0 0 24 24">
+          <path d="M21 20l-5.8-5.8a7 7 0 10-1.4 1.4L20 21zM5 10a5 5 0 1110 0A5 5 0 015 10z"/>
+        </svg>
+        <input type="text" id="globalSearch" placeholder="Search branch / RM / region"/>
+      </div>
+
+      <button class="icon-btn" id="themeToggle" aria-label="Toggle Theme">
+        <svg id="themeIcon" viewBox="0 0 24 24">
+          <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+        </svg>
+      </button>
+
+      <button class="export-btn">
+        <svg viewBox="0 0 24 24">
+          <path d="M5 20h14v-2H5m14-9h-4V3H9v6H5l7 7 7-7z"/>
+        </svg>
+        Export
+      </button>
+
+    </div>
+
+  </header>
+
+  <!-- FILTERS -->
+  <section class="filters sticky-filters">
+
+    <div class="filter-group">
+      <label>Date Range</label>
+      <select>
+        <option>Current Month</option>
+        <option>Quarter</option>
+        <option>Financial Year</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>Bank Partner</label>
+      <select>
+        <option>All Banks</option>
+        <option>SBI</option>
+        <option>PNB</option>
+        <option>Canara Bank</option>
+        <option>Union Bank</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>Region</label>
+      <select>
+        <option>All Regions</option>
+        <option>North</option>
+        <option>South</option>
+        <option>East</option>
+        <option>West</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>Product Line</label>
+      <select>
+        <option>All Products</option>
+        <option>Motor</option>
+        <option>Health GI</option>
+        <option>Fire</option>
+        <option>SME</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>Branch Category</label>
+      <select>
+        <option>All Categories</option>
+        <option>Metro</option>
+        <option>Urban</option>
+        <option>Semi Urban</option>
+        <option>Rural</option>
+      </select>
+    </div>
+
+  </section>
+
+  <main class="main-content">
+
+    <!-- KPI SECTION -->
+    <section class="section">
+      <div class="section-header">
+        <h2>Executive KPI Snapshot</h2>
+
+        <div class="toggle-group">
+          <button class="toggle-btn active">MTD</button>
+          <button class="toggle-btn">YTD</button>
+        </div>
+      </div>
+
+      <div class="kpi-grid" id="kpiGrid"></div>
+    </section>
+
+    <!-- TREND ANALYTICS -->
+    <section class="section">
+
+      <div class="section-header">
+        <h2>Trend Analytics</h2>
+      </div>
+
+      <div class="analytics-grid">
+
+        <div class="panel chart-panel">
+          <div class="panel-title">
+            Monthly Premium Trend
+          </div>
+
+          <svg class="line-chart" viewBox="0 0 500 220">
+            <polyline
+              fill="none"
+              stroke="var(--accent)"
+              stroke-width="4"
+              points="20,180 80,160 140,145 200,110 260,120 320,90 380,75 440,40"
+            />
+          </svg>
+        </div>
+
+        <div class="panel chart-panel">
+          <div class="panel-title">
+            Policy Count Trend
+          </div>
+
+          <div class="bar-chart">
+            <div style="height:50%"></div>
+            <div style="height:62%"></div>
+            <div style="height:70%"></div>
+            <div style="height:76%"></div>
+            <div style="height:82%"></div>
+            <div style="height:88%"></div>
+            <div style="height:95%"></div>
+          </div>
+        </div>
+
+        <div class="panel chart-panel">
+          <div class="panel-title">
+            Renewal vs Cancellation
+          </div>
+
+          <div class="dual-bars">
+            <div class="bar-row">
+              <span>Renewal</span>
+              <div class="bar-track">
+                <div class="bar-fill success" style="width:78%"></div>
+              </div>
+              <strong>78%</strong>
+            </div>
+
+            <div class="bar-row">
+              <span>Cancellation</span>
+              <div class="bar-track">
+                <div class="bar-fill danger" style="width:12%"></div>
+              </div>
+              <strong>12%</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel chart-panel">
+          <div class="panel-title">
+            Loss Ratio Trend
+          </div>
+
+          <svg class="line-chart" viewBox="0 0 500 220">
+            <polyline
+              fill="none"
+              stroke="#d9485f"
+              stroke-width="4"
+              points="20,120 80,130 140,110 200,100 260,90 320,115 380,140 440,130"
+            />
+          </svg>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- PERFORMANCE -->
+    <section class="section">
+
+      <div class="section-header">
+        <h2>Performance Segmentation</h2>
+      </div>
+
+      <div class="segmentation-grid">
+
+        <div class="panel">
+          <div class="panel-title">Bank Partner Comparison</div>
+
+          <div class="progress-list">
+
+            <div class="progress-item">
+              <span>SBI</span>
+              <div class="progress-track">
+                <div class="progress-fill" style="width:88%"></div>
+              </div>
+              <strong>₹118 Cr</strong>
+            </div>
+
+            <div class="progress-item">
+              <span>PNB</span>
+              <div class="progress-track">
+                <div class="progress-fill" style="width:72%"></div>
+              </div>
+              <strong>₹91 Cr</strong>
+            </div>
+
+            <div class="progress-item">
+              <span>Canara</span>
+              <div class="progress-track">
+                <div class="progress-fill" style="width:61%"></div>
+              </div>
+              <strong>₹76 Cr</strong>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Region-wise Performance</div>
+
+          <div class="region-grid">
+
+            <div class="region-card good">
+              <h4>South</h4>
+              <p>124%</p>
+            </div>
+
+            <div class="region-card warn">
+              <h4>East</h4>
+              <p>88%</p>
+            </div>
+
+            <div class="region-card risk">
+              <h4>North</h4>
+              <p>73%</p>
+            </div>
+
+            <div class="region-card good">
+              <h4>West</h4>
+              <p>111%</p>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Product Mix</div>
+
+          <div class="donut-wrap">
+
+            <svg viewBox="0 0 42 42" class="donut">
+              <circle class="donut-ring" cx="21" cy="21" r="15.915"></circle>
+
+              <circle class="donut-segment teal"
+                cx="21"
+                cy="21"
+                r="15.915"
+                stroke-dasharray="40 60"
+                stroke-dashoffset="25">
+              </circle>
+
+              <circle class="donut-segment amber"
+                cx="21"
+                cy="21"
+                r="15.915"
+                stroke-dasharray="25 75"
+                stroke-dashoffset="-15">
+              </circle>
+
+            </svg>
+
+            <div class="donut-legend">
+              <div><span class="legend teal"></span> Motor 40%</div>
+              <div><span class="legend amber"></span> Health 25%</div>
+              <div><span class="legend green"></span> SME 18%</div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- TABLE -->
+    <section class="section">
+
+      <div class="section-header">
+        <h2>Branch Action Table</h2>
+      </div>
+
+      <div class="table-container">
+
+        <table id="branchTable">
+
+          <thead>
+            <tr>
+              <th data-sort="region">Region</th>
+              <th data-sort="bank">Bank</th>
+              <th data-sort="branch">Branch</th>
+              <th data-sort="premium">Premium</th>
+              <th data-sort="policies">Policies</th>
+              <th data-sort="achievement">Target %</th>
+              <th data-sort="sellers">Sellers</th>
+              <th data-sort="conversion">Conversion</th>
+              <th data-sort="renewal">Renewal</th>
+              <th data-sort="loss">Loss Ratio</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+
+          <tbody id="tableBody"></tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
+    <!-- OPPORTUNITY -->
+    <section class="section">
+
+      <div class="risk-grid">
+
+        <div class="panel">
+          <div class="panel-title">Top Opportunities</div>
+
+          <ul class="insight-list">
+            <li>17 inactive metro branches with CASA > ₹80 Cr</li>
+            <li>SME package penetration strongest in South zone</li>
+            <li>Health GI attachment improving in salary accounts</li>
+            <li>Cross-sell conversion highest in urban Karnataka clusters</li>
+          </ul>
+
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Risk Alerts</div>
+
+          <ul class="insight-list risk-list">
+            <li>Motor cancellation spike in North region</li>
+            <li>Renewal decline in two PSU bank cohorts</li>
+            <li>Loss ratio breach in SME fire portfolio</li>
+            <li>Seller activation below threshold in East zone</li>
+          </ul>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- LEADERBOARD -->
+    <section class="section">
+
+      <div class="section-header">
+        <h2>RM / Branch Leaderboard</h2>
+      </div>
+
+      <div class="leaderboard-grid">
+
+        <div class="leaderboard-card">
+          <span class="rank">1</span>
+          <div>
+            <h4>Ananya Rao</h4>
+            <p>South Cluster</p>
+          </div>
+          <strong>₹3.8 Cr</strong>
+        </div>
+
+        <div class="leaderboard-card">
+          <span class="rank">2</span>
+          <div>
+            <h4>Rahul Mehta</h4>
+            <p>West Metro</p>
+          </div>
+          <strong>₹3.1 Cr</strong>
+        </div>
+
+        <div class="leaderboard-card review">
+          <span class="rank">!</span>
+          <div>
+            <h4>East Rural Cluster</h4>
+            <p>Under Review</p>
+          </div>
+          <strong>63%</strong>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- DECISION -->
+    <section class="section">
+
+      <div class="section-header">
+        <h2>Decision Support</h2>
+      </div>
+
+      <div class="decision-grid">
+
+        <div class="decision-card">
+          <h3>12 branches below 50% target achievement</h3>
+          <p>Focused intervention required within current quarter.</p>
+        </div>
+
+        <div class="decision-card">
+          <h3>4 regions contributing 60% of premium</h3>
+          <p>Portfolio concentration risk emerging.</p>
+        </div>
+
+        <div class="decision-card">
+          <h3>SME package growth exceeds Motor</h3>
+          <p>Cross-sell bundling showing stronger momentum.</p>
+        </div>
+
+        <div class="decision-card danger-card">
+          <h3>Loss ratio breach in one product cluster</h3>
+          <p>Requires underwriting review and pricing correction.</p>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div>
+      Last updated: 18 May 2026, 11:42 AM
+    </div>
+
+    <div>
+      Illustrative internal dashboard concept
+    </div>
+
+    <div class="footer-links">
+      <a href="#">Policy Analytics</a>
+      <a href="#">Channel MIS</a>
+      <a href="#">Renewal Tracker</a>
+    </div>
+  </footer>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
